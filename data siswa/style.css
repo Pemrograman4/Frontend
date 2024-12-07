@@ -10,7 +10,8 @@ h1 {
 }
 
 .header-buttons {
-    text-align: center;
+    display: flex;
+    justify-content: flex-end; /* Menggeser tombol ke ujung kanan */
     margin-bottom: 20px;
 }
 
@@ -21,6 +22,7 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .btn-add:hover {
