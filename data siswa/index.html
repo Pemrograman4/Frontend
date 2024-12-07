@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Data Siswa</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Master Data Siswa</h1>
+    <div class="header-buttons">
+        <button class="btn-add" onclick="window.location.href='tambah_siswa.html'">Tambah Siswa</button>
+    </div>
+    <table id="siswaTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nama Lengkap</th>
+                <th>Alamat</th>
+                <th>Nomor Telepon</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data siswa akan diisi secara dinamis -->
+        </tbody>
+    </table>
+    <script src="script.js"></script>
+</body>
+</html>

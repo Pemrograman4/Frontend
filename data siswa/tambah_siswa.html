@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Siswa</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Tambah Data Siswa</h1>
+        <form id="formTambahSiswa">
+            <label for="nama">Nama Lengkap:</label>
+            <input type="text" id="nama" name="nama" required>
+
+            <label for="alamat">Alamat:</label>
+            <input type="text" id="alamat" name="alamat" required>
+
+            <label for="telepon">Nomor Telepon:</label>
+            <input type="text" id="telepon" name="telepon" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="Aktif">Aktif</option>
+                <option value="Nonaktif">Nonaktif</option>
+            </select>
+
+            <div class="form-buttons">
+                <button type="submit">Simpan</button>
+                <button type="button" onclick="window.location.href='index.html'">Batal</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Fungsi untuk menambahkan data siswa ke localStorage
+        function tambahSiswa(event) {
+            event.preventDefault();
+
+            // Ambil data dari form
+            const nama = document.getElementById('nama').value;
+            const alamat = document.getElementById('alamat').value;
+            const telepon = document.getElementById('telepon').value;
+            const email = document.getElementById('email').value;
+            const status = document.getElementById('status').value;
+
+            // Ambil data siswa dari localStorage (atau buat array baru jika belum ada)
+            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+
+            // Buat ID baru untuk siswa
+            const idBaru = siswaData.length > 0 ? siswaData[siswaData.length - 1].id + 1 : 1;
+
+            // Tambahkan data siswa baru ke array
+            siswaData.push({
+                id: idBaru,
+                nama,
+                alamat,
+                telepon,
+                email,
+                status
+            });
+
+            // Simpan kembali data siswa ke localStorage
+            localStorage.setItem('siswaData', JSON.stringify(siswaData));
+
+            // Tampilkan notifikasi sukses dengan SweetAlert2
+            Swal.fire({
+                title: 'Berhasil!',
+                text: 'Data siswa berhasil ditambahkan.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Arahkan kembali ke halaman utama setelah notifikasi
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Tambahkan event listener ke form
+        document.getElementById('formTambahSiswa').addEventListener('submit', tambahSiswa);
+    </script>
+</body>
+</html>
