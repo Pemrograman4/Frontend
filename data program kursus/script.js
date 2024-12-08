@@ -68,7 +68,7 @@ function saveCourse(event) {
 
     // Reset the form inputs
     courseForm.reset();
-    costValue.textContent = `Rp 0.000`;  // Reset the cost display to default
+    costValue.textContent = `Rp 0.00`;  // Reset the cost display to default
 }
 
 // Function to edit an existing course
