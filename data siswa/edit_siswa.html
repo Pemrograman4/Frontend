@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Siswa</title>
+    <title>Edit Siswa</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Menambahkan Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Tambah Data Siswa</h1>
-        <form id="formTambahSiswa">
+        <h1>Edit Data Siswa</h1>
+        <form id="formEditSiswa">
             <div class="form-group">
                 <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
                 <input type="text" id="nama" name="nama" required>
@@ -48,32 +48,33 @@
     </div>
 
     <script>
-        // Fungsi untuk menambahkan data siswa ke localStorage
-        function tambahSiswa(event) {
+        // Fungsi untuk memperbarui data siswa di localStorage
+        function editSiswa(event) {
             event.preventDefault();
 
             // Ambil data dari form
+            const id = getUrlParameter('id'); // Mendapatkan ID siswa dari URL
             const nama = document.getElementById('nama').value;
             const alamat = document.getElementById('alamat').value;
             const telepon = document.getElementById('telepon').value;
             const email = document.getElementById('email').value;
             const status = document.getElementById('status').value;
 
-            // Ambil data siswa dari localStorage (atau buat array baru jika belum ada)
+            // Ambil data siswa dari localStorage
             let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
 
-            // Buat ID baru untuk siswa
-            const idBaru = siswaData.length > 0 ? siswaData[siswaData.length - 1].id + 1 : 1;
+            // Temukan siswa dengan ID tertentu
+            const siswaIndex = siswaData.findIndex(siswa => siswa.id == id);
 
-            // Tambahkan data siswa baru ke array
-            siswaData.push({
-                id: idBaru,
+            // Perbarui data siswa
+            siswaData[siswaIndex] = {
+                id: parseInt(id),
                 nama,
                 alamat,
                 telepon,
                 email,
                 status
-            });
+            };
 
             // Simpan kembali data siswa ke localStorage
             localStorage.setItem('siswaData', JSON.stringify(siswaData));
@@ -81,7 +82,7 @@
             // Tampilkan notifikasi sukses dengan SweetAlert2
             Swal.fire({
                 title: 'Berhasil!',
-                text: 'Data siswa berhasil ditambahkan.',
+                text: 'Data siswa berhasil diperbarui.',
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then(() => {
@@ -90,8 +91,14 @@
             });
         }
 
+        // Ambil parameter 'id' dari URL
+        function getUrlParameter(name) {
+            var url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
         // Tambahkan event listener ke form
-        document.getElementById('formTambahSiswa').addEventListener('submit', tambahSiswa);
+        document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
     </script>
 </body>
 </html>
