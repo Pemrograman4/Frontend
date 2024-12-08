@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FASFADE Institute</title>
+    <link rel="shortcut icon" href="logo_only.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css"
+      integrity="sha512-9xKTRVabjVeZmc+GUW8GgSmcREDunMM+Dt/GrzchfN8tkwHizc5RP4Ok/MXFFy5rIjJjzhndFScTceq5e6GvVQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <img src="logo_only.png" alt="FASFADE Logo" class="logo" />
+      <h1 class="title">FASFADE Institute</h1>
+    </header>
+
+    <!-- Welcome Section -->
+    <main class="welcome-section">
+      <h2>Welcome to</h2>
+      <h3>FASFADE Institute Finance System</h3>
+
+      <!-- Data Cards -->
+      <div class="data-section">
+        <h4>Data</h4>
+        <div class="card-container">
+          <div class="card" onclick="window.location.href='siswa/index.html'">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <p>Siswa</p>
+          </div>
+          <div class="card" onclick="window.location.href='program_kursus/list_courses.html'">
+            <i class="fa-solid fa-book-open"></i>
+            <p>Program Kursus</p>
+          </div>
+          <div class="card" onclick="window.location.href='tagihan/index.html'">
+            <i class="fa-solid fa-file-invoice"></i>
+            <p>Tagihan</p>
+          </div>
+          <div class="card" onclick="window.location.href='pembayaran/index.html'">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <p>Pembayaran</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i class="fa-solid fa-house active" onclick="window.location.href='index.html'"></i>
+      <i class="fa-solid fa-plus-circle active" onclick="showAddPopup()"></i>
+      <i class="fa-solid fa-user active"></i>
+    </nav>
+
+    <!-- Popup Modal -->
+    <div class="popup-modal" id="addPopup">
+      <div class="popup-content">
+        <h4>Pilih Data yang Akan Ditambahkan</h4>
+        <div class="popup-card" onclick="window.location.href='siswa/tambah_siswa.html'">
+          Tambah Siswa
+        </div>
+        <div class="popup-card" onclick="window.location.href='program_kursus/add_courses.html'">
+          Tambah Program Kursus
+        </div>
+        <div class="popup-card" onclick="window.location.href='tagihan/add.html'">
+          Tambah Tagihan
+        </div>
+        <div class="popup-card" onclick="window.location.href='pembayaran/add.html'">
+          Tambah Pembayaran
+        </div>
+        <button onclick="closePopup()">Tutup</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

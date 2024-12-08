@@ -1,0 +1,200 @@
+/* General Reset */
+body, h1, h2, h3, h4, p {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #0097b2;
+  }
+  
+  body {
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #fff;
+    height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header .logo {
+    height: 40px;
+    margin-right: 5px;
+    margin-left: 10px;
+  }
+  
+  .header .title {
+    color: #ffc00a;
+    font-size: 20px;
+    font-weight: medium;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  /* Welcome Section */
+  .welcome-section {
+    text-align: center;
+    padding: 20px;
+    background-color: #0097b2;
+    color: #e9e3d5;
+    font-family: "Poppins", sans-serif;
+    height: 250px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+   
+  }
+  
+  .welcome-section h2 {
+    font-size: 50px;
+     color: #f4f4f4;
+     font-family: "Poppins", sans-serif;
+     font-weight: bold;
+  }
+  
+  .welcome-section h3 {
+    font-size: 35px;
+    margin-bottom: 20px;
+    color: #f4f4f4;
+    font-family: "Ubuntu", sans-serif;
+    font-weight: normal;
+  }
+  
+  /* Data Section */
+  .data-section {
+    padding: 20px;
+    background-color: #d9d9d9;
+    margin-top: 25px;
+    border-radius: 20px;
+    text-align: start;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-section h4 {
+    color: #0097b2;
+    margin-bottom: 10px;
+    font-size: 30px;
+    margin-left: 5px;
+  }
+  
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Lebar minimal tiap card */
+    gap: 20px; /* Jarak antar kartu */
+    padding: 10px; /* Ruang sekitar kontainer */
+    justify-items: center; /* Pusatkan setiap kartu di grid */
+  }
+  
+  .card {
+    background: #fff; 
+    color: #ffc00a; 
+    width: 100%; 
+    max-width: 100px; 
+    height: 100px;
+    padding: 15px; /* Ruang dalam kartu */
+    border-radius: 12px; /* Sudut melengkung */
+    text-align: center; /* Pusatkan teks */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Efek bayangan */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animasi saat hover */
+    cursor: pointer; /* Ubah kursor jadi pointer */
+  }
+  
+  .card:hover {
+    transform: scale(1.05); /* Perbesar sedikit saat di-hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Bayangan lebih kuat */
+  }
+  
+  .card svg {
+    width: 60px;
+    height: 30px;
+    margin-bottom: 10px; /* Jarak antara ikon dan teks */
+    color: #ffc00a; /* Warna ikon */
+    margin-top: 15px;
+  }
+  
+  .card p {
+    font-size: 1rem; /* Ukuran font teks */
+    font-weight: bold; /* Teks tebal */
+    color: #ffc00a;
+  }  
+  
+  /* Bottom Navigation */
+  .nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    color: #0097b2;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-bottom i {
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .nav-bottom .fa-house.active {
+    color: #ffc00a;
+  }
+  .nav-bottom .fa-plus-circle.active {
+    color: #ffc00a;
+  }
+
+  
+  /* Popup Modal */
+  .popup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-content {
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    width: 80%;
+  }
+  
+  .popup-card {
+    background: #ffc00a;
+    margin: 10px 0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  .popup-card:hover {
+    background: #0097b2;
+    color: #e9e3d5;
+  }
+  
+  /* Button Close */
+  .popup-content button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #0097b2;
+    color: #e9e3d5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .popup-content button:hover {
+    background: #0097b2;
+  }
+  
