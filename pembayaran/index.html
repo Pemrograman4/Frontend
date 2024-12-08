@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Pembayaran</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header>
+        <div class="logo">💠</div>
+        <h1>Daftar Pembayaran</h1>
+        <button class="btn-add" onclick="window.location.href='add.html'">
+          Tambah Pembayaran
+        </button>
+      </header>
+
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Search..." />
+        <button class="search-icon">🔍</button>
+      </div>
+
+      <!-- Daftar Pembayaran -->
+      <div id="pembayaranList" class="card-list">
+        <!-- Cards akan di-generate dengan JavaScript -->
+      </div>
+    </div>
+
+    <script>
+      // Fungsi untuk format Rupiah
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(angka);
+      }
+
+      // Fungsi untuk format Tanggal
+      function formatTanggal(tanggal) {
+        const date = new Date(tanggal);
+        const options = { day: "2-digit", month: "long", year: "numeric" }; // Contoh: 09 Desember 2024
+        return date.toLocaleDateString("id-ID", options);
+      }
+
+      // Fungsi untuk menampilkan daftar pembayaran
+      function tampilkanPembayaran() {
+        const pembayaranData =
+          JSON.parse(localStorage.getItem("pembayaranData")) || [];
+        const pembayaranList = document.getElementById("pembayaranList");
+        pembayaranList.innerHTML = "";
+
+        pembayaranData.forEach((pembayaran) => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+      <div class="card-info">
+        <p><strong>ID Pembayaran:</strong> ${pembayaran.idPembayaran}</p>
+        <p><strong>ID Siswa:</strong> ${pembayaran.idSiswa}</p>
+        <p><strong>ID Tagihan:</strong> ${pembayaran.idTagihan}</p>
+        <p><strong>Tanggal Pembayaran:</strong> ${formatTanggal(
+          pembayaran.tanggalPembayaran
+        )}</p>
+        <p><strong>Jumlah Pembayaran:</strong> ${formatRupiah(
+          pembayaran.jumlahPembayaran
+        )}</p>
+        <p><strong>Metode Pembayaran:</strong> ${
+          pembayaran.metodePembayaran
+        }</p>
+      </div>
+      <div class="card-actions">
+        <button class="edit-btn" onclick="editPembayaran(${
+          pembayaran.idPembayaran
+        })">✏️ Edit</button>
+        <button class="delete-btn" onclick="hapusPembayaran(${
+          pembayaran.idPembayaran
+        })">🗑️ Hapus</button>
+      </div>
+    `;
+
+          pembayaranList.appendChild(card);
+        });
+      }
+
+      function editPembayaran(id) {
+        window.location.href = `edit.html?id=${id}`;
+      }
+
+      function hapusPembayaran(id) {
+        let pembayaranData =
+          JSON.parse(localStorage.getItem("pembayaranData")) || [];
+        pembayaranData = pembayaranData.filter(
+          (data) => data.idPembayaran != id
+        );
+        localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
+        tampilkanPembayaran();
+      }
+
+      tampilkanPembayaran();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Data Pembayaran</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Edit Data Pembayaran</h1>
+      <form id="formEditPembayaran">
+        <input type="hidden" id="idPembayaran" />
+        <label for="idSiswa">Nama Siswa</label>
+        <select id="idSiswa" required>
+          <option value="">Pilih Siswa</option>
+        </select>
+        <label for="idTagihan">ID Tagihan:</label>
+        <select id="idTagihan" required>
+          <option value="">Pilih Tagihan</option>
+        </select>
+        <label for="tanggalPembayaran">Tanggal Pembayaran:</label>
+        <input type="date" id="tanggalPembayaran" required />
+        <label for="jumlahPembayaran">Jumlah Pembayaran:</label>
+        <input type="number" id="jumlahPembayaran" required />
+        <label for="metodePembayaran">Metode Pembayaran:</label>
+        <select id="metodePembayaran" required>
+          <option value="Transfer Bank">Transfer Bank</option>
+          <option value="Tunai">Tunai</option>
+        </select>
+        <button type="submit">Simpan</button>
+      </form>
+    </div>
+    <script>
+      // Fungsi format Rupiah
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(angka);
+      }
+
+      // Fungsi format Tanggal ke format Indonesia
+      function formatTanggalIndonesia(tanggal) {
+        const date = new Date(tanggal);
+        const options = { day: "2-digit", month: "long", year: "numeric" };
+        return date.toLocaleDateString("id-ID", options);
+      }
+
+      // Fungsi untuk mengisi dropdown
+      function populateSelects() {
+        const siswaData = JSON.parse(localStorage.getItem("siswaData")) || [];
+        const tagihanData = JSON.parse(localStorage.getItem("tagihanData")) || [];
+
+        // Isi dropdown ID Siswa
+        const idSiswaSelect = document.getElementById("idSiswa");
+        siswaData.forEach((siswa) => {
+          const option = document.createElement("option");
+          option.value = siswa.id;
+          option.textContent = siswa.nama;
+          idSiswaSelect.appendChild(option);
+        });
+
+        // Isi dropdown ID Tagihan berdasarkan ID Siswa yang dipilih
+        const idTagihanSelect = document.getElementById("idTagihan");
+        const idSiswaDipilih = document.getElementById("idSiswa").value;
+        idTagihanSelect.innerHTML = '<option value="">Pilih Tagihan</option>'; // Reset options
+        tagihanData
+          .filter((tagihan) => tagihan.idSiswa === idSiswaDipilih)
+          .forEach((tagihan) => {
+            const option = document.createElement("option");
+            option.value = tagihan.id;
+            option.textContent = tagihan.nama;
+            idTagihanSelect.appendChild(option);
+          });
+      }
+
+      // Memanggil fungsi untuk mengisi dropdown saat halaman dimuat
+      window.onload = populateSelects;
+
+      // Memilih pembayaran berdasarkan id dari URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const idPembayaran = urlParams.get("id");
+
+      let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData"));
+      const pembayaran = pembayaranData.find(
+        (data) => data.idPembayaran == idPembayaran
+      );
+
+      if (pembayaran) {
+        document.getElementById("idPembayaran").value = pembayaran.idPembayaran;
+        document.getElementById("idSiswa").value = pembayaran.idSiswa;
+        document.getElementById("idTagihan").value = pembayaran.idTagihan;
+        document.getElementById("tanggalPembayaran").value = pembayaran.tanggalPembayaran;
+        document.getElementById("jumlahPembayaran").value = pembayaran.jumlahPembayaran;
+        document.getElementById("metodePembayaran").value = pembayaran.metodePembayaran;
+      }
+
+      document
+        .getElementById("formEditPembayaran")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          pembayaran.idSiswa = document.getElementById("idSiswa").value;
+          pembayaran.idTagihan = document.getElementById("idTagihan").value;
+          pembayaran.tanggalPembayaran = document.getElementById("tanggalPembayaran").value;
+          pembayaran.jumlahPembayaran = document.getElementById("jumlahPembayaran").value;
+          pembayaran.metodePembayaran = document.getElementById("metodePembayaran").value;
+
+          localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
+
+          Swal.fire({
+            title: "Berhasil!",
+            text: "Data pembayaran berhasil diperbarui.",
+            icon: "success",
+          }).then(() => {
+            window.location.href = "index.html";
+          });
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Data Pembayaran</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tambah Data Pembayaran</h1>
+      <form id="formTambahPembayaran">
+        <label for="idSiswa">Nama Siswa</label>
+        <select id="idSiswa" required>
+          <option value="">Pilih Siswa</option>
+        </select>
+        <label for="idTagihan">ID Tagihan:</label>
+        <select id="idTagihan" required>
+          <option value="">Pilih Tagihan</option>
+        </select>
+        <label for="tanggalPembayaran">Tanggal Pembayaran:</label>
+        <input type="date" id="tanggalPembayaran" required />
+        <label for="jumlahPembayaran">Jumlah Pembayaran:</label>
+        <input type="number" id="jumlahPembayaran" required />
+        <label for="metodePembayaran">Metode Pembayaran:</label>
+        <select id="metodePembayaran" required>
+          <option value="Transfer Bank">Transfer Bank</option>
+          <option value="Tunai">Tunai</option>
+        </select>
+        <button type="submit">Tambah</button>
+      </form>
+    </div>
+    <script>
+      // Fungsi format Rupiah
+      function formatRupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(angka);
+      }
+
+      // Fungsi format Tanggal ke format Indonesia
+      function formatTanggalIndonesia(tanggal) {
+        const date = new Date(tanggal);
+        const options = { day: "2-digit", month: "long", year: "numeric" };
+        return date.toLocaleDateString("id-ID", options);
+      }
+
+      // Fungsi untuk membuat ID Pembayaran
+      function generateIdPembayaran(tanggalPembayaran) {
+        const date = new Date();
+        const formattedDate = date
+          .toISOString()
+          .replace(/[-:T]/g, "")
+          .slice(0, 14); // Format: YYYYMMDDHHMMSS
+
+        // Ambil data sebelumnya dari localStorage untuk nomor urut
+        const pembayaranData =
+          JSON.parse(localStorage.getItem("pembayaranData")) || [];
+
+        // Hitung nomor urut berdasarkan tanggal pembayaran (reset tiap hari)
+        const today = new Date(tanggalPembayaran).toISOString().slice(0, 10); // YYYY-MM-DD
+        const dailyCount = pembayaranData.filter(
+          (data) =>
+            new Date(data.tanggalPembayaran).toISOString().slice(0, 10) ===
+            today
+        ).length;
+
+        const nomorUrut = dailyCount + 1; // Mulai dari 1
+        return `PAY${formattedDate}-${nomorUrut}`;
+      }
+
+      // Fungsi untuk menambahkan data siswa dan tagihan ke dropdown
+      function populateSelects() {
+        const siswaData = JSON.parse(localStorage.getItem("siswaData")) || [];
+        const tagihanData =
+          JSON.parse(localStorage.getItem("tagihanData")) || [];
+
+        // Isi dropdown ID Siswa
+        const idSiswaSelect = document.getElementById("idSiswa");
+        siswaData.forEach((siswa) => {
+          const option = document.createElement("option");
+          option.value = siswa.id;
+          option.textContent = siswa.nama;
+          idSiswaSelect.appendChild(option);
+        });
+
+        // Isi dropdown ID Tagihan berdasarkan ID Siswa yang dipilih
+        const idTagihanSelect = document.getElementById("idTagihan");
+        const idSiswaDipilih = document.getElementById("idSiswa").value;
+        idTagihanSelect.innerHTML = '<option value="">Pilih Tagihan</option>'; // Reset options
+        tagihanData
+          .filter((tagihan) => tagihan.idSiswa === idSiswaDipilih)
+          .forEach((tagihan) => {
+            const option = document.createElement("option");
+            option.value = tagihan.id;
+            option.textContent = tagihan.nama;
+            idTagihanSelect.appendChild(option);
+          });
+      }
+
+      // Memanggil fungsi untuk mengisi dropdown saat halaman dimuat
+      window.onload = populateSelects;
+
+      document
+        .getElementById("formTambahPembayaran")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const idSiswa = document.getElementById("idSiswa").value;
+          const idTagihan = document.getElementById("idTagihan").value;
+          const tanggalPembayaran =
+            document.getElementById("tanggalPembayaran").value;
+          const jumlahPembayaran = parseInt(
+            document.getElementById("jumlahPembayaran").value
+          );
+          const metodePembayaran =
+            document.getElementById("metodePembayaran").value;
+
+          // Update status tagihan
+          updateStatusTagihan(idTagihan, jumlahPembayaran);
+
+          let pembayaranData =
+            JSON.parse(localStorage.getItem("pembayaranData")) || [];
+
+          // Buat ID Pembayaran
+          const idPembayaran = generateIdPembayaran(tanggalPembayaran);
+
+          // Simpan data baru
+          pembayaranData.push({
+            idPembayaran,
+            idSiswa,
+            idTagihan,
+            tanggalPembayaran: formatTanggalIndonesia(tanggalPembayaran),
+            jumlahPembayaran: formatRupiah(jumlahPembayaran),
+            metodePembayaran,
+          });
+
+          localStorage.setItem(
+            "pembayaranData",
+            JSON.stringify(pembayaranData)
+          );
+
+          // Tampilkan pesan sukses
+          Swal.fire({
+            title: "Berhasil!",
+            text: "Data pembayaran berhasil ditambahkan.",
+            icon: "success",
+          }).then(() => {
+            window.location.href = "index.html";
+          });
+        });
+    </script>
+  </body>
+</html>
