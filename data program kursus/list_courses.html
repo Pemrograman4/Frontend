@@ -1,146 +1,150 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Daftar Program Kursus</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f1f5f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f1f5f9;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
 
-        h1 {
-            text-align: center;
-            color: #4CAF50;
-            font-size: 32px;
-            margin-bottom: 30px;
-        }
+      h1 {
+        text-align: center;
+        color: #4caf50;
+        font-size: 32px;
+        margin-bottom: 30px;
+      }
 
-        h2 {
-            text-align: center;
-            color: #555;
-            font-size: 18px;
-            margin-top: 20px;
-        }
+      h2 {
+        text-align: center;
+        color: #555;
+        font-size: 18px;
+        margin-top: 20px;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
 
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+      }
 
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-        }
+      th {
+        background-color: #f2f2f2;
+        color: #333;
+      }
 
-        td {
-            font-size: 14px;
-        }
+      td {
+        font-size: 14px;
+      }
 
-        .edit-btn, .delete-btn {
-            padding: 8px 16px;
-            font-size: 14px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 8px;
-            margin: 5px;
-        }
+      .edit-btn,
+      .delete-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        margin: 5px;
+      }
 
-        .edit-btn {
-            background-color: #f0ad4e;
-        }
+      .edit-btn {
+        background-color: #f0ad4e;
+      }
 
-        .delete-btn {
-            background-color: #d9534f;
-        }
+      .delete-btn {
+        background-color: #d9534f;
+      }
 
-        .edit-btn:hover {
-            background-color: #e9a84e;
-        }
+      .edit-btn:hover {
+        background-color: #e9a84e;
+      }
 
-        .delete-btn:hover {
-            background-color: #c9302c;
-        }
+      .delete-btn:hover {
+        background-color: #c9302c;
+      }
 
-        .action-btns {
-            display: flex;
-            justify-content: space-between;
-        }
+      .action-btns {
+        display: flex;
+        justify-content: space-between;
+      }
 
-        #costValue {
-            font-weight: bold;
-        }
+      #costValue {
+        font-weight: bold;
+      }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
+      .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
 
-        a {
-            text-decoration: none;
-            color: #4CAF50;
-            font-weight: bold;
-            text-align: center;
-        }
+      a {
+        text-decoration: none;
+        color: #4caf50;
+        font-weight: bold;
+        text-align: center;
+      }
 
-        a:hover {
-            text-decoration: underline;
-        }
+      a:hover {
+        text-decoration: underline;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Daftar Program Kursus</h1>
-        
-        <div class="table-container">
-            <table id="courseTable">
-                <thead>
-                    <tr>
-                        <th>ID Program</th>
-                        <th>Nama Program</th>
-                        <th>Durasi Program (bulan)</th>
-                        <th>Biaya Kursus (Rp)</th>
-                        <th>Deskripsi</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data program kursus akan tampil di sini -->
-                </tbody>
-            </table>
-        </div>
+      <h1>Daftar Program Kursus</h1>
 
-        <div class="button-container">
-            <h2><a href="input_course.html">Tambah Program Kursus</a></h2>
-        </div>
+      <div class="table-container">
+        <table id="courseTable">
+          <thead>
+            <tr>
+              <th>ID Program</th>
+              <th>Nama Program</th>
+              <th>Durasi Program (bulan)</th>
+              <th>Biaya Kursus (Rp)</th>
+              <th>Deskripsi</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="courseList">
+            <!-- Data program kursus akan tampil di sini -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="button-container">
+        <h2><a href="add_course.html">Tambah Program Kursus</a></h2>
+      </div>
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

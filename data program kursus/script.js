@@ -1,21 +1,17 @@
-// Mendapatkan referensi ke elemen-elemen yang dibutuhkan
 const costSlider = document.getElementById('costRange');
 const costValue = document.getElementById('costValue');
-const courseTable = document.getElementById('courseTable')?.getElementsByTagName('tbody')[0];
 const courseForm = document.getElementById('courseForm');
 const submitButton = document.getElementById('submitButton');  // Tombol submit
 
 // Menampilkan nilai dari slider biaya secara dinamis
 if (costSlider) {
-    // Mengupdate nilai yang ditampilkan saat slider berubah
     costSlider.oninput = function() {
         costValue.textContent = `Rp ${costSlider.value}`;
     };
-    // Menetapkan nilai awal ketika halaman pertama kali dimuat
     costValue.textContent = `Rp ${costSlider.value}`;
 }
 
-// Menangani pengiriman form untuk menyimpan atau mengupdate data kursus
+// Menangani pengiriman form untuk menambah kursus baru
 if (courseForm) {
     courseForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -44,17 +40,8 @@ if (courseForm) {
         // Mengambil data kursus yang ada di localStorage atau membuat array kosong
         let courses = JSON.parse(localStorage.getItem('courses')) || [];
 
-        // Mengecek apakah ini pengeditan atau penambahan kursus baru
-        const urlParams = new URLSearchParams(window.location.search);
-        const editIndex = urlParams.get('edit');
-
-        if (editIndex !== null) {
-            // Mengupdate kursus yang sudah ada
-            courses[editIndex] = course;
-        } else {
-            // Menambahkan kursus baru
-            courses.push(course);
-        }
+        // Menambahkan kursus baru
+        courses.push(course);
 
         // Menyimpan kembali array kursus ke localStorage
         localStorage.setItem('courses', JSON.stringify(courses));
@@ -71,6 +58,7 @@ if (courseForm) {
 // Memuat dan menampilkan kursus dari localStorage
 function loadCourses() {
     const courses = JSON.parse(localStorage.getItem('courses')) || [];
+    const courseTable = document.getElementById('courseTable').getElementsByTagName('tbody')[0];
     courseTable.innerHTML = '';  // Membersihkan tabel sebelum menambahkan baris baru
 
     courses.forEach((course, index) => {
@@ -86,7 +74,7 @@ function loadCourses() {
         editButton.textContent = 'Edit';
         editButton.classList.add('edit-btn');
         editButton.onclick = function() {
-            window.location.href = `input_course.html?edit=${index}`;
+            window.location.href = `edit_course.html?edit=${index}`;
         };
 
         const deleteButton = document.createElement('button');
@@ -114,31 +102,3 @@ if (document.getElementById('courseTable')) {
     loadCourses();
 }
 
-// Memuat data kursus untuk pengeditan jika parameter 'edit' ada di URL
-function loadCourseForEditing() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const editIndex = urlParams.get('edit');
-
-    if (editIndex !== null) {
-        let courses = JSON.parse(localStorage.getItem('courses')) || [];
-        const course = courses[editIndex];
-
-        // Mengisi form dengan data kursus yang akan diedit
-        document.getElementById('programId').value = course.programId;
-        document.getElementById('programName').value = course.programName;
-        document.getElementById('duration').value = course.duration;
-        costSlider.value = course.cost;
-        costValue.textContent = `Rp ${course.cost}`;
-        document.getElementById('description').value = course.description;
-
-        // Mengubah teks tombol submit menjadi 'Selesai Perubahan'
-        if (submitButton) {
-            submitButton.textContent = 'Selesai Perubahan';
-        }
-    }
-}
-
-// Menjalankan loadCourseForEditing jika berada di halaman edit kursus
-if (window.location.pathname.includes('input_course.html')) {
-    loadCourseForEditing();
-}
