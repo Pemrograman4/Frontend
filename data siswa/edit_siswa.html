@@ -48,11 +48,33 @@
     </div>
 
     <script>
+        // Fungsi untuk memuat data siswa dari localStorage
+        function loadSiswaData() {
+            const id = getUrlParameter('id'); // Mendapatkan ID siswa dari URL
+            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+            
+            // Cari data siswa berdasarkan ID
+            const siswa = siswaData.find(s => s.id == id);
+
+            if (siswa) {
+                // Isi form dengan data siswa
+                document.getElementById('nama').value = siswa.nama;
+                document.getElementById('alamat').value = siswa.alamat;
+                document.getElementById('telepon').value = siswa.telepon;
+                document.getElementById('email').value = siswa.email;
+                document.getElementById('status').value = siswa.status;
+            } else {
+                // Tampilkan pesan jika data siswa tidak ditemukan
+                Swal.fire('Error', 'Data siswa tidak ditemukan!', 'error').then(() => {
+                    window.location.href = 'index.html';
+                });
+            }
+        }
+
         // Fungsi untuk memperbarui data siswa di localStorage
         function editSiswa(event) {
             event.preventDefault();
 
-            // Ambil data dari form
             const id = getUrlParameter('id'); // Mendapatkan ID siswa dari URL
             const nama = document.getElementById('nama').value;
             const alamat = document.getElementById('alamat').value;
@@ -63,66 +85,48 @@
             // Ambil data siswa dari localStorage
             let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
 
-            // Temukan siswa dengan ID tertentu
+            // Temukan indeks siswa dengan ID tertentu
             const siswaIndex = siswaData.findIndex(siswa => siswa.id == id);
 
-            // Perbarui data siswa
-            siswaData[siswaIndex] = {
-                id: parseInt(id),
-                nama,
-                alamat,
-                telepon,
-                email,
-                status
-            };
+            if (siswaIndex !== -1) {
+                // Perbarui data siswa
+                siswaData[siswaIndex] = {
+                    id: parseInt(id),
+                    nama,
+                    alamat,
+                    telepon,
+                    email,
+                    status
+                };
 
-            // Simpan kembali data siswa ke localStorage
-            localStorage.setItem('siswaData', JSON.stringify(siswaData));
+                // Simpan kembali data siswa ke localStorage
+                localStorage.setItem('siswaData', JSON.stringify(siswaData));
 
-            // Tampilkan notifikasi sukses dengan SweetAlert2
-            Swal.fire({
-                title: 'Berhasil!',
-                text: 'Data siswa berhasil diperbarui.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                // Arahkan kembali ke halaman utama setelah notifikasi
-                window.location.href = 'index.html';
-            });
-        }
-
-        // Ambil parameter 'id' dari URL
-        function getUrlParameter(name) {
-            var url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
-
-        // Memuat data siswa dari file JSON ketika halaman dimuat
-        async function loadSiswaData() {
-            try {
-                const response = await fetch('data_siswa.json');
-                const siswaData = await response.json();
-                const id = getUrlParameter('id');
-
-                // Temukan siswa berdasarkan ID
-                const siswa = siswaData.find(s => s.id == id);
-
-                if (siswa) {
-                    document.getElementById('nama').value = siswa.nama;
-                    document.getElementById('alamat').value = siswa.alamat;
-                    document.getElementById('telepon').value = siswa.telepon;
-                    document.getElementById('email').value = siswa.email;
-                    document.getElementById('status').value = siswa.status;
-                }
-            } catch (error) {
-                console.error('Error loading siswa data:', error);
+                // Tampilkan notifikasi sukses
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Data siswa berhasil diperbarui.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Arahkan kembali ke halaman utama
+                    window.location.href = 'index.html';
+                });
+            } else {
+                Swal.fire('Error', 'Gagal memperbarui data siswa!', 'error');
             }
         }
 
-        // Panggil fungsi untuk memuat data siswa saat halaman dimuat
-        loadSiswaData();
+        // Fungsi untuk mendapatkan parameter ID dari URL
+        function getUrlParameter(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
 
-        // Tambahkan event listener ke form
+        // Tambahkan event listener untuk memuat data siswa saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', loadSiswaData);
+
+        // Tambahkan event listener untuk menyimpan perubahan
         document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
     </script>
 </body>
