@@ -129,115 +129,95 @@
     <div class="container">
       <h2>Edit Kursus</h2>
       <form id="editCourseForm">
-        <div class="form-group">
-          <label for="programId">ID Program</label>
-          <input
-            type="text"
-            id="programId"
-            name="programId"
-            required
-            placeholder="Masukkan ID Program"
-          />
-        </div>
+        <label for="programId">ID Program:</label>
+        <input type="text" id="programId" name="programId" placeholder="ID Program" required>
 
-        <div class="form-group">
-          <label for="programName">Nama Program</label>
-          <input
-            type="text"
-            id="programName"
-            name="programName"
-            required
-            placeholder="Masukkan Nama Program"
-          />
-        </div>
+        <label for="programName">Nama Program:</label>
+        <input type="text" id="programName" name="programName" placeholder="Nama Program" required>
 
-        <div class="form-group">
-          <label for="duration">Durasi (bulan)</label>
-          <input
-            type="number"
-            id="duration"
-            name="duration"
-            required
-            placeholder="Masukkan Durasi"
-          />
-        </div>
+        <label for="duration">Durasi Program (bulan):</label>
+        <input type="number" id="duration" name="duration" placeholder="Durasi (Bulan)" required>
 
-        <div class="form-group">
-          <label for="costRange">Biaya</label>
-          <input
-            type="range"
-            id="costRange"
-            name="cost"
-            min="100000"
-            max="1000000"
-            step="10000"
-          />
-          <span id="costValue">Rp 100.000</span>
-        </div>
+        <label for="programCost">Biaya Kursus:</label>
+        <input type="number" id="programCost" name="programCost" placeholder="Biaya per Program" required>
+        <p id="costValue">Rp 0</p><br>
 
-        <div class="form-group">
-          <label for="description">Deskripsi</label>
-          <textarea
-            id="description"
-            name="description"
-            required
-            placeholder="Masukkan Deskripsi Program"
-          ></textarea>
-        </div>
-
+        <label for="description">Deskripsi Program:</label>
+        <textarea id="description" name="description" placeholder="Deskripsi Program" required></textarea>
         <button type="submit">Selesai Perubahan</button>
         <button type="button" id="cancelButton">Batal</button>
       </form>
+      
     </div>
 
     <script>
-      const costSlider = document.getElementById("costRange");
+      const costInput = document.getElementById("programCost"); // Input biaya program
       const costValue = document.getElementById("costValue");
+      const durationInput = document.getElementById("duration");
       const courseForm = document.getElementById("editCourseForm");
       const submitButton = document.querySelector("button");
-
-      // Menampilkan nilai dari slider biaya secara dinamis
-      costSlider.oninput = function () {
-        costValue.textContent = `Rp ${costSlider.value}`;
-      };
-
+    
+      // Fungsi untuk menghitung total biaya berdasarkan durasi dan biaya per bulan
+      function updateTotalCost() {
+        const duration = parseInt(durationInput.value) || 0;
+        const costPerProgram = parseInt(costInput.value) || 0;
+        const totalCost = costPerProgram * duration;
+        costValue.textContent = `Rp ${totalCost.toLocaleString()}`;
+      }
+    
+      // Menampilkan nilai dari input biaya secara dinamis
+      costInput.addEventListener("input", function () {
+        updateTotalCost(); // Memperbarui biaya total saat biaya program berubah
+      });
+    
       // Memuat data kursus untuk pengeditan jika parameter 'edit' ada di URL
       function loadCourseForEditing() {
         const urlParams = new URLSearchParams(window.location.search);
         const editIndex = urlParams.get("edit");
-
+    
         if (editIndex !== null) {
           let courses = JSON.parse(localStorage.getItem("courses")) || [];
           const course = courses[editIndex];
-
-          // Mengisi form dengan data kursus yang akan diedit
-          document.getElementById("programId").value = course.programId;
-          document.getElementById("programName").value = course.programName;
-          document.getElementById("duration").value = course.duration;
-          costSlider.value = course.cost;
-          costValue.textContent = `Rp ${course.cost}`;
-          document.getElementById("description").value = course.description;
-
-          // Mengubah teks tombol submit menjadi 'Selesai Perubahan'
-          submitButton.textContent = "Selesai Perubahan";
+    
+          if (course) {
+            // Mengisi form dengan data kursus yang akan diedit
+            document.getElementById("programId").value = course.programId;
+            document.getElementById("programName").value = course.programName;
+            document.getElementById("duration").value = course.duration;
+            costInput.value = course.cost / course.duration; // Set biaya per program (biaya total / durasi)
+            costValue.textContent = `Rp ${course.cost.toLocaleString()}`;
+            document.getElementById("description").value = course.description;
+    
+            // Mengubah teks tombol submit menjadi 'Selesai Perubahan'
+            submitButton.textContent = "Selesai Perubahan";
+    
+            // Memperbarui biaya total saat halaman pertama kali dimuat
+            updateTotalCost();
+          } else {
+            alert("Data kursus tidak ditemukan!");
+            window.location.href = "list_courses.html"; // Redirect jika data kursus tidak ditemukan
+          }
+        } else {
+          alert("ID kursus tidak ditemukan!");
+          window.location.href = "list_courses.html"; // Redirect jika tidak ada parameter edit
         }
       }
-
+    
       // Menyimpan data setelah pengeditan
       courseForm.addEventListener("submit", function (event) {
         event.preventDefault();
-
+    
         const programId = document.getElementById("programId").value;
         const programName = document.getElementById("programName").value;
         const duration = document.getElementById("duration").value;
-        const cost = costSlider.value;
+        const cost = costInput.value * duration; // Total biaya = biaya per program * durasi
         const description = document.getElementById("description").value;
-
+    
         if (!programId || !programName || !duration || !description) {
           alert("Semua kolom wajib diisi!");
           return;
         }
-
+    
         const course = {
           programId,
           programName,
@@ -245,27 +225,28 @@
           cost,
           description,
         };
-
+    
         let courses = JSON.parse(localStorage.getItem("courses")) || [];
         const urlParams = new URLSearchParams(window.location.search);
         const editIndex = urlParams.get("edit");
-
+    
         if (editIndex !== null) {
-          courses[editIndex] = course;
+          courses[editIndex] = course; // Update data kursus yang dipilih
+        } else {
+          // Tambahkan kursus baru ke array jika bukan edit
+          courses.push(course);
         }
-
+    
         // Menyimpan kembali data yang telah diubah ke localStorage
         localStorage.setItem("courses", JSON.stringify(courses));
-
+    
         // Mengarahkan kembali ke halaman daftar kursus setelah pengeditan
         window.location.href = "list_courses.html";
       });
-
+    
       // Memuat kursus ketika halaman pertama kali dimuat
-      if (window.location.pathname.includes("input_course.html")) {
-        loadCourseForEditing();
-      }
-
+      loadCourseForEditing();
+    
       // Menangani tombol Batal
       const cancelButton = document.getElementById("cancelButton");
       if (cancelButton) {
@@ -275,5 +256,7 @@
         });
       }
     </script>
+    
+      
   </body>
 </html>

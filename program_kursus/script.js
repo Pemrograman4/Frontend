@@ -2,6 +2,7 @@ const costSlider = document.getElementById('costRange');
 const costValue = document.getElementById('costValue');
 const courseForm = document.getElementById('courseForm');
 const submitButton = document.getElementById('submitButton');  // Tombol submit
+const programIdInput = document.getElementById('programId');
 
 // Menampilkan nilai dari slider biaya secara dinamis
 if (costSlider) {
@@ -9,6 +10,13 @@ if (costSlider) {
         costValue.textContent = `Rp ${costSlider.value}`;
     };
     costValue.textContent = `Rp ${costSlider.value}`;
+}
+
+// Fungsi untuk menghasilkan ID program secara otomatis
+function generateProgramId() {
+    const courses = JSON.parse(localStorage.getItem('courses')) || [];
+    const newId = `ID-${courses.length + 1}`;
+    programIdInput.value = newId;  // Menampilkan ID baru pada input programId
 }
 
 // Menangani pengiriman form untuk menambah kursus baru
@@ -49,6 +57,7 @@ if (courseForm) {
         // Mereset form setelah data disimpan
         courseForm.reset();
         costValue.textContent = 'Rp 100.000';
+        generateProgramId();  // Memperbarui ID program untuk kursus berikutnya
 
         // Mengarahkan kembali ke halaman daftar kursus setelah penyimpanan
         window.location.href = 'list_courses.html';
@@ -102,3 +111,7 @@ if (document.getElementById('courseTable')) {
     loadCourses();
 }
 
+// Generate ID pertama kali ketika halaman dimuat
+if (programIdInput) {
+    generateProgramId();
+}
