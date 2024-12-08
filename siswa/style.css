@@ -1,0 +1,455 @@
+/* CSS untuk responsivitas halaman */
+
+body {
+    font-family: 'Signika', sans-serif;
+    margin: 20px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.btn-add {
+    padding: 10px 15px;
+    background-color: #3085d6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background-color: #255a9e;
+}
+
+#siswaTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#siswaTable th, #siswaTable td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#siswaTable th {
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+#siswaTable td {
+    text-align: center;
+}
+/* Tambahkan CSS untuk tombol edit dan hapus */
+.btn-edit {
+    background-color: #FDA521; /* Warna kuning ke orange */
+    color: #fff; /* Warna teks putih */
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s; /* Transisi perubahan warna */
+}
+
+.btn-edit:hover {
+    background-color: #FFA500; /* Warna oranye saat di-hover */
+}
+
+.btn-delete {
+    background-color: #d33; /* Warna merah */
+    color: #fff; /* Warna teks putih */
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s; /* Transisi perubahan warna */
+}
+
+.btn-delete:hover {
+    background-color: #c00; /* Warna merah gelap saat di-hover */
+}
+
+/* Media Queries untuk Responsif */
+@media (max-width: 1024px) {
+    .btn-edit,
+    .btn-delete {
+        padding: 6px 12px; /* Ukuran lebih kecil pada layar dengan lebar maksimum 1024px */
+        font-size: 14px; /* Ukuran font lebih kecil */
+    }
+}
+
+@media (max-width: 768px) {
+    .btn-edit,
+    .btn-delete {
+        padding: 5px 10px; /* Ukuran lebih kecil pada layar dengan lebar maksimum 768px */
+        font-size: 12px; /* Ukuran font lebih kecil */
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-edit,
+    .btn-delete {
+        padding: 4px 8px; /* Ukuran lebih kecil pada layar dengan lebar maksimum 480px */
+        font-size: 10px; /* Ukuran font lebih kecil */
+    }
+}
+
+
+@media (max-width: 1024px) {
+    .header-buttons {
+        justify-content: center;
+    }
+
+    #siswaTable {
+        font-size: 14px;
+    }
+
+    #siswaTable th, #siswaTable td {
+        padding: 8px;
+    }
+
+    #siswaTable td {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-add {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #siswaTable {
+        font-size: 12px;
+    }
+
+    #siswaTable th, #siswaTable td {
+        padding: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-buttons {
+        padding: 10px;
+    }
+
+    #siswaTable {
+        font-size: 10px;
+    }
+
+    #siswaTable th, #siswaTable td {
+        padding: 4px;
+    }
+
+    #siswaTable td {
+        font-size: 8px;
+    }
+}
+/* tambah data siswa */
+/* CSS untuk responsivitas halaman */
+
+body {
+    font-family: 'Signika', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-buttons button {
+    padding: 10px 20px;
+    background-color: #3085d6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-buttons button:hover {
+    background-color: #255a9e;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .form-buttons button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 5px;
+    }
+
+    .form-group label {
+        font-size: 10px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 10px;
+        padding: 4px;
+    }
+
+    .form-buttons button {
+        font-size: 10px;
+        padding: 6px 12px;
+    }
+}
+/* edit data siswa */
+/* CSS untuk responsivitas halaman */
+
+body {
+    font-family: 'Signika', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-buttons button {
+    padding: 10px 20px;
+    background-color: #3085d6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-buttons button:hover {
+    background-color: #255a9e;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .form-buttons button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 5px;
+    }
+
+    .form-group label {
+        font-size: 10px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 10px;
+        padding: 4px;
+    }
+
+    .form-buttons button {
+        font-size: 10px;
+        padding: 6px 12px;
+    }
+}
