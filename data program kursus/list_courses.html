@@ -145,6 +145,67 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+      // Menentukan biaya berdasarkan ID program
+      const courseCosts = {
+        "ID-1": 350000, // Biaya untuk program dengan ID program1
+        "ID-2": 300000, // Biaya untuk program dengan ID program2
+        "ID-3": 550000, // Biaya untuk program dengan ID program3
+        "ID-4": 600000, // Biaya untuk program dengan ID program3
+        "ID-5": 750000, // Biaya untuk program dengan ID program3
+      };
+
+      // Fungsi untuk menghitung biaya berdasarkan ID program dan durasi
+      function calculateCost(programId, duration) {
+        const costPerProgram = courseCosts[programId]; // Mendapatkan biaya per program berdasarkan ID
+        return costPerProgram * duration; // Menghitung biaya total
+      }
+
+      // Memuat data kursus dan menampilkannya di tabel
+function loadCourses() {
+    const courses = JSON.parse(localStorage.getItem("courses")) || [];
+    const courseList = document.getElementById("courseList");
+
+    // Kosongkan tabel sebelum menambahkan data baru
+    courseList.innerHTML = "";
+
+    courses.forEach((course, index) => {
+        const row = document.createElement("tr");
+
+        // Menampilkan data kursus
+        row.innerHTML = `
+            <td>${course.programId}</td>
+            <td>${course.programName}</td>
+            <td>${course.duration} bulan</td>
+            <td>Rp ${course.cost.toLocaleString()}</td>
+            <td>${course.description}</td>
+            <td>
+                <button class="edit-btn" onclick="editCourse(${index})">Edit</button>
+                <button class="delete-btn" onclick="deleteCourse(${index})">Hapus</button>
+            </td>
+        `;
+        courseList.appendChild(row);
+    });
+}
+
+// Memuat kursus saat halaman dimuat
+document.addEventListener("DOMContentLoaded", loadCourses);
+
+      // Fungsi untuk mengedit kursus
+      function editCourse(index) {
+        window.location.href = `edit_course.html?edit=${index}`;
+      }
+
+      // Fungsi untuk menghapus kursus
+      function deleteCourse(index) {
+        let courses = JSON.parse(localStorage.getItem("courses")) || [];
+        courses.splice(index, 1); // Menghapus kursus berdasarkan index
+        localStorage.setItem("courses", JSON.stringify(courses));
+        loadCourses(); // Memuat ulang daftar kursus
+      }
+
+      // Memuat data kursus saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", loadCourses);
+    </script>
   </body>
 </html>
