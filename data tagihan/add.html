@@ -9,7 +9,7 @@
 <body>
     <header>
         <h1>Tambah Tagihan Siswa</h1>
-        <a href="index.html" class="btn">Kembali</a>
+        <a href="index.html" class="btn" id="kembali-btn">Kembali ke Data Tagihan Siswa</a>
     </header>
     <main>
         <form id="tagihan-form">
@@ -78,14 +78,13 @@
                 status_pembayaran: document.getElementById('status_pembayaran').value,
             };
 
-            // Ambil data yang sudah ada dari Local Storage
+            // Simpan tagihan ke Local Storage (simulasi)
             let tagihanList = JSON.parse(localStorage.getItem('tagihanList')) || [];
             tagihanList.push(tagihan);
-
-            // Simpan kembali ke Local Storage
             localStorage.setItem('tagihanList', JSON.stringify(tagihanList));
 
             alert('Tagihan berhasil disimpan!');
+            // Reset form
             this.reset();
         });
     </script>

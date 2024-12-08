@@ -21,6 +21,7 @@
                     <th>Tanggal Jatuh Tempo</th>
                     <th>Total Tagihan</th>
                     <th>Status Pembayaran</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody id="tagihan-list">
@@ -34,7 +35,7 @@
         
         // Menampilkan data yang diambil dari Local Storage
         const tbody = document.getElementById('tagihan-list');
-        tagihanList.forEach(tagihan => {
+        tagihanList.forEach((tagihan, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${tagihan.id_tagihan}</td>
@@ -43,9 +44,30 @@
                 <td>${tagihan.tanggal_jatuh_tempo}</td>
                 <td>${tagihan.total_tagihan}</td>
                 <td>${tagihan.status_pembayaran}</td>
+                <td>
+                    <button onclick="editTagihan(${index})">Edit</button>
+                    <button onclick="hapusTagihan(${index})">Hapus</button>
+                </td>
             `;
             tbody.appendChild(row);
         });
+
+        // Fungsi untuk mengedit tagihan
+        function editTagihan(index) {
+            const tagihan = tagihanList[index];
+            // Anda dapat menambahkan logika untuk mengisi form dengan data tagihan yang dipilih
+            alert(`Edit Tagihan: ${JSON.stringify(tagihan)}`);
+            // Contoh: navigasi ke halaman edit atau buka modal
+        }
+
+        // Fungsi untuk menghapus tagihan
+        function hapusTagihan(index) {
+            if (confirm("Apakah Anda yakin ingin menghapus tagihan ini?")) {
+                tagihanList.splice(index, 1);
+                localStorage.setItem('tagihanList', JSON.stringify(tagihanList));
+                location.reload(); // Muat ulang halaman untuk memperbarui tampilan
+            }
+        }
     </script>
 </body>
 </html>
