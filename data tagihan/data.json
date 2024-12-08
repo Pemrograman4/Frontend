@@ -1,0 +1,82 @@
+[
+  {
+      "id_tagihan": "T001",
+      "id_siswa": "S001",
+      "id_kursus": "P001",
+      "tanggal_jatuh_tempo": "2024-12-15",
+      "total_tagihan": 1500000,
+      "status_pembayaran": "Lunas"
+  },
+  {
+      "id_tagihan": "T002",
+      "id_siswa": "S002",
+      "id_kursus": "P002",
+      "tanggal_jatuh_tempo": "2024-12-20",
+      "total_tagihan": 2000000,
+      "status_pembayaran": "Belum Lunas"
+  },
+  {
+      "id_tagihan": "T003",
+      "id_siswa": "S003",
+      "id_kursus": "P001",
+      "tanggal_jatuh_tempo": "2024-12-25",
+      "total_tagihan": 1200000,
+      "status_pembayaran": "Lunas"
+  },
+  {
+      "id_tagihan": "T004",
+      "id_siswa": "S004",
+      "id_kursus": "P003",
+      "tanggal_jatuh_tempo": "2024-12-30",
+      "total_tagihan": 1800000,
+      "status_pembayaran": "Belum Lunas"
+  },
+  {
+      "id_tagihan": "T005",
+      "id_siswa": "S005",
+      "id_kursus": "P002",
+      "tanggal_jatuh_tempo": "2024-12-10",
+      "total_tagihan": 1600000,
+      "status_pembayaran": "Lunas"
+  },
+  {
+      "id_tagihan": "T006",
+      "id_siswa": "S006",
+      "id_kursus": "P001",
+      "tanggal_jatuh_tempo": "2024-12-05",
+      "total_tagihan": 1400000,
+      "status_pembayaran": "Belum Lunas"
+  },
+  {
+      "id_tagihan": "T007",
+      "id_siswa": "S007",
+      "id_kursus": "P003",
+      "tanggal_jatuh_tempo": "2024-12-15",
+      "total_tagihan": 1900000,
+      "status_pembayaran": "Lunas"
+  },
+  {
+      "id_tagihan": "T008",
+      "id_siswa": "S008",
+      "id_kursus": "P002",
+      "tanggal_jatuh_tempo": "2024-12-22",
+      "total_tagihan": 1700000,
+      "status_pembayaran": "Belum Lunas"
+  },
+  {
+      "id_tagihan": "T009",
+      "id_siswa": "S009",
+      "id_kursus": "P001",
+      "tanggal_jatuh_tempo": "2024-12-28",
+      "total_tagihan": 1100000,
+      "status_pembayaran": "Lunas"
+  },
+  {
+      "id_tagihan": "T010",
+      "id_siswa": "S010",
+      "id_kursus": "P003",
+      "tanggal_jatuh_tempo": "2024-12-31",
+      "total_tagihan": 2000000,
+      "status_pembayaran": "Belum Lunas"
+  }
+]
