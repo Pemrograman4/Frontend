@@ -97,6 +97,31 @@
             return url.searchParams.get(name);
         }
 
+        // Memuat data siswa dari file JSON ketika halaman dimuat
+        async function loadSiswaData() {
+            try {
+                const response = await fetch('data_siswa.json');
+                const siswaData = await response.json();
+                const id = getUrlParameter('id');
+
+                // Temukan siswa berdasarkan ID
+                const siswa = siswaData.find(s => s.id == id);
+
+                if (siswa) {
+                    document.getElementById('nama').value = siswa.nama;
+                    document.getElementById('alamat').value = siswa.alamat;
+                    document.getElementById('telepon').value = siswa.telepon;
+                    document.getElementById('email').value = siswa.email;
+                    document.getElementById('status').value = siswa.status;
+                }
+            } catch (error) {
+                console.error('Error loading siswa data:', error);
+            }
+        }
+
+        // Panggil fungsi untuk memuat data siswa saat halaman dimuat
+        loadSiswaData();
+
         // Tambahkan event listener ke form
         document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
     </script>
