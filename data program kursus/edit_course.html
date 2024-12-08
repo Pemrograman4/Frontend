@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Program Kursus</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Edit Program Kursus</h1>
+        <form id="editCourseForm">
+            <label for="courseId">ID Program</label>
+            <input type="text" id="courseId" name="courseId" disabled>
+
+            <label for="courseName">Nama Program</label>
+            <input type="text" id="courseName" name="courseName" required>
+
+            <label for="courseDuration">Durasi Program (bulan)</label>
+            <input type="number" id="courseDuration" name="courseDuration" required>
+
+            <label for="courseCost">Biaya Kursus (Rp)</label>
+            <input type="number" id="courseCost" name="courseCost" required>
+
+            <label for="courseDescription">Deskripsi</label>
+            <textarea id="courseDescription" name="courseDescription" required></textarea>
+
+            <button type="submit">Simpan Perubahan</button>
+        </form>
+
+        <a href="index.html" class="back-button">Kembali ke Daftar Kursus</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
