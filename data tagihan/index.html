@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Data Tagihan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* Latar belakang putih */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #004080;
+        }
+        form {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #004080;
+            border-radius: 5px;
+            background-color: #d9e6f2;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: calc(100% - 22px);
+            border: 1px solid #004080;
+            border-radius: 5px;
+        }
+        button {
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 5px;
+            position: relative; /* Untuk efek pop-up */
+            overflow: hidden; /* Menghindari overflow */
+        }
+        button.add {
+            background-color: #004080; /* Warna biru untuk tombol tambah */
+        }
+        button.add:hover {
+            background-color: #003366; /* Warna saat hover */
+            animation: pop 0.2s ease; /* Efek pop-up */
+        }
+        button.edit {
+            background-color: yellow;
+            color: black; /* Warna teks untuk tombol edit */
+        }
+        button.edit:hover {
+            background-color: #e6e600; /* Warna saat hover */
+            animation: pop 0.2s ease; /* Efek pop-up */
+        }
+        button.delete {
+            background-color: red;
+        }
+        button.delete:hover {
+            background-color: #cc0000; /* Warna saat hover */
+            animation: pop 0.2s ease; /* Efek pop-up */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #004080;
+        }
+        th {
+            background-color: #004080;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #d9e6f2;
+        }
+        tr:hover {
+            background-color: #b3c7e6;
+        }
+        .status-lunas {
+            color: green;
+            font-weight: bold;
+        }
+        .status-belum-lunas {
+            color: red;
+            font-weight: bold;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Master Data Tagihan Siswa</h1>
+    <form id="tagihan-form">
+        <input type="text" id="id-tagihan" placeholder="ID Tagihan" required>
+        <select id="id-siswa" required>
+            <option value="">Pilih Siswa</option>
+            <!-- Opsi siswa akan diisi di sini -->
+        </select>
+        <input type="text" id="id-program" placeholder="ID Program" required>
+        <input type="text" id="bulan-tagihan" placeholder="Bulan Tagihan" required>
+        <input type="number" id="total-tagihan" placeholder="Total Tagihan" required>
+        <select id="status-pembayaran" required>
+            <option value="">Status Pembayaran</option>
+            <option value="Lunas">Lunas</option>
+            <option value="Belum Lunas">Belum Lunas</option>
+        </select>
+        <button class="add" type="submit">Tambah Tagihan</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID Tagihan</th>
+                <th>ID Siswa</th>
+                <th>ID Program</th>
+                <th>Bulan Tagihan</th>
+                <th>Total Tagihan</th>
+                <th>Status Pembayaran</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tagihan-list">
+            <!-- Data tagihan akan ditampilkan di sini -->
+        </tbody>
+    </table>
+
+    <script>
+        const tagihanData = [];
+        let editIndex = -1; // Menyimpan index yang sedang diedit
+        
+        // Data JSON siswa
+        const siswaData = [
+            { "id": 1, "nama": "Budi Santoso", "alamat": "Jakarta", "telepon": "08123456789", "email": "budi@email.com", "status": "Aktif" },
+            { "id": 2, "nama": "Siti Aisyah", "alamat": "Bandung", "telepon": "08234567890", "email": "siti@email.com", "status": "Nonaktif" }
+        ];
+
+        // Mengisi pilihan siswa ke dalam dropdown
+        function loadSiswaOptions() {
+            const siswaSelect = document.getElementById('id-siswa');
+            siswaData.forEach(siswa => {
+                const option = document.createElement('option');
+                option.value = siswa.id; // ID siswa
+                option.textContent = siswa.nama; // Nama siswa
+                siswaSelect.appendChild(option);
+            });
+        }
+
+        function displayTagihan() {
+            const tagihanList = document.getElementById('tagihan-list');
+            tagihanList.innerHTML = ''; // Kosongkan tabel sebelum menampilkan data
+            tagihanData.forEach((tagihan, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${tagihan.id_tagihan}</td>
+                    <td>${tagihan.id_siswa}</td>
+                    <td>${tagihan.id_program}</td>
+                    <td>${tagihan.bulan_tagihan}</td>
+                    <td>${tagihan.total_tagihan}</td>
+                    <td class="${tagihan.status_pembayaran === 'Lunas' ? 'status-lunas' : 'status-belum-lunas'}">${tagihan.status_pembayaran}</td>
+                    <td>
+                        <button class="edit" onclick="editTagihan(${index})">Edit</button>
+                        <button class="delete" onclick="deleteTagihan(${index})">Hapus</button>
+                    </td>
+                `;
+                tagihanList.appendChild(row);
+            });
+        }
+
+        function editTagihan(index) {
+            const tagihan = tagihanData[index];
+            document.getElementById('id-tagihan').value = tagihan.id_tagihan;
+            document.getElementById('id-siswa').value = tagihan.id_siswa;
+            document.getElementById('id-program').value = tagihan.id_program;
+            document.getElementById('bulan-tagihan').value = tagihan.bulan_tagihan;
+            document.getElementById('total-tagihan').value = tagihan.total_tagihan;
+            document.getElementById('status-pembayaran').value = tagihan.status_pembayaran;
+            editIndex = index; // Simpan index yang sedang diedit
+        }
+
+        function deleteTagihan(index) {
+            tagihanData.splice(index, 1); // Hapus data dari array
+            displayTagihan(); // Tampilkan ulang data
+        }
+
+        document.getElementById('tagihan-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah reload halaman
+            const idTagihan = document.getElementById('id-tagihan').value;
+            const idSiswa = document.getElementById('id-siswa').value;
+            const idProgram = document.getElementById('id-program').value;
+            const bulanTagihan = document.getElementById('bulan-tagihan').value;
+            const totalTagihan = document.getElementById('total-tagihan').value;
+            const statusPembayaran = document.getElementById('status-pembayaran').value;
+
+            if (editIndex >= 0) {
+                // Jika dalam mode edit, update data
+                tagihanData[editIndex] = {
+                    id_tagihan: idTagihan,
+                    id_siswa: idSiswa,
+                    id_program: idProgram,
+                    bulan_tagihan: bulanTagihan,
+                    total_tagihan: totalTagihan,
+                    status_pembayaran: statusPembayaran
+                };
+                editIndex = -1; // Reset index edit
+            } else {
+                // Menambahkan data tagihan baru ke array
+                tagihanData.push({
+                    id_tagihan: idTagihan,
+                    id_siswa: idSiswa,
+                    id_program: idProgram,
+                    bulan_tagihan: bulanTagihan,
+                    total_tagihan: totalTagihan,
+                    status_pembayaran: statusPembayaran
+                });
+            }
+
+            displayTagihan(); // Tampilkan data tagihan
+            this.reset(); // Reset form
+        });
+
+        // Load opsi siswa saat halaman dimuat
+        loadSiswaOptions();
+    </script>
+</body>
+</html>
