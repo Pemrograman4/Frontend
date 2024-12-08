@@ -6,22 +6,46 @@
     <title>Daftar Pembayaran</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <header class="header">
+      <i class="fa-solid fa-bars"></i>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
     <div class="container">
-      <!-- Header -->
-      <header>
-        <div class="logo">💠</div>
+      <nav class="nav-bar">
         <h1>Daftar Pembayaran</h1>
-        <button class="btn-add" onclick="window.location.href='add.html'">
+        <!-- <button class="btn-add" onclick="window.location.href='add.html'">
           Tambah Pembayaran
-        </button>
-      </header>
+        </button> -->
+      </nav>
 
       <!-- Search Bar -->
       <div class="search-bar">
         <input type="text" id="search" placeholder="Search..." />
-        <button class="search-icon">🔍</button>
+        <button class="search-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </div>
 
       <!-- Daftar Pembayaran -->
@@ -29,7 +53,18 @@
         <!-- Cards akan di-generate dengan JavaScript -->
       </div>
     </div>
-
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i
+        class="fa-solid fa-house"
+        onclick="window.location.href='/index.html'"
+      ></i>
+      <i
+        class="fa-solid fa-plus-circle"
+        onclick="window.location.href='add.html'"
+      ></i>
+      <i class="fa-solid fa-user active"></i>
+    </nav>
     <script>
       // Fungsi untuk format Rupiah
       function formatRupiah(angka) {
@@ -55,34 +90,61 @@
         pembayaranList.innerHTML = "";
 
         pembayaranData.forEach((pembayaran) => {
+          // Membuat elemen kartu
           const card = document.createElement("div");
           card.className = "card";
 
-          card.innerHTML = `
-      <div class="card-info">
-        <p><strong>ID Pembayaran:</strong> ${pembayaran.idPembayaran}</p>
-        <p><strong>ID Siswa:</strong> ${pembayaran.idSiswa}</p>
-        <p><strong>ID Tagihan:</strong> ${pembayaran.idTagihan}</p>
-        <p><strong>Tanggal Pembayaran:</strong> ${formatTanggal(
-          pembayaran.tanggalPembayaran
-        )}</p>
-        <p><strong>Jumlah Pembayaran:</strong> ${formatRupiah(
-          pembayaran.jumlahPembayaran
-        )}</p>
-        <p><strong>Metode Pembayaran:</strong> ${
-          pembayaran.metodePembayaran
-        }</p>
-      </div>
-      <div class="card-actions">
-        <button class="edit-btn" onclick="editPembayaran(${
-          pembayaran.idPembayaran
-        })">✏️ Edit</button>
-        <button class="delete-btn" onclick="hapusPembayaran(${
-          pembayaran.idPembayaran
-        })">🗑️ Hapus</button>
-      </div>
+          // Bagian informasi
+          const cardInfo = document.createElement("div");
+          cardInfo.className = "card-info";
+
+          cardInfo.innerHTML = `
+      <h3><strong class="idPembayaran"> ${pembayaran.idPembayaran}</strong></h3>
+      <medium>${pembayaran.idSiswa}</medium>
+      <h5></h5>
+       <p>
+ <strong> <span style="display: block;">ID Tagihan</strong></span>
+  ${pembayaran.idTagihan}
+</p>
+      
+      <p><strong><span style="display: block;">Tanggal Pembayaran</span></strong> ${formatTanggal(
+        pembayaran.tanggalPembayaran
+      )}</p>
+      
+      <p><strong><span style="display: block;">Jumlah Pembayaran</span></strong> ${formatRupiah(
+        pembayaran.jumlahPembayaran
+      )}</p>
+      
+      <p><strong><span style="display: block;">Metode Pembayaran</span></strong> ${
+        pembayaran.metodePembayaran
+      }</p>
     `;
 
+          // Bagian aksi (tombol edit & hapus)
+          const cardActions = document.createElement("div");
+          cardActions.className = "card-actions";
+
+          // Tombol Edit
+          const editButton = document.createElement("button");
+          editButton.className = "edit-btn";
+          editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+          editButton.onclick = () => editPembayaran(pembayaran.idPembayaran);
+
+          // Tombol Delete
+          const deleteButton = document.createElement("button");
+          deleteButton.className = "delete-btn";
+          deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+          deleteButton.onclick = () => hapusPembayaran(pembayaran.idPembayaran);
+
+          // Tambahkan tombol ke bagian aksi
+          cardActions.appendChild(editButton);
+          cardActions.appendChild(deleteButton);
+
+          // Tambahkan informasi dan aksi ke kartu
+          card.appendChild(cardInfo);
+          card.appendChild(cardActions);
+
+          // Tambahkan kartu ke daftar
           pembayaranList.appendChild(card);
         });
       }
@@ -102,6 +164,40 @@
       }
 
       tampilkanPembayaran();
+
+      // Data Sementara
+      const contohDataPembayaran = [
+        {
+          idPembayaran: "PAY20240812095001",
+          idSiswa: "Siti Aisyah",
+          idTagihan: "T001",
+          tanggalPembayaran: "2024-12-01",
+          jumlahPembayaran: 1500000,
+          metodePembayaran: "Transfer Bank",
+        },
+        {
+          idPembayaran: "PAY20240812105002",
+          idSiswa: "Budi Santoso",
+          idTagihan: "T002",
+          tanggalPembayaran: "2024-12-02",
+          jumlahPembayaran: 2000000,
+          metodePembayaran: "Tunai",
+        },
+        {
+          idPembayaran: "PAY20240812115003",
+          idSiswa: "Aisyah Santoso",
+          idTagihan: "T003",
+          tanggalPembayaran: "2024-12-03",
+          jumlahPembayaran: 1750000,
+          metodePembayaran: "Transfer Bank",
+        },
+      ];
+
+      // Menyimpan data sementara ke localStorage
+      localStorage.setItem(
+        "pembayaranData",
+        JSON.stringify(contohDataPembayaran)
+      );
     </script>
   </body>
 </html>
