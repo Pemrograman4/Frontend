@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Data Program Kursus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 5px 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .edit-btn {
+            background-color: #f0ad4e;
+        }
+
+        .delete-btn {
+            background-color: #d9534f;
+        }
+
+        .edit-btn:hover {
+            background-color: #e9a84e;
+        }
+
+        .delete-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .action-btns {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #costValue {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Master Data Program Kursus</h1>
+        
+        <form id="courseForm">
+            <label for="programId">ID Program:</label>
+            <input type="text" id="programId" required><br><br>
+            
+            <label for="programName">Nama Program:</label>
+            <input type="text" id="programName" required><br><br>
+            
+            <label for="duration">Durasi Program (bulan):</label>
+            <input type="number" id="duration" required><br><br>
+            
+            <label for="cost">Biaya Kursus (Rp):</label>
+            <input type="range" id="cost" min="100000" max="1000000" step="50000" value="100000">
+            <span id="costValue">Rp 0.000</span><br><br>
+
+            <label for="description">Deskripsi Program:</label>
+            <input type="text" id="description" required><br><br>
+            
+            <button type="submit" id="submitButton">Tambah Program</button>
+        </form>
+        
+        <h2>Daftar Program Kursus</h2>
+        <table id="courseTable">
+            <thead>
+                <tr>
+                    <th>ID Program</th>
+                    <th>Nama Program</th>
+                    <th>Durasi Program (bulan)</th>
+                    <th>Biaya Kursus (Rp)</th>
+                    <th>Deskripsi</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data program kursus akan tampil di sini -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
