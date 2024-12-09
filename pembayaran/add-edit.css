@@ -43,6 +43,10 @@ body {
   height: 20px;
 }
 
+.header svg {
+  color: #333;
+}
+
 .header .logo {
   height: 40px;
   margin-right: 10px;
@@ -54,6 +58,7 @@ body {
   font-size: 20px;
   font-weight: medium;
   font-family: "Poppins", sans-serif;
+  margin-top: 20px;
 }
 
 .container {
@@ -88,16 +93,45 @@ body {
     font-family: "Poppins", sans-serif;
   }
   
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc; /* Warna border */
-    border-radius: 8px; /* Membuat sudut input membulat */
-    background-color: #f9f9f9; /* Latar belakang input */
-    font-size: 0.9rem;
-    color: #333;
-    font-family: "Ubuntu", sans-serif;
+ /* Sembunyikan ikon default */
+select {
+  appearance: none; /* Hapus gaya default */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  cursor: pointer;
+}
+
+option {
+  appearance: none; /* Hapus gaya default */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+/* Tambahkan gaya ke opsi */
+.option-icon {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><circle cx="12" cy="12" r="9"></circle></svg>');
+  background-repeat: no-repeat;
+  background-position: left 10px center;
+  padding-left: 30px; /* Spasi untuk ikon */
+  width: 100px;
+}
+
+  
+  select:focus option {
+    background-color: #f1f1f1; /* Warna saat dipilih */
   }
+  
 
   input[type="date"],
   input[type="number"] {
@@ -117,7 +151,7 @@ body {
     outline: none; /* Menghilangkan garis biru default */
     box-shadow: 0 0 5px rgb(0, 151, 178);
   }
-  
+
   button[type="submit"] {
     background-color: #0097b2; /* Warna utama */
     color: #fff; /* Warna teks */
@@ -170,9 +204,5 @@ body {
   }
   
   .nav-bottom .fa-house.active {
-    color: #ffc00a;
-  }
-  
-  .nav-bottom .active-plus{
     color: #ffc00a;
   }
