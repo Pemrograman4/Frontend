@@ -1,111 +1,112 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daftar Pembayaran</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Tagihan</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-  <header class="header">
-    <i class="fa-solid fa-bars"></i>
-    <div class="right-section">
-      <h1 class="title">FASFADE Institute</h1>
-      <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+    <header class="header">
+        <i class="fa-solid fa-bars"></i>
+        <div class="right-section">
+            <h1 class="title">FASFADE Institute</h1>
+            <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+    </header>
+    <div class="container">
+        <nav class="nav-bar">
+            <h1>Data Tagihan Siswa</h1>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Cari Tagihan..." />
+            <button class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+
+        <div id="cardContainer" class="card-container">
+            <!-- Data tagihan akan ditampilkan di sini dalam bentuk card -->
+        </div>
     </div>
-  </header>
-  <div class="container">
-    <nav class="nav-bar">
-      <h1>Data Tagihan Siswa</h1>
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+        <i class="fa-solid fa-plus-circle" onclick="window.location.href='add.html'"></i>
+        <i class="fa-solid fa-user active"></i>
     </nav>
 
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <input type="text" id="search" placeholder="Cari Tagihan..." />
-      <button class="search-icon">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
+    <script>
+        function displayTagihan() {
+            const tagihanData = JSON.parse(localStorage.getItem("tagihanData")) || [];
+            const cardContainer = document.getElementById("cardContainer");
 
-    <div id="cardContainer" class="card-container">
-      <!-- Data tagihan akan ditampilkan di sini dalam bentuk card -->
-    </div>
-  </div>
-  <!-- Bottom Navigation -->
-  <nav class="nav-bottom">
-    <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
-    <i class="fa-solid fa-plus-circle" onclick="window.location.href='add.html'"></i>
-    <i class="fa-solid fa-user active"></i>
-  </nav>
-  <script>
-    function displayTagihan() {
-      const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
-      const cardContainer = document.getElementById("cardContainer");
+            cardContainer.innerHTML = ''; // Clear existing cards
+            tagihanData.forEach((tagihan, index) => {
+                const card = document.createElement("div");
+                card.className = "card";
 
-      cardContainer.innerHTML = ''; // Clear existing cards
-      pembayaranData.forEach((tagihan, index) => {
-        const card = document.createElement("div");
-        card.className = "card";
+                card.innerHTML = `
+                    <div class="card-content">
+                        <p><strong>ID Tagihan:</strong> ${tagihan.idTagihan}</p>
+                        <p><strong>ID Siswa:</strong> ${tagihan.idSiswa}</p>
+                        <p><strong>Program:</strong> ${tagihan.program}</p>
+                        <p><strong>Tanggal Tagihan:</strong> ${tagihan.tanggalTagihan}</p>
+                        <p><strong>Total Tagihan:</strong> ${tagihan.totalTagihan}</p>
+                        <p><strong>Status Tagihan:</strong> ${tagihan.statusTagihan}</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="edit-btn" onclick="editTagihan('${tagihan.idTagihan}')">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="delete-btn" onclick="hapusTagihan(${index})">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
 
-        card.innerHTML = `
-          <div class="card-content">
-            <p><strong>ID Tagihan:</strong> ${tagihan.idTagihan}</p>
-            <p><strong>ID Siswa:</strong> ${tagihan.idSiswa}</p>
-            <p><strong>Program:</strong> ${tagihan.program}</p>
-            <p><strong>Tanggal Tagihan:</strong> ${tagihan.tanggalTagihan}</p>
-            <p><strong>Total Tagihan:</strong> ${tagihan.totalTagihan}</p>
-            <p><strong>Status Pembayaran:</strong> ${tagihan.statusPembayaran}</p>
-          </div>
-          <div class="card-actions">
-            <button class="edit-btn" onclick="editPembayaran(${tagihan.idTagihan})">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            <button class="delete-btn" onclick="hapusPembayaran(${index})">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
-          </div>
-        `;
-
-        cardContainer.appendChild(card);
-      });
-    }
-
-    function editPembayaran(id) {
-      const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
-      const tagihanToEdit = pembayaranData.find(tagihan => tagihan.idTagihan == id);
-      if (tagihanToEdit) {
-        const queryString = new URLSearchParams(tagihanToEdit).toString();
-        window.location.href = `add.html?${queryString}`;
-      }
-    }
-
-    function hapusPembayaran(index) {
-      Swal.fire({
-        title: 'Konfirmasi Hapus',
-        text: "Apakah Anda yakin ingin menghapus tagihan ini?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
-          // Hapus data berdasarkan index
-          pembayaranData.splice(index, 1);
-          // Simpan kembali ke localStorage
-          localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
-          // Tampilkan kembali data setelah penghapusan
-          displayTagihan();
-          Swal.fire('Dihapus!', 'Tagihan telah dihapus.', 'success');
+                cardContainer.appendChild(card);
+            });
         }
-      });
-    }
 
-    // Panggil fungsi untuk menampilkan tagihan saat halaman dimuat
-    window.onload = displayTagihan;
-  </script>
+        function editTagihan(id) {
+            const tagihanData = JSON.parse(localStorage.getItem("tagihanData")) || [];
+            const tagihanToEdit = tagihanData.find(tagihan => tagihan.idTagihan === id);
+            if (tagihanToEdit) {
+                const queryString = new URLSearchParams(tagihanToEdit).toString();
+                window.location.href = `add.html?${queryString}`;
+            }
+        }
+
+        function hapusTagihan(index) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus tagihan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let tagihanData = JSON.parse(localStorage.getItem("tagihanData")) || [];
+                    // Hapus data berdasarkan index
+                    tagihanData.splice(index, 1);
+                    // Simpan kembali ke localStorage
+                    localStorage.setItem("tagihanData", JSON.stringify(tagihanData));
+                    // Tampilkan kembali data setelah penghapusan
+                    displayTagihan();
+                    Swal.fire('Terhapus!', 'Tagihan telah dihapus.', 'success');
+                }
+            });
+        }
+
+        // Panggil fungsi displayTagihan saat halaman dimuat
+        window.onload = displayTagihan;
+    </script>
 </body>
 </html>
