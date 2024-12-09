@@ -133,8 +133,7 @@ option {
   }
   
 
-  input[type="date"],
-  input[type="number"] {
+  input {
     width: 94%;
     padding: 10px;
     border: 1px solid #ccc; /* Warna border */
@@ -161,6 +160,7 @@ option {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    width: 100%;
     transition: background-color 0.3s ease;
   }
   
