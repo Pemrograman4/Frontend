@@ -73,66 +73,43 @@
 
     <script src="script.js"></script>
     <script>
-      // Menentukan biaya kursus berdasarkan ID program yang dapat dimodifikasi
-let courseCosts = {};
+        // Fungsi untuk menambahkan program kursus
+        document.getElementById("courseForm").addEventListener("submit", function (e) {
+          e.preventDefault(); // Mencegah submit default form
+  
+          // Ambil data dari form
+          const programId = document.getElementById("programId").value;
+          const programName = document.getElementById("programName").value;
+          const duration = parseInt(document.getElementById("duration").value);
+          const description = document.getElementById("description").value;
+          const programCost = parseInt(document.getElementById("programCost").value);
+  
+          // Validasi form
+          if (!programId || !programName || !duration || !description || !programCost) {
+            alert("Semua field harus diisi dengan benar!");
+            return;
+          }
+  
+          // Ambil data kursus dari localStorage dan tambahkan data baru
+          let courses = JSON.parse(localStorage.getItem("courses")) || [];
+          courses.push({
+            programId,
+            programName,
+            duration,
+            description,
+            cost: programCost * duration
+          });
+  
+          // Simpan kembali ke localStorage
+          localStorage.setItem("courses", JSON.stringify(courses));
+  
+          // Setelah menambahkan data kursus ke localStorage
+localStorage.setItem("courses", JSON.stringify(courses));
 
-// Fungsi untuk menghitung biaya berdasarkan ID program dan durasi
-function calculateCost(programId, duration) {
-    const costPerProgram = courseCosts[programId]; // Mendapatkan biaya berdasarkan ID program
-    if (!costPerProgram) {
-        return "Biaya program tidak ditemukan"; // Menangani jika programId belum ada dalam data biaya
-    }
-    return costPerProgram * duration;
-}
+// Redirect ke halaman daftar kursus
+window.location.href = "list_courses.html"; // Ganti dengan halaman daftar kursus yang benar
 
-// Fungsi untuk menampilkan biaya kursus ketika durasi atau biaya diubah
-document.getElementById("duration").addEventListener("input", function () {
-    const duration = parseInt(this.value);
-    const programId = document.getElementById("programId").value;
-    const programCost = document.getElementById("programCost").value;
-
-    if (programId && programCost) {
-        // Perbarui biaya jika ada perubahan
-        courseCosts[programId] = parseInt(programCost); // Set biaya kursus untuk programId yang dipilih
-        const cost = calculateCost(programId, duration);
-        document.getElementById("costValue").textContent = `Rp ${cost.toLocaleString()}`;
-    }
-});
-
-// Menangani pengiriman form untuk menambahkan kursus
-document.getElementById("courseForm").addEventListener("submit", function (e) {
-    e.preventDefault(); // Mencegah submit default form
-
-    // Ambil data dari form
-    const programId = document.getElementById("programId").value;
-    const programName = document.getElementById("programName").value;
-    const duration = parseInt(document.getElementById("duration").value);
-    const description = document.getElementById("description").value;
-
-    // Pastikan biaya program sudah ada di courseCosts
-    const programCost = document.getElementById("programCost").value;
-    courseCosts[programId] = parseInt(programCost); // Set biaya kursus jika belum ada
-
-    // Hitung biaya kursus
-    const cost = calculateCost(programId, duration);
-
-    // Ambil data kursus dari localStorage dan tambahkan data baru
-    let courses = JSON.parse(localStorage.getItem("courses")) || [];
-    courses.push({
-        programId,
-        programName,
-        duration,
-        description,
-        cost
-    });
-
-    // Simpan data kursus ke localStorage
-    localStorage.setItem("courses", JSON.stringify(courses));
-
-    // Redirect ke daftar kursus
-    window.location.href = "list_courses.html"; // Halaman daftar kursus
-});
-
-    </script>
+        });
+      </script>
 </body>
 </html>

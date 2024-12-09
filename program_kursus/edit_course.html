@@ -16,7 +16,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,7 +23,6 @@
       rel="stylesheet"
     />
   </head>
-    <title>Edit Kursus</title>
   <body>
     <header class="header">
       <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
@@ -47,15 +45,13 @@
             <input type="number" id="duration" required><br><br></span>
         
         <span><label for="programCost">Biaya Kursus:</label>
-            <input type="number" id="programCost" min="100000" step="10000" value="100000" required>
-            <span id="costValue">Rp 100.000</span><br><br></span>
+            <span id="programCost" class="costValue">Rp 100.000</span><br><br></span>
         
         <span><label for="description">Deskripsi Program:</label>
             <textarea id="description" required></textarea><br><br></span>
         
         <button type="submit" id="submitButton">Simpan Program</button>
-    </form>       
-      <!-- Bottom Navigation -->
+    </form>
     <nav class="nav-bottom">
       <i
         class="fa-solid fa-house"
@@ -70,112 +66,78 @@
     </div>
 
     <script>
-      const costInput = document.getElementById("programCost"); // Input biaya program
-      const costValue = document.getElementById("costValue");
-      const durationInput = document.getElementById("duration");
-      const courseForm = document.getElementById("editCourseForm");
-      const submitButton = document.querySelector("button");
+      // Mengambil parameter 'edit' dari URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const editIndex = urlParams.get("edit");
     
-      // Fungsi untuk menghitung total biaya berdasarkan durasi dan biaya per bulan
-      function updateTotalCost() {
-        const duration = parseInt(durationInput.value) || 0;
-        const costPerProgram = parseInt(costInput.value) || 0;
-        const totalCost = costPerProgram * duration;
-        costValue.textContent = `Rp ${totalCost.toLocaleString()}`;
+      // Memuat data kursus untuk diedit
+      const courses = JSON.parse(localStorage.getItem("courses")) || [];
+      const course = courses[editIndex];
+    
+      // Cek jika course ada di localStorage
+      if (!course) {
+        alert('Data tidak ditemukan!');
+        window.location.href = 'list_courses.html'; // Jika data tidak ada, kembali ke halaman daftar kursus
       }
     
-      // Menampilkan nilai dari input biaya secara dinamis
-      costInput.addEventListener("input", function () {
-        updateTotalCost(); // Memperbarui biaya total saat biaya program berubah
-      });
+      // Isi form dengan data kursus
+      document.getElementById("programName").value = course.programName;
+      document.getElementById("duration").value = course.duration;
+      document.getElementById("description").value = course.description;
+      document.getElementById("programId").value = course.programId; // Menampilkan ID Program
     
-      // Memuat data kursus untuk pengeditan jika parameter 'edit' ada di URL
-      function loadCourseForEditing() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const editIndex = urlParams.get("edit");
+      // Menampilkan biaya awal pada elemen span
+      const programCost = calculateCost(course.programId, course.duration); // Menghitung biaya berdasarkan ID dan durasi kursus
+      document.getElementById("programCost").textContent = "Rp " + formatCurrency(programCost);
     
-        if (editIndex !== null) {
-          let courses = JSON.parse(localStorage.getItem("courses")) || [];
-          const course = courses[editIndex];
-    
-          if (course) {
-            // Mengisi form dengan data kursus yang akan diedit
-            document.getElementById("programId").value = course.programId;
-            document.getElementById("programName").value = course.programName;
-            document.getElementById("duration").value = course.duration;
-            costInput.value = course.cost / course.duration; // Set biaya per program (biaya total / durasi)
-            costValue.textContent = `Rp ${course.cost.toLocaleString()}`;
-            document.getElementById("description").value = course.description;
-    
-            // Mengubah teks tombol submit menjadi 'Selesai Perubahan'
-            submitButton.textContent = "Selesai Perubahan";
-    
-            // Memperbarui biaya total saat halaman pertama kali dimuat
-            updateTotalCost();
-          } else {
-            alert("Data kursus tidak ditemukan!");
-            window.location.href = "list_courses.html"; // Redirect jika data kursus tidak ditemukan
-          }
-        } else {
-          alert("ID kursus tidak ditemukan!");
-          window.location.href = "list_courses.html"; // Redirect jika tidak ada parameter edit
-        }
-      }
-    
-      // Menyimpan data setelah pengeditan
-      courseForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-    
-        const programId = document.getElementById("programId").value;
-        const programName = document.getElementById("programName").value;
-        const duration = document.getElementById("duration").value;
-        const cost = costInput.value * duration; // Total biaya = biaya per program * durasi
-        const description = document.getElementById("description").value;
-    
-        if (!programId || !programName || !duration || !description) {
-          alert("Semua kolom wajib diisi!");
-          return;
-        }
-    
-        const course = {
-          programId,
-          programName,
-          duration,
-          cost,
-          description,
+      // Fungsi untuk menghitung biaya berdasarkan ID program dan durasi
+      function calculateCost(programId, duration) {
+        const courseCosts = {
+          "ID-1": 1000000,
+          "ID-2": 500000,
+          "ID-3": 600000,
+          "ID-4": 650000,
+          "ID-5": 750000,
         };
     
-        let courses = JSON.parse(localStorage.getItem("courses")) || [];
-        const urlParams = new URLSearchParams(window.location.search);
-        const editIndex = urlParams.get("edit");
+        const costPerProgram = courseCosts[programId];
+        return costPerProgram * duration * 1; // Menggandakan biaya sesuai durasi
+      }
     
-        if (editIndex !== null) {
-          courses[editIndex] = course; // Update data kursus yang dipilih
-        } else {
-          // Tambahkan kursus baru ke array jika bukan edit
-          courses.push(course);
-        }
+      // Fungsi untuk memformat nilai menjadi format mata uang (Rupiah)
+      function formatCurrency(amount) {
+        return Number(amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }).replace('Rp', '').trim();
+      }
     
-        // Menyimpan kembali data yang telah diubah ke localStorage
-        localStorage.setItem("courses", JSON.stringify(courses));
-    
-        // Mengarahkan kembali ke halaman daftar kursus setelah pengeditan
-        window.location.href = "list_courses.html";
+      // Perbarui biaya saat durasi berubah
+      document.getElementById("duration").addEventListener("input", function () {
+        const duration = document.getElementById("duration").value;
+        const cost = calculateCost(course.programId, duration); // Menghitung biaya baru
+        document.getElementById("programCost").textContent = "Rp " + formatCurrency(cost);
       });
     
-      // Memuat kursus ketika halaman pertama kali dimuat
-      loadCourseForEditing();
+      // Ketika form disubmit, perbarui data kursus
+      document.getElementById("courseForm").addEventListener("submit", function (e) {
+        e.preventDefault();
     
-      // Menangani tombol Batal
-      const cancelButton = document.getElementById("cancelButton");
-      if (cancelButton) {
-        cancelButton.addEventListener("click", function () {
-          // Mengarahkan kembali ke halaman daftar kursus tanpa menyimpan perubahan
-          window.location.href = "list_courses.html";
-        });
-      }
+        // Ambil data baru dari form
+        const updatedCourse = {
+          programId: document.getElementById("programId").value,
+          programName: document.getElementById("programName").value,
+          duration: document.getElementById("duration").value,
+          description: document.getElementById("description").value,
+          cost: calculateCost(course.programId, document.getElementById("duration").value), // Menghitung biaya baru
+        };
+    
+        // Update data kursus di array
+        courses[editIndex] = updatedCourse;
+    
+        // Simpan kembali ke localStorage
+        localStorage.setItem("courses", JSON.stringify(courses));
+    
+        // Arahkan kembali ke halaman daftar kursus setelah data diperbarui
+        window.location.href = "list_courses.html"; // Sesuaikan dengan halaman list kursus
+      });
     </script>
-    
-      
   </body>
 </html>
