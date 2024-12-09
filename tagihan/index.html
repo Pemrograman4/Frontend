@@ -51,13 +51,19 @@
                 const card = document.createElement("div");
                 card.className = "card";
 
+                // Format angka menjadi Rupiah
+                const formattedTotalTagihan = parseInt(tagihan.totalTagihan).toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                });
+
                 card.innerHTML = `
                     <div class="card-content">
                         <p><strong>ID Tagihan:</strong> ${tagihan.idTagihan}</p>
                         <p><strong>ID Siswa:</strong> ${tagihan.idSiswa}</p>
                         <p><strong>Program:</strong> ${tagihan.program}</p>
                         <p><strong>Tanggal Tagihan:</strong> ${tagihan.tanggalTagihan}</p>
-                        <p><strong>Total Tagihan:</strong> ${tagihan.totalTagihan}</p>
+                        <p><strong>Total Tagihan:</strong> ${formattedTotalTagihan}</p>
                         <p><strong>Status Tagihan:</strong> ${tagihan.statusTagihan}</p>
                     </div>
                     <div class="card-actions">
