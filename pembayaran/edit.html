@@ -4,34 +4,75 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Data Pembayaran</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="add-edit.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <header class="header">
+      <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
     <div class="container">
       <h1>Edit Data Pembayaran</h1>
       <form id="formEditPembayaran">
         <input type="hidden" id="idPembayaran" />
+        <span>
         <label for="idSiswa">Nama Siswa</label>
         <select id="idSiswa" required>
           <option value="">Pilih Siswa</option>
-        </select>
+        </select></span>
+        <span>
         <label for="idTagihan">ID Tagihan:</label>
         <select id="idTagihan" required>
           <option value="">Pilih Tagihan</option>
-        </select>
+        </select></span>
+        <span>
         <label for="tanggalPembayaran">Tanggal Pembayaran:</label>
-        <input type="date" id="tanggalPembayaran" required />
+        <input type="date" id="tanggalPembayaran" required /></span>
+        <span>
         <label for="jumlahPembayaran">Jumlah Pembayaran:</label>
-        <input type="number" id="jumlahPembayaran" required />
+        <input type="number" id="jumlahPembayaran" required /></span>
+        <span>
         <label for="metodePembayaran">Metode Pembayaran:</label>
         <select id="metodePembayaran" required>
           <option value="Transfer Bank">Transfer Bank</option>
           <option value="Tunai">Tunai</option>
-        </select>
+        </select></span>
         <button type="submit">Simpan</button>
       </form>
     </div>
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i
+        class="fa-solid fa-house"
+        onclick="window.location.href='/index.html'"
+      ></i>
+      <i
+        class="fa-solid fa-plus-circle active-plus"
+        onclick="window.location.href='#'"
+      ></i>
+      <i class="fa-solid fa-user active"></i>
+    </nav>
     <script>
       // Fungsi format Rupiah
       function formatRupiah(angka) {

@@ -1,91 +1,111 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Tagihan Siswa</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar Pembayaran</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Data Tagihan Siswa</h1>
-        <table id="dataTagihan">
-            <thead>
-                <tr>
-                    <th>ID Tagihan</th>
-                    <th>ID Siswa</th>
-                    <th>Program</th>
-                    <th>Tanggal Tagihan</th>
-                    <th>Total Tagihan</th>
-                    <th>Status Pembayaran</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data tagihan akan ditampilkan di sini -->
-            </tbody>
-        </table>
-        <button onclick="window.location.href='add.html'">Tambah Tagihan</button>
+  <header class="header">
+    <i class="fa-solid fa-bars"></i>
+    <div class="right-section">
+      <h1 class="title">FASFADE Institute</h1>
+      <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
     </div>
-    <script>
-        function displayTagihan() {
-            const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
-            const tableBody = document.getElementById("dataTagihan").getElementsByTagName("tbody")[0];
+  </header>
+  <div class="container">
+    <nav class="nav-bar">
+      <h1>Data Tagihan Siswa</h1>
+    </nav>
 
-            tableBody.innerHTML = ''; // Clear existing rows
-            pembayaranData.forEach((tagihan, index) => {
-                const row = tableBody.insertRow();
-                row.insertCell(0).textContent = tagihan.idTagihan;
-                row.insertCell(1).textContent = tagihan.idSiswa;
-                row.insertCell(2).textContent = tagihan.program;
-                row.insertCell(3).textContent = tagihan.tanggalTagihan;
-                row.insertCell(4).textContent = tagihan.totalTagihan;
-                row.insertCell(5).textContent = tagihan.statusPembayaran;
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Cari Tagihan..." />
+      <button class="search-icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
 
-                // Create action buttons
-                const actionsCell = row.insertCell(6);
-                const editButton = document.createElement("button");
-                editButton.textContent = "Edit";
-                editButton.onclick = () => editTagihan(index);
-                actionsCell.appendChild(editButton);
+    <div id="cardContainer" class="card-container">
+      <!-- Data tagihan akan ditampilkan di sini dalam bentuk card -->
+    </div>
+  </div>
+  <!-- Bottom Navigation -->
+  <nav class="nav-bottom">
+    <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+    <i class="fa-solid fa-plus-circle" onclick="window.location.href='add.html'"></i>
+    <i class="fa-solid fa-user active"></i>
+  </nav>
+  <script>
+    function displayTagihan() {
+      const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
+      const cardContainer = document.getElementById("cardContainer");
 
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Hapus";
-                deleteButton.onclick = () => deleteTagihan(index);
-                actionsCell.appendChild(deleteButton);
-            });
+      cardContainer.innerHTML = ''; // Clear existing cards
+      pembayaranData.forEach((tagihan, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <div class="card-content">
+            <p><strong>ID Tagihan:</strong> ${tagihan.idTagihan}</p>
+            <p><strong>ID Siswa:</strong> ${tagihan.idSiswa}</p>
+            <p><strong>Program:</strong> ${tagihan.program}</p>
+            <p><strong>Tanggal Tagihan:</strong> ${tagihan.tanggalTagihan}</p>
+            <p><strong>Total Tagihan:</strong> ${tagihan.totalTagihan}</p>
+            <p><strong>Status Pembayaran:</strong> ${tagihan.statusPembayaran}</p>
+          </div>
+          <div class="card-actions">
+            <button class="edit-btn" onclick="editPembayaran(${tagihan.idTagihan})">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="delete-btn" onclick="hapusPembayaran(${index})">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+
+        cardContainer.appendChild(card);
+      });
+    }
+
+    function editPembayaran(id) {
+      const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
+      const tagihanToEdit = pembayaranData.find(tagihan => tagihan.idTagihan == id);
+      if (tagihanToEdit) {
+        const queryString = new URLSearchParams(tagihanToEdit).toString();
+        window.location.href = `add.html?${queryString}`;
+      }
+    }
+
+    function hapusPembayaran(index) {
+      Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: "Apakah Anda yakin ingin menghapus tagihan ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
+          // Hapus data berdasarkan index
+          pembayaranData.splice(index, 1);
+          // Simpan kembali ke localStorage
+          localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
+          // Tampilkan kembali data setelah penghapusan
+          displayTagihan();
+          Swal.fire('Dihapus!', 'Tagihan telah dihapus.', 'success');
         }
+      });
+    }
 
-        function editTagihan(index) {
-            const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData"));
-            const tagihan = pembayaranData[index];
-
-            // Redirect to edit page with tagihan data
-            localStorage.setItem("editTagihan", JSON.stringify(tagihan));
-            window.location.href = 'add.html';
-        }
-
-        function deleteTagihan(index) {
-            Swal.fire({
-                title: 'Konfirmasi Hapus',
-                text: "Apakah Anda yakin ingin menghapus tagihan ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData"));
-                    pembayaranData.splice(index, 1); // Remove the item
-                    localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
-                    displayTagihan(); // Refresh the table
-                    Swal.fire('Terhapus!', 'Tagihan telah dihapus.', 'success');
-                }
-            });
-        }
-
-        window.onload = displayTagihan;
-    </script>
+    // Panggil fungsi untuk menampilkan tagihan saat halaman dimuat
+    window.onload = displayTagihan;
+  </script>
 </body>
 </html>

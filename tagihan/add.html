@@ -4,10 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tambah Data Pembayaran</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="add-edit.css" /> <!-- Menghubungkan CSS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
+    <header class="header">
+        <i class="fa-solid fa-arrow-left" onclick="window.location.href='index.html'"></i>
+        <div class="right-section">
+            <h1 class="title">FASFADE Institute</h1>
+            <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+    </header>
     <div class="container">
         <h1>Tambah Data Pembayaran</h1>
         <form id="formTambahPembayaran">
@@ -39,31 +47,19 @@
                 <option value="Belum Lunas" selected>Belum Lunas</option>
                 <option value="Lunas">Lunas</option>
             </select>
-            <button type="submit">Tambah</button>
+            <button type="submit" id="submitBtn">Tambah</button>
+            <button type="button" id="saveBtn" style="display: none;">Simpan</button>
+            <button type="button" id="cancelBtn" style="display: none;">Batal</button>
         </form>
-        <button onclick="window.location.href='index.html'">Kembali ke Data Tagihan Siswa</button>
     </div>
+
+    <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+        <i class="fa-solid fa-plus-circle active-plus" onclick="window.location.href='#'" style="color: #ffc00a;"></i>
+        <i class="fa-solid fa-user active"></i>
+    </nav>
+
     <script>
-        function generateIdTagihan() {
-            const tagihanData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
-            const newId = tagihanData.length ? Math.max(...tagihanData.map(tagihan => tagihan.idTagihan)) + 1 : 1;
-            document.getElementById("idTagihan").value = newId;
-        }
-
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-            }).format(angka);
-        }
-
-        function formatTanggalIndonesia(tanggal) {
-            const date = new Date(tanggal);
-            const options = { day: "2-digit", month: "long", year: "numeric" };
-            return date.toLocaleDateString("id-ID", options);
-        }
-
         function populateSelects() {
             const siswaData = JSON.parse(localStorage.getItem("siswaData")) || [];
             const idSiswaSelect = document.getElementById("idSiswa");
@@ -75,9 +71,33 @@
             });
         }
 
+        function loadDataForEdit() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idTagihan = urlParams.get("idTagihan");
+            const idSiswa = urlParams.get("idSiswa");
+            const program = urlParams.get("program");
+            const tanggalTagihan = urlParams.get("tanggalTagihan");
+            const totalTagihan = urlParams.get("totalTagihan");
+            const statusPembayaran = urlParams.get("statusPembayaran");
+
+            if (idTagihan) {
+                document.getElementById("idTagihan").value = idTagihan;
+                document.getElementById("idSiswa").value = idSiswa;
+                document.getElementById("program").value = program;
+                document.getElementById("tanggalTagihan").value = tanggalTagihan;
+                document.getElementById("totalTagihan").value = totalTagihan;
+                document.getElementById("statusPembayaran").value = statusPembayaran;
+
+                // Menampilkan tombol Simpan dan Batal
+                document.getElementById("submitBtn").style.display = "none";
+                document.getElementById("saveBtn").style.display = "inline-block";
+                document.getElementById("cancelBtn").style.display = "inline-block";
+            }
+        }
+
         window.onload = function() {
             populateSelects();
-            generateIdTagihan();
+            loadDataForEdit();
         };
 
         document.getElementById("formTambahPembayaran").addEventListener("submit", function (event) {
@@ -92,24 +112,49 @@
 
             let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
 
-            pembayaranData.push({
-                idTagihan,
-                idSiswa,
-                program,
-                tanggalTagihan: formatTanggalIndonesia(tanggalTagihan),
-                totalTagihan: formatRupiah(totalTagihan),
-                statusPembayaran,
-            });
+            if (idTagihan) {
+                // Update existing tagihan
+                const index = pembayaranData.findIndex(tagihan => tagihan.idTagihan == idTagihan);
+                if (index !== -1) {
+                    pembayaranData[index] = {
+                        idTagihan,
+                        idSiswa,
+                        program,
+                        tanggalTagihan: tanggalTagihan,
+                        totalTagihan: totalTagihan,
+                        statusPembayaran,
+                    };
+                }
+            } else {
+                // Generate new ID if adding new tagihan
+                const newId = pembayaranData.length ? Math.max(...pembayaranData.map(tagihan => tagihan.idTagihan)) + 1 : 1;
+                pembayaranData.push({
+                    idTagihan: newId,
+                    idSiswa,
+                    program,
+                    tanggalTagihan: tanggalTagihan,
+                    totalTagihan: totalTagihan,
+                    statusPembayaran,
+                });
+            }
 
             localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
 
             Swal.fire({
                 title: "Berhasil!",
-                text: "Data pembayaran berhasil ditambahkan.",
+                text: "Data pembayaran berhasil disimpan.",
                 icon: "success",
             }).then(() => {
                 window.location.href = "index.html";
             });
+        });
+
+        document.getElementById("saveBtn").addEventListener("click", function() {
+            document.getElementById("formTambahPembayaran").dispatchEvent(new Event('submit'));
+        });
+
+        document.getElementById("cancelBtn").addEventListener("click", function() {
+            window.location.href = "index.html";
         });
     </script>
 </body>
