@@ -1,73 +1,91 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Data Tagihan Siswa</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <header>
+    <div class="container">
         <h1>Data Tagihan Siswa</h1>
-        <a href="add.html" class="btn">Tambah Tagihan</a>
-    </header>
-    <main>
-        <table>
+        <table id="dataTagihan">
             <thead>
                 <tr>
                     <th>ID Tagihan</th>
                     <th>ID Siswa</th>
-                    <th>ID Kursus</th>
-                    <th>Tanggal Jatuh Tempo</th>
+                    <th>Program</th>
+                    <th>Tanggal Tagihan</th>
                     <th>Total Tagihan</th>
                     <th>Status Pembayaran</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody id="tagihan-list">
+            <tbody>
                 <!-- Data tagihan akan ditampilkan di sini -->
             </tbody>
         </table>
-    </main>
+        <button onclick="window.location.href='add.html'">Tambah Tagihan</button>
+    </div>
     <script>
-        // Mengambil data dari Local Storage
-        const tagihanList = JSON.parse(localStorage.getItem('tagihanList')) || [];
-        
-        // Menampilkan data yang diambil dari Local Storage
-        const tbody = document.getElementById('tagihan-list');
-        tagihanList.forEach((tagihan, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${tagihan.id_tagihan}</td>
-                <td>${tagihan.id_siswa}</td>
-                <td>${tagihan.id_kursus}</td>
-                <td>${tagihan.tanggal_jatuh_tempo}</td>
-                <td>${tagihan.total_tagihan}</td>
-                <td>${tagihan.status_pembayaran}</td>
-                <td>
-                    <button onclick="editTagihan(${index})">Edit</button>
-                    <button onclick="hapusTagihan(${index})">Hapus</button>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
+        function displayTagihan() {
+            const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
+            const tableBody = document.getElementById("dataTagihan").getElementsByTagName("tbody")[0];
 
-        // Fungsi untuk mengedit tagihan
+            tableBody.innerHTML = ''; // Clear existing rows
+            pembayaranData.forEach((tagihan, index) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = tagihan.idTagihan;
+                row.insertCell(1).textContent = tagihan.idSiswa;
+                row.insertCell(2).textContent = tagihan.program;
+                row.insertCell(3).textContent = tagihan.tanggalTagihan;
+                row.insertCell(4).textContent = tagihan.totalTagihan;
+                row.insertCell(5).textContent = tagihan.statusPembayaran;
+
+                // Create action buttons
+                const actionsCell = row.insertCell(6);
+                const editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+                editButton.onclick = () => editTagihan(index);
+                actionsCell.appendChild(editButton);
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Hapus";
+                deleteButton.onclick = () => deleteTagihan(index);
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
         function editTagihan(index) {
-            const tagihan = tagihanList[index];
-            // Anda dapat menambahkan logika untuk mengisi form dengan data tagihan yang dipilih
-            alert(`Edit Tagihan: ${JSON.stringify(tagihan)}`);
-            // Contoh: navigasi ke halaman edit atau buka modal
+            const pembayaranData = JSON.parse(localStorage.getItem("pembayaranData"));
+            const tagihan = pembayaranData[index];
+
+            // Redirect to edit page with tagihan data
+            localStorage.setItem("editTagihan", JSON.stringify(tagihan));
+            window.location.href = 'add.html';
         }
 
-        // Fungsi untuk menghapus tagihan
-        function hapusTagihan(index) {
-            if (confirm("Apakah Anda yakin ingin menghapus tagihan ini?")) {
-                tagihanList.splice(index, 1);
-                localStorage.setItem('tagihanList', JSON.stringify(tagihanList));
-                location.reload(); // Muat ulang halaman untuk memperbarui tampilan
-            }
+        function deleteTagihan(index) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus tagihan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData"));
+                    pembayaranData.splice(index, 1); // Remove the item
+                    localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
+                    displayTagihan(); // Refresh the table
+                    Swal.fire('Terhapus!', 'Tagihan telah dihapus.', 'success');
+                }
+            });
         }
+
+        window.onload = displayTagihan;
     </script>
 </body>
 </html>

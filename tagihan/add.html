@@ -1,91 +1,115 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Tambah Tagihan</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Data Pembayaran</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <header>
-        <h1>Tambah Tagihan Siswa</h1>
-        <a href="index.html" class="btn" id="kembali-btn">Kembali ke Data Tagihan Siswa</a>
-    </header>
-    <main>
-        <form id="tagihan-form">
-            <label for="id_tagihan">ID Tagihan:</label>
-            <select id="id_tagihan" required>
-                <option value="">Pilih ID Tagihan</option>
-                <option value="T001">T001</option>
-                <option value="T002">T002</option>
-                <option value="T003">T003</option>
-                <option value="T004">T004</option>
-                <option value="T005">T005</option>
-                <option value="T006">T006</option>
-                <option value="T007">T007</option>
-                <option value="T008">T008</option>
-                <option value="T009">T009</option>
-                <option value="T010">T010</option>
+    <div class="container">
+        <h1>Tambah Data Pembayaran</h1>
+        <form id="formTambahPembayaran">
+            <input type="hidden" id="idTagihan" required />
+            <label for="idSiswa">ID Siswa:</label>
+            <select id="idSiswa" required>
+                <option value="">Pilih Siswa</option>
             </select>
-
-            <label for="id_siswa">ID Siswa:</label>
-            <select id="id_siswa" required>
-                <option value="">Pilih ID Siswa</option>
-                <option value="S001">S001</option>
-                <option value="S002">S002</option>
-                <option value="S003">S003</option>
-                <option value="S004">S004</option>
-                <option value="S005">S005</option>
-                <option value="S006">S006</option>
-                <option value="S007">S007</option>
-                <option value="S008">S008</option>
-                <option value="S009">S009</option>
-                <option value="S010">S010</option>
+            <label for="program">Program:</label>
+            <select id="program" required>
+                <option value="">Pilih Program</option>
+                <option value="Matematika">Matematika</option>
+                <option value="Fisika">Fisika</option>
+                <option value="Kimia">Kimia</option>
+                <option value="Biologi">Biologi</option>
+                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                <option value="Sejarah">Sejarah</option>
+                <option value="Geografi">Geografi</option>
+                <option value="Ekonomi">Ekonomi</option>
+                <option value="Seni Rupa">Seni Rupa</option>
             </select>
-
-            <label for="id_kursus">ID Kursus:</label>
-            <select id="id_kursus" required>
-                <option value="">Pilih ID Kursus</option>
-                <option value="P001">P001</option>
-                <option value="P002">P002</option>
-                <option value="P003">P003</option>
-            </select>
-
-            <label for="tanggal_jatuh_tempo">Tanggal Jatuh Tempo:</label>
-            <input type="date" id="tanggal_jatuh_tempo" required>
-
-            <label for="total_tagihan">Total Tagihan:</label>
-            <input type="number" id="total_tagihan" required>
-
-            <label for="status_pembayaran">Status Pembayaran:</label>
-            <select id="status_pembayaran" required>
+            <label for="tanggalTagihan">Tanggal Tagihan:</label>
+            <input type="date" id="tanggalTagihan" required />
+            <label for="totalTagihan">Total Tagihan:</label>
+            <input type="number" id="totalTagihan" required />
+            <label for="statusPembayaran">Status Pembayaran:</label>
+            <select id="statusPembayaran" required>
+                <option value="Belum Lunas" selected>Belum Lunas</option>
                 <option value="Lunas">Lunas</option>
-                <option value="Belum Lunas">Belum Lunas</option>
             </select>
-
-            <button type="submit">Simpan Tagihan</button>
+            <button type="submit">Tambah</button>
         </form>
-    </main>
+        <button onclick="window.location.href='index.html'">Kembali ke Data Tagihan Siswa</button>
+    </div>
     <script>
-        document.getElementById('tagihan-form').addEventListener('submit', function(event) {
+        function generateIdTagihan() {
+            const tagihanData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
+            const newId = tagihanData.length ? Math.max(...tagihanData.map(tagihan => tagihan.idTagihan)) + 1 : 1;
+            document.getElementById("idTagihan").value = newId;
+        }
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+            }).format(angka);
+        }
+
+        function formatTanggalIndonesia(tanggal) {
+            const date = new Date(tanggal);
+            const options = { day: "2-digit", month: "long", year: "numeric" };
+            return date.toLocaleDateString("id-ID", options);
+        }
+
+        function populateSelects() {
+            const siswaData = JSON.parse(localStorage.getItem("siswaData")) || [];
+            const idSiswaSelect = document.getElementById("idSiswa");
+            siswaData.forEach((siswa) => {
+                const option = document.createElement("option");
+                option.value = siswa.id;
+                option.textContent = siswa.nama;
+                idSiswaSelect.appendChild(option);
+            });
+        }
+
+        window.onload = function() {
+            populateSelects();
+            generateIdTagihan();
+        };
+
+        document.getElementById("formTambahPembayaran").addEventListener("submit", function (event) {
             event.preventDefault();
-            const tagihan = {
-                id_tagihan: document.getElementById('id_tagihan').value,
-                id_siswa: document.getElementById('id_siswa').value,
-                id_kursus: document.getElementById('id_kursus').value,
-                tanggal_jatuh_tempo: document.getElementById('tanggal_jatuh_tempo').value,
-                total_tagihan: document.getElementById('total_tagihan').value,
-                status_pembayaran: document.getElementById('status_pembayaran').value,
-            };
 
-            // Simpan tagihan ke Local Storage (simulasi)
-            let tagihanList = JSON.parse(localStorage.getItem('tagihanList')) || [];
-            tagihanList.push(tagihan);
-            localStorage.setItem('tagihanList', JSON.stringify(tagihanList));
+            const idTagihan = document.getElementById("idTagihan").value;
+            const idSiswa = document.getElementById("idSiswa").value;
+            const program = document.getElementById("program").value;
+            const tanggalTagihan = document.getElementById("tanggalTagihan").value;
+            const totalTagihan = parseInt(document.getElementById("totalTagihan").value);
+            const statusPembayaran = document.getElementById("statusPembayaran").value;
 
-            alert('Tagihan berhasil disimpan!');
-            // Reset form
-            this.reset();
+            let pembayaranData = JSON.parse(localStorage.getItem("pembayaranData")) || [];
+
+            pembayaranData.push({
+                idTagihan,
+                idSiswa,
+                program,
+                tanggalTagihan: formatTanggalIndonesia(tanggalTagihan),
+                totalTagihan: formatRupiah(totalTagihan),
+                statusPembayaran,
+            });
+
+            localStorage.setItem("pembayaranData", JSON.stringify(pembayaranData));
+
+            Swal.fire({
+                title: "Berhasil!",
+                text: "Data pembayaran berhasil ditambahkan.",
+                icon: "success",
+            }).then(() => {
+                window.location.href = "index.html";
+            });
         });
     </script>
 </body>
