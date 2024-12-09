@@ -3,193 +3,107 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daftar Program Kursus</title>
-    <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f1f5f9;
-        margin: 0;
-        padding: 0;
-        color: #333;
-      }
-
-      .container {
-        width: 90%;
-        max-width: 1200px;
-        margin: 50px auto;
-        padding: 30px;
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        text-align: center;
-        color: #4caf50;
-        font-size: 32px;
-        margin-bottom: 30px;
-      }
-
-      h2 {
-        text-align: center;
-        color: #555;
-        font-size: 18px;
-        margin-top: 20px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
-      }
-
-      th,
-      td {
-        padding: 12px;
-        text-align: left;
-      }
-
-      th {
-        background-color: #f2f2f2;
-        color: #333;
-      }
-
-      td {
-        font-size: 14px;
-      }
-
-      .edit-btn,
-      .delete-btn {
-        padding: 8px 16px;
-        font-size: 14px;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
-        margin: 5px;
-      }
-
-      .edit-btn {
-        background-color: #f0ad4e;
-      }
-
-      .delete-btn {
-        background-color: #d9534f;
-      }
-
-      .edit-btn:hover {
-        background-color: #e9a84e;
-      }
-
-      .delete-btn:hover {
-        background-color: #c9302c;
-      }
-
-      .action-btns {
-        display: flex;
-        justify-content: space-between;
-      }
-
-      #costValue {
-        font-weight: bold;
-      }
-
-      .button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-
-      a {
-        text-decoration: none;
-        color: #4caf50;
-        font-weight: bold;
-        text-align: center;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-    </style>
+    <title>Tambah Data Pembayaran</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+    
   </head>
   <body>
+    <header class="header">
+      <i class="fa-solid fa-bars"></i>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
     <div class="container">
-      <h1>Daftar Program Kursus</h1>
+      <nav class="nav-bar">
+        <h1>Daftar Program Kursus</h1>
+        <!-- <button class="btn-add" onclick="window.location.href='add.html'">
+          Tambah Pembayaran
+        </button> -->
+      </nav>
 
-      <div class="table-container">
-        <table id="courseTable">
-          <thead>
-            <tr>
-              <th>ID Program</th>
-              <th>Nama Program</th>
-              <th>Durasi Program (bulan)</th>
-              <th>Biaya Kursus (Rp)</th>
-              <th>Deskripsi</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="courseList">
-            <!-- Data program kursus akan tampil di sini -->
-          </tbody>
-        </table>
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Search..." />
+        <button class="search-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </div>
 
-      <div class="button-container">
-        <h2><a href="add_course.html">Tambah Program Kursus</a></h2>
+      <div class="cards-container" id="courseCards">
+        <!-- Data program kursus akan tampil di sini -->
       </div>
     </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+      <i class="fa-solid fa-plus-circle active-plus" onclick="window.location.href='add_course.html'"></i>
+      <i class="fa-solid fa-user active"></i>
+    </nav>
 
     <script>
       // Menentukan biaya berdasarkan ID program
       const courseCosts = {
-        "ID-1": 350000, // Biaya untuk program dengan ID program1
-        "ID-2": 300000, // Biaya untuk program dengan ID program2
-        "ID-3": 550000, // Biaya untuk program dengan ID program3
-        "ID-4": 600000, // Biaya untuk program dengan ID program3
-        "ID-5": 750000, // Biaya untuk program dengan ID program3
+        "ID-1": 350000,
+        "ID-2": 300000,
+        "ID-3": 550000,
+        "ID-4": 600000,
+        "ID-5": 750000,
       };
 
       // Fungsi untuk menghitung biaya berdasarkan ID program dan durasi
       function calculateCost(programId, duration) {
-        const costPerProgram = courseCosts[programId]; // Mendapatkan biaya per program berdasarkan ID
-        return costPerProgram * duration; // Menghitung biaya total
+        const costPerProgram = courseCosts[programId];
+        return costPerProgram * duration;
       }
 
-      // Memuat data kursus dan menampilkannya di tabel
-function loadCourses() {
-    const courses = JSON.parse(localStorage.getItem("courses")) || [];
-    const courseList = document.getElementById("courseList");
+      // Memuat data kursus dan menampilkannya dalam bentuk kartu
+      function loadCourses() {
+        const courses = JSON.parse(localStorage.getItem("courses")) || [];
+        const courseCards = document.getElementById("courseCards");
 
-    // Kosongkan tabel sebelum menambahkan data baru
-    courseList.innerHTML = "";
+        // Kosongkan kartu sebelum menambahkan data baru
+        courseCards.innerHTML = "";
 
-    courses.forEach((course, index) => {
-        const row = document.createElement("tr");
+        courses.forEach((course, index) => {
+          const card = document.createElement("div");
+          card.classList.add("course-card");
 
-        // Menampilkan data kursus
-        row.innerHTML = `
-            <td>${course.programId}</td>
-            <td>${course.programName}</td>
-            <td>${course.duration} bulan</td>
-            <td>Rp ${course.cost.toLocaleString()}</td>
-            <td>${course.description}</td>
-            <td>
+          card.innerHTML = `
+            <h3 class="course-name">${course.programName}</h3>
+            <p><strong>Durasi:</strong> ${course.duration} bulan</p>
+            <p><strong>Biaya:</strong> Rp ${course.cost.toLocaleString()}</p>
+            <p><strong>Deskripsi:</strong> ${course.description}</p>
+            <div class="card-actions">
                 <button class="edit-btn" onclick="editCourse(${index})">Edit</button>
                 <button class="delete-btn" onclick="deleteCourse(${index})">Hapus</button>
-            </td>
-        `;
-        courseList.appendChild(row);
-    });
-}
+            </div>
+          `;
+          courseCards.appendChild(card);
+        });
+      }
 
-// Memuat kursus saat halaman dimuat
-document.addEventListener("DOMContentLoaded", loadCourses);
+      // Memuat kursus saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", loadCourses);
 
       // Fungsi untuk mengedit kursus
       function editCourse(index) {
@@ -199,13 +113,10 @@ document.addEventListener("DOMContentLoaded", loadCourses);
       // Fungsi untuk menghapus kursus
       function deleteCourse(index) {
         let courses = JSON.parse(localStorage.getItem("courses")) || [];
-        courses.splice(index, 1); // Menghapus kursus berdasarkan index
+        courses.splice(index, 1);
         localStorage.setItem("courses", JSON.stringify(courses));
-        loadCourses(); // Memuat ulang daftar kursus
+        loadCourses();
       }
-
-      // Memuat data kursus saat halaman dimuat
-      document.addEventListener("DOMContentLoaded", loadCourses);
     </script>
   </body>
 </html>

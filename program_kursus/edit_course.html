@@ -3,151 +3,70 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Kursus</title>
-    <style>
-      /* Reset some default styles */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+    <title>Tambah Data Pembayaran</title>
+    <link rel="stylesheet" href="add-edit.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
-      body {
-        font-family: "Arial", sans-serif;
-        background-color: #f4f7f6;
-        color: #333;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-
-      /* Container for form elements */
-      .container {
-        background-color: #ffffff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 500px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      /* Form header style */
-      h2 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 20px;
-        font-size: 24px;
-      }
-
-      /* General form styling */
-      form {
-        display: flex;
-        flex-direction: column;
-      }
-
-      /* Form group styling */
-      .form-group {
-        margin-bottom: 20px;
-      }
-
-      label {
-        font-size: 14px;
-        font-weight: bold;
-        color: #555;
-        margin-bottom: 8px;
-        display: block;
-      }
-
-      input[type="text"],
-      input[type="number"],
-      textarea {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-top: 5px;
-        box-sizing: border-box;
-      }
-
-      input[type="range"] {
-        width: 100%;
-        margin-top: 5px;
-      }
-
-      /* Style for cost value */
-      #costValue {
-        display: block;
-        margin-top: 5px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      /* Button styling */
-      button {
-        background-color: #4caf50;
-        color: #fff;
-        padding: 12px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 20px;
-      }
-
-      button:hover {
-        background-color: #45a049;
-      }
-
-      /* Placeholder text styling */
-      input::placeholder,
-      textarea::placeholder {
-        color: #bbb;
-      }
-
-      /* Responsive design: Make form elements responsive on smaller screens */
-      @media (max-width: 600px) {
-        .container {
-          padding: 20px;
-          width: 90%;
-        }
-
-        h2 {
-          font-size: 20px;
-        }
-
-        button {
-          font-size: 14px;
-          padding: 10px 18px;
-        }
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
+    <title>Edit Kursus</title>
   <body>
+    <header class="header">
+      <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
     <div class="container">
       <h2>Edit Kursus</h2>
-      <form id="editCourseForm">
-        <label for="programId">ID Program:</label>
-        <input type="text" id="programId" name="programId" placeholder="ID Program" required>
-
-        <label for="programName">Nama Program:</label>
-        <input type="text" id="programName" name="programName" placeholder="Nama Program" required>
-
-        <label for="duration">Durasi Program (bulan):</label>
-        <input type="number" id="duration" name="duration" placeholder="Durasi (Bulan)" required>
-
-        <label for="programCost">Biaya Kursus:</label>
-        <input type="number" id="programCost" name="programCost" placeholder="Biaya per Program" required>
-        <p id="costValue">Rp 0</p><br>
-
-        <label for="description">Deskripsi Program:</label>
-        <textarea id="description" name="description" placeholder="Deskripsi Program" required></textarea>
-        <button type="submit">Selesai Perubahan</button>
-        <button type="button" id="cancelButton">Batal</button>
-      </form>
-      
+      <!-- Form input data program kursus -->
+      <form id="courseForm">
+        <span><label for="programId">ID Program:</label>
+            <input type="text" id="programId" required readonly><br><br></span>
+        
+        <span><label for="programName">Nama Program:</label>
+            <input type="text" id="programName" required><br><br></span>
+        
+        <span><label for="duration">Durasi Program (bulan):</label>
+            <input type="number" id="duration" required><br><br></span>
+        
+        <span><label for="programCost">Biaya Kursus:</label>
+            <input type="number" id="programCost" min="100000" step="10000" value="100000" required>
+            <span id="costValue">Rp 100.000</span><br><br></span>
+        
+        <span><label for="description">Deskripsi Program:</label>
+            <textarea id="description" required></textarea><br><br></span>
+        
+        <button type="submit" id="submitButton">Simpan Program</button>
+    </form>       
+      <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i
+        class="fa-solid fa-house"
+        onclick="window.location.href='/index.html'"
+      ></i>
+      <i
+        class="fa-solid fa-plus-circle active-plus"
+        onclick="window.location.href='#'"
+      ></i>
+      <i class="fa-solid fa-user active"></i>
+    </nav>
     </div>
 
     <script>

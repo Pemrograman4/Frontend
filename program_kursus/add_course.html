@@ -1,157 +1,74 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tambah Data Pembayaran</title>
+        <link rel="stylesheet" href="add-edit.css" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+      </head>
     <title>Data Program Kursus</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f1f5f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #4CAF50;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        input[type="number"], input[type="text"], textarea {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-
-        .slider {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .cost-label {
-            font-weight: bold;
-            margin-top: 5px;
-            font-size: 16px;
-            color: #333;
-        }
-
-        #costValue {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: #4CAF50;
-            font-weight: bold;
-            text-align: center;
-            display: block;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-    </style>
 </head>
 <body>
+    <header class="header">
+        <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+        <div class="right-section">
+          <h1 class="title">FASFADE Institute</h1>
+          <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+      </header>
     <div class="container">
         <h1>Tambah Program Kursus</h1>
         
         <!-- Form input data program kursus -->
         <form id="courseForm">
-            <label for="programId">ID Program:</label>
-            <input type="text" id="programId" required readonly><br><br>
+            <span><label for="programId">ID Program:</label>
+                <input type="text" id="programId" required readonly><br><br></span>
             
-            <label for="programName">Nama Program:</label>
-            <input type="text" id="programName" required><br><br>
+            <span><label for="programName">Nama Program:</label>
+                <input type="text" id="programName" required><br><br></span>
             
-            <label for="duration">Durasi Program (bulan):</label>
-            <input type="number" id="duration" required><br><br>
+            <span><label for="duration">Durasi Program (bulan):</label>
+                <input type="number" id="duration" required><br><br></span>
             
-            <label for="programCost">Biaya Kursus:</label>
-            <input type="number" id="programCost" min="100000" step="10000" value="100000" required>
-            <span id="costValue">Rp 100.000</span><br><br>
+            <span><label for="programCost">Biaya Kursus:</label>
+                <input type="number" id="programCost" min="100000" step="10000" value="100000" required>
+                <span id="costValue">Rp 100.000</span><br><br></span>
             
-            <label for="description">Deskripsi Program:</label>
-            <textarea id="description" required></textarea><br><br>
+            <span><label for="description">Deskripsi Program:</label>
+                <textarea id="description" required></textarea><br><br></span>
             
             <button type="submit" id="submitButton">Simpan Program</button>
         </form>        
-        
-        <div class="button-container">
-            <a href="list_courses.html" class="back-link">Kembali ke Daftar Program</a>
-        </div>
+        <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+        <i
+          class="fa-solid fa-house"
+          onclick="window.location.href='/index.html'"
+        ></i>
+        <i
+          class="fa-solid fa-plus-circle active-plus"
+          onclick="window.location.href='#'"
+        ></i>
+        <i class="fa-solid fa-user active"></i>
+      </nav>
     </div>
 
     <script src="script.js"></script>

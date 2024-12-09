@@ -1,65 +1,170 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
 
-.container {
-    width: 80%;
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .right-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header .fa-bars {
+    justify-content: start;
+    margin-left: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  
+  .header .logo {
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 5px;
+  }
+  
+  .header .title {
+    color: #ffc00a;
+    font-size: 20px;
+    font-weight: medium;
+    font-family: "Poppins", sans-serif;
+  }  
+
+  .container {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-    text-align: center;
-}
-
-form {
+  }
+  
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-top: 10px;
-}
-
-input {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    box-sizing: border-box;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
+  }
+  
+  .nav-bar h1 {
+    color: #0097b2;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+  }
+  
+  .search-bar input[type="text"] {
+    flex: 1;
     border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-}
-
-th, td {
     padding: 10px;
-    text-align: left;
-}
+    outline: none;
+  }
+  
+  .search-bar button {
+    background-color: #ffc00a;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-bar button:hover {
+    background-color: #0097b2;
+  }
+  
+  .search-bar .fa-solid.fa-magnifying-glass {
+    pointer-events: none;
+    /* Prevent accidental clicks on the icon */
+  }  
 
-th {
-    background-color: #f2f2f2;
-}
+      .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .course-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 280px;
+        padding: 15px;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .course-card:hover {
+        transform: scale(1.05);
+      }
+
+      .course-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .course-card p {
+        margin: 10px 0;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .card-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+      }
+
+      .edit-btn, .delete-btn {
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .delete-btn {
+        background-color: red;
+      }
+      .edit-btn {
+        background-color: #ffc00a;
+      }
+
+      .edit-btn:hover, .delete-btn:hover {
+        opacity: 0.8;
+      }
+
+      .nav-bottom {
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        background-color: #fff;
+    color: #0097b2;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .nav-bottom i {
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+      }
