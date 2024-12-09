@@ -4,10 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tambah Data Pembayaran</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="add-edit.css" /> <!-- Menghubungkan CSS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
+    <header class="header">
+        <i class="fa-solid fa-arrow-left" onclick="window.location.href='index.html'"></i>
+        <div class="right-section">
+            <h1 class="title">FASFADE Institute</h1>
+            <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+    </header>
     <div class="container">
         <h1>Tambah Data Pembayaran</h1>
         <form id="formTambahPembayaran">
@@ -43,8 +51,14 @@
             <button type="button" id="saveBtn" style="display: none;">Simpan</button>
             <button type="button" id="cancelBtn" style="display: none;">Batal</button>
         </form>
-        <button onclick="window.location.href='index.html'">Kembali ke Data Tagihan Siswa</button>
     </div>
+
+    <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+        <i class="fa-solid fa-plus-circle active-plus" onclick="window.location.href='#'" style="color: #ffc00a;"></i>
+        <i class="fa-solid fa-user active"></i>
+    </nav>
+
     <script>
         function populateSelects() {
             const siswaData = JSON.parse(localStorage.getItem("siswaData")) || [];
