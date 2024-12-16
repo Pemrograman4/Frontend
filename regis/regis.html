@@ -6,47 +6,34 @@
     <title>Halaman Registrasi</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="../logo_only.png" type="image/x-icon">
-    <script>
-        function validatePassword() {
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirm_password');
-            if (password.value !== confirmPassword.value) {
-                confirmPassword.classList.add('error');
-            } else {
-                confirmPassword.classList.remove('error');
-            }
-        }
-    </script>
 </head>
 <body>
-    <div class="register-page-container">
-        <div class="register-card">
-            <!-- Logo di pojok kiri atas -->
-            <img src="../logo_only.png" alt="Logo" class="logo-card">
-            
-            <h2>Registrasi Akun</h2>
-            <form action="#" method="POST" onsubmit="validatePassword(); return false;">
-                <div class="form-group">
-                    <label for="name">Nama</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm_password">Konfirmasi Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required oninput="validatePassword()">
-                </div>
-                <button type="submit" class="btn">Daftar</button>
-            </form>
-            <div class="text-center mt-3">
-                <a href="../login/login.html" class="text-muted">Kembali ke Login</a>
+    <!-- Halaman Registrasi dalam Card -->
+    <div class="login-page-container">
+        <div class="login-card">
+            <!-- Header Card: Logo dan Teks -->
+            <div class="logo-header">
+                <img src="../logo_only.png" alt="Logo" class="logo-card">
+                <h3 class="title-card">FASFADE Institute</h3>
             </div>
+
+            <h2>Registrasi</h2>
+            <form action="#" method="post">
+                <div class="input-container">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+                </div>
+                <div class="input-container">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Masukkan email" required>
+                </div>
+                <div class="input-container">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                </div>
+                <button type="submit" class="login-btn">Daftar</button>
+                <p class="signup-link">Sudah punya akun? <a href="../login/login.html">Login di sini</a></p>
+            </form>
         </div>
     </div>
 </body>

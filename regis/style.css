@@ -1,5 +1,5 @@
-/* Container Card Registrasi */
-.register-page-container {
+/* Card Container */
+.login-page-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,19 +7,17 @@
     background-color: #f4f4f4;
 }
 
-/* Card Registrasi */
-.register-card {
+.login-card-with-logo {
+    display: flex;
+    align-items: center;
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    padding: 30px 25px;
-    width: 400px;
-    position: relative; /* Posisi relatif agar logo diatur absolut */
-    box-sizing: border-box;
-    text-align: center;
+    width: 600px;
+    overflow: hidden; /* Hilangkan overflow jika konten terlalu besar */
 }
 
-/* Logo di pojok kiri atas */
+/* Logo di Kiri */
 .logo-card {
     position: absolute;
     top: 10px;    /* Jarak dari atas */
@@ -28,32 +26,56 @@
     height: 40px;
 }
 
-/* Form Input */
-.form-group {
+/* Card Login */
+.login-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 30px 25px;
+    width: 350px;
+    text-align: center;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.login-card h2 {
+    color: #0097b2;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.login-card p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.input-container {
     text-align: left;
     margin-bottom: 15px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
+.input-container label {
+    font-size: 14px;
     color: #0097b2;
+    margin-bottom: 5px;
+    display: block;
 }
 
-.form-group input {
-    width: 100%;
+.input-container input {
+    width: 93%;
     padding: 10px;
-    font-size: 14px;
     border: 1px solid #d9d9d9;
     border-radius: 5px;
+    font-size: 14px;
 }
 
-.btn {
+.login-btn {
     width: 100%;
     padding: 10px;
     background-color: #0097b2;
     border: none;
-    color: white;
+    color: #fff;
     font-size: 16px;
     font-weight: bold;
     border-radius: 5px;
@@ -61,20 +83,44 @@
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.login-btn:hover {
     background-color: #005f70;
 }
 
-.text-center {
-    margin-top: 15px;
+.signup-link {
+    margin-top: 10px;
     font-size: 14px;
 }
 
-.text-muted {
-    color: #0097b2;
+.signup-link a {
+    color: #ffc00a;
     text-decoration: none;
+    font-weight: bold;
 }
 
-.text-muted:hover {
+.signup-link a:hover {
     text-decoration: underline;
+}
+
+/* Header Logo dan Teks */
+.logo-header {
+    display: flex; /* Agar logo dan teks sejajar */
+    align-items: center; /* Posisi vertikal di tengah */
+    justify-content: start; /* Rata kiri */
+    margin-bottom: 20px; /* Jarak dengan konten lain */
+}
+
+.logo-card {
+    width: 40px;  /* Ukuran logo */
+    height: 40px;
+    margin-right: 10px; /* Jarak antara logo dan teks */
+}
+
+.title-card {
+    font-size: 10px;
+    color: #0097b2; /* Warna teks sesuai tema */
+    font-weight: bold;
+    margin: 0;
+    margin-left: 20px;
+    font-family: "Poppins", sans-serif;
 }
