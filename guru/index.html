@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Guru</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+        integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+</head>
+<body>
+    <header class="header">
+        <i class="fa-solid fa-bars"></i>
+        <div class="right-section">
+          <h1 class="title">FASFADE Institute</h1>
+          <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+      </header>
+      <div class="container">
+        <nav class="nav-bar">
+          <h1>Data Guru</h1>
+        </nav>
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search...">
+            <button class="search-icon" onclick="searchGuru()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+
+        <!-- Daftar Konten -->
+        <div id="guruList" class="card-list">
+            <!-- Card guru akan di-generate oleh JavaScript -->
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+        <i class="fa-solid fa-plus-circle" onclick="window.location.href='add.html'"></i>
+        <i class="fa-solid fa-user active"></i>
+    </nav>
+
+    <script>
+        // Fungsi untuk mendapatkan data guru dari localStorage
+        function getGuruData() {
+            return JSON.parse(localStorage.getItem('guruData')) || [];
+        }
+
+        // Fungsi untuk menyimpan data guru ke localStorage
+        function saveGuruData(data) {
+            localStorage.setItem('guruData', JSON.stringify(data));
+        }
+
+        // Fungsi untuk menampilkan data guru dalam format card
+        function tampilkanDataGuru() {
+            const guruData = getGuruData();
+            const guruList = document.getElementById('guruList');
+            guruList.innerHTML = '';
+            guruData.forEach(guru => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <h3>${guru.nama}</h3>
+                    <p><strong>Alamat:</strong> ${guru.alamat}</p>
+                    <p><strong>Telepon:</strong> ${guru.telepon}</p>
+                    <p><strong>Email:</strong> ${guru.email}</p>
+                `;
+
+                // Bagian aksi (tombol edit & hapus)
+                const cardActions = document.createElement("div");
+                cardActions.className = "card-actions";
+
+                // Tombol Edit
+                const editButton = document.createElement("button");
+                editButton.className = "edit-btn";
+                editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+                editButton.onclick = () => editGuru(guru.id);
+
+                // Tombol Delete
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-btn";
+                deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                deleteButton.onclick = () => hapusGuru(guru.id);
+
+                // Tambahkan tombol ke bagian aksi
+                cardActions.appendChild(editButton);
+                cardActions.appendChild(deleteButton);
+
+                // Tambahkan cardActions ke card
+                card.appendChild(cardActions);
+
+                guruList.appendChild(card);
+            });
+        }
+
+        // Fungsi untuk mengedit data guru
+        function editGuru(id) {
+            window.location.href = `edit.html?id=${id}`;
+        }
+
+        // Fungsi untuk menghapus data guru
+        function hapusGuru(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data guru akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let guruData = getGuruData();
+                    guruData = guruData.filter(guru => guru.id !== id);
+                    saveGuruData(guruData);
+                    Swal.fire('Terhapus!', 'Data guru telah dihapus.', 'success')
+                        .then(() => {
+                            tampilkanDataGuru();
+                        });
+                }
+            });
+        }
+
+        // Fungsi untuk mencari guru berdasarkan nama
+        function searchGuru() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const guruData = getGuruData();
+            const filteredData = guruData.filter(guru =>
+                guru.nama.toLowerCase().includes(query)
+            );
+            const guruList = document.getElementById('guruList');
+            guruList.innerHTML = '';
+            filteredData.forEach(guru => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <h3>${guru.nama}</h3>
+                    <p><strong>Alamat:</strong> ${guru.alamat}</p>
+                    <p><strong>Telepon:</strong> ${guru.telepon}</p>
+                    <p><strong>Email:</strong> ${guru.email}</p>
+                `;
+                guruList.appendChild(card);
+            });
+        }
+
+        // Tampilkan data guru saat halaman dimuat
+        tampilkanDataGuru();
+    </script>
+</body>
+</html>

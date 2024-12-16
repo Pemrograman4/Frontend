@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tambah Guru</title>
+  <link rel="stylesheet" href="add-edit.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="right-section">
+      <h1 class="title">FASFADE Institute</h1>
+      <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+    </div>
+  </header>
+  <div class="container">
+    <h1>Tambah Guru</h1>
+    <form id="formTambahGuru">
+      <span>
+        <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
+        <input type="text" id="nama" name="nama" required>
+      </span>
+      <span>
+        <label for="alamat"><i class="fas fa-map-marker-alt"></i> Alamat:</label>
+        <input type="text" id="alamat" name="alamat" required>
+      </span>
+      <span>
+        <label for="telepon"><i class="fas fa-phone-alt"></i> Nomor Telepon:</label>
+        <input type="text" id="telepon" name="telepon" required>
+      </span>
+      <span>
+        <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+        <input type="email" id="email" name="email" required>
+      </span>
+      <div class="form-buttons">
+        <button type="submit">Simpan</button>
+      </div>
+    </form>
+  </div>
+  <!-- Bottom Navigation -->
+  <nav class="nav-bottom">
+    <i
+      class="fa-solid fa-house"
+      onclick="window.location.href='/index.html'"
+    ></i>
+    <i
+      class="fa-solid fa-plus-circle"
+      onclick="window.location.href='add.html'"
+    ></i>
+    <i class="fa-solid fa-user active"></i>
+  </nav>
+  <script>
+    // Fungsi untuk menambahkan data guru ke localStorage
+    function tambahGuru(event) {
+      event.preventDefault();
+
+      // Ambil data dari form
+      const nama = document.getElementById('nama').value;
+      const alamat = document.getElementById('alamat').value;
+      const telepon = document.getElementById('telepon').value;
+      const email = document.getElementById('email').value;
+
+      // Ambil data guru dari localStorage (atau buat array baru jika belum ada)
+      let guruData = JSON.parse(localStorage.getItem('guruData')) || [];
+
+      // Buat ID baru untuk guru
+      const idBaru = guruData.length > 0 ? guruData[guruData.length - 1].id + 1 : 1;
+
+      // Tambahkan data guru baru ke array
+      guruData.push({ id: idBaru, nama, alamat, telepon, email });
+
+      // Simpan kembali data guru ke localStorage
+      localStorage.setItem('guruData', JSON.stringify(guruData));
+
+      // Tampilkan notifikasi sukses dengan SweetAlert2
+      Swal.fire({
+        title: 'Berhasil!',
+        text: 'Data guru berhasil ditambahkan.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.href = 'index.html'; // Redirect setelah berhasil
+      });
+    }
+
+    // Tambahkan event listener ke form
+    document.getElementById('formTambahGuru').addEventListener('submit', tambahGuru);
+  </script>
+</body>
+</html>
