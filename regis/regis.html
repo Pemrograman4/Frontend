@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Registrasi</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm_password');
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('error');
+            } else {
+                confirmPassword.classList.remove('error');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Registrasi Akun</h2>
+        <form action="#" method="POST" onsubmit="validatePassword(); return false;">
+            <div class="form-group">
+                <label for="name">Nama</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Konfirmasi Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required oninput="validatePassword()">
+            </div>
+            <button type="submit" class="btn">Daftar</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="#" class="text-muted">Kembali ke Login</a>
+        </div>
+    </div>
+</body>
+</html>
