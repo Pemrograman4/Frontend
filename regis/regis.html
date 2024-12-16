@@ -19,32 +19,34 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="logo.png" alt="Logo">
-        </div>
-        <h2>Registrasi Akun</h2>
-        <form action="#" method="POST" onsubmit="validatePassword(); return false;">
-            <div class="form-group">
-                <label for="name">Nama</label>
-                <input type="text" id="name" name="name" required>
+    <div class="register-page-container">
+        <div class="register-card">
+            <!-- Logo di pojok kiri atas -->
+            <img src="../logo_only.png" alt="Logo" class="logo-card">
+            
+            <h2>Registrasi Akun</h2>
+            <form action="#" method="POST" onsubmit="validatePassword(); return false;">
+                <div class="form-group">
+                    <label for="name">Nama</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Konfirmasi Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required oninput="validatePassword()">
+                </div>
+                <button type="submit" class="btn">Daftar</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="../login/login.html" class="text-muted">Kembali ke Login</a>
             </div>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Konfirmasi Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required oninput="validatePassword()">
-            </div>
-            <button type="submit" class="btn">Daftar</button>
-        </form>
-        <div class="text-center mt-3">
-            <a href="../login/login.html" class="text-muted">Kembali ke Login</a>
         </div>
     </div>
 </body>
