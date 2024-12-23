@@ -24,7 +24,7 @@ loginForm.addEventListener('submit', function (event) {
                 console.log('Login sukses:', data);
                 alert('Login berhasil!');
                 // Redirect ke halaman lain, misalnya dashboard
-                window.location.href = 'index.html';
+                window.location.href = '/index.html';
             } else {
                 // Login gagal
                 console.error('Login gagal:', data);
