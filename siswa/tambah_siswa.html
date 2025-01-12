@@ -33,101 +33,119 @@
       </div>
     </header>
     <div class="container">
-      <h1>Tambah Siswa</h1>
-      <form id="formEditSiswa">
-          <!-- Input untuk Nama -->
-          <div class="form-group">
-              <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
-              <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap" required>
-          </div>
-  
-          <!-- Input untuk Alamat -->
-          <div class="form-group">
-              <label for="alamat"><i class="fas fa-map-marker-alt"></i> Alamat:</label>
-              <input type="text" id="alamat" name="alamat" placeholder="Masukkan alamat" required>
-          </div>
-  
-          <!-- Input untuk Telepon -->
-          <div class="form-group">
-              <label for="telepon"><i class="fas fa-phone-alt"></i> Nomor Telepon:</label>
-              <input type="text" id="telepon" name="telepon" placeholder="Masukkan nomor telepon" required>
-          </div>
-  
-          <!-- Input untuk Email -->
-          <div class="form-group">
-              <label for="email"><i class="fas fa-envelope"></i> Email:</label>
-              <input type="email" id="email" name="email" placeholder="Masukkan email" required>
-          </div>
-  
-          <!-- Input untuk Status -->
-          <div class="form-group">
-              <label for="status"><i class="fas fa-toggle-on"></i> Status:</label>
-              <select id="status" name="status" required>
-                  <option value="Aktif">Aktif</option>
-                  <option value="Nonaktif">Nonaktif</option>
-              </select>
-          </div>
-  
-          <!-- Tombol Simpan -->
-          <div class="form-buttons">
-              <button type="submit" class="btn-save">Simpan</button>
-          </div>
-      </form>
-  
-      <!-- Navigasi Bawah -->
-      <nav class="nav-bottom">
-          <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
-          <i class="fa-solid fa-plus-circle active-plus" onclick="window.location.href='#'"></i>
-          <i class="fa-solid fa-user active"></i>
+        <h1>Tambah Siswa</h1>
+        <form id="formEditSiswa">
+            <span>
+                <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
+                <input type="text" id="nama" name="nama" required>
+            </span>
+            <span>
+                <label for="alamat"><i class="fas fa-map-marker-alt"></i> Alamat:</label>
+                <input type="text" id="alamat" name="alamat" required>
+            </span>
+
+            <span>
+                <label for="telepon"><i class="fas fa-phone-alt"></i> Nomor Telepon:</label>
+                <input type="text" id="telepon" name="telepon" required>
+            </span>
+
+            <span>
+                <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+                <input type="email" id="email" name="email" required>
+            </span>
+
+            <span>
+                <label for="status"><i class="fas fa-toggle-on"></i> Status:</label>
+                <select id="status" name="status" required>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Nonaktif">Nonaktif</option>
+                </select>
+            </span>
+
+            <div class="form-buttons">
+                <button type="submit">Simpan</button>
+            </div>
+            <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+        <i
+          class="fa-solid fa-house"
+          onclick="window.location.href='/index.html'"
+        ></i>
+        <i
+          class="fa-solid fa-plus-circle active-plus"
+          onclick="window.location.href='#'"
+        ></i>
+        <i class="fa-solid fa-user active"></i>
       </nav>
-  </div>
-  
+        </form>
+    </div>
 
     <script>
-        // Fungsi untuk menambahkan data siswa ke localStorage
-        function tambahSiswa(event) {
-            event.preventDefault();
+      // Menunggu hingga DOM selesai dimuat
+      document.addEventListener('DOMContentLoaded', function() {
+          // Fungsi untuk menambahkan data siswa ke server menggunakan fetch
+          async function tambahSiswa(event) {
+              event.preventDefault();
 
-            // Ambil data dari form
-            const nama = document.getElementById('nama').value;
-            const alamat = document.getElementById('alamat').value;
-            const telepon = document.getElementById('telepon').value;
-            const email = document.getElementById('email').value;
-            const status = document.getElementById('status').value;
+              // Ambil data dari form
+              const fullName = document.getElementById('nama').value;  // Menggunakan fullname sesuai model
+              const address = document.getElementById('alamat').value;  // Menggunakan address sesuai model
+              const phoneNumber = document.getElementById('telepon').value;  // Menggunakan phonenumber sesuai model
+              const email = document.getElementById('email').value;
+              const status = document.getElementById('status').value;
 
-            // Ambil data siswa dari localStorage (atau buat array baru jika belum ada)
-            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+              const siswaData = {
+                  fullname: fullName,  // Menyesuaikan dengan nama field di model
+                  address: address,  // Menyesuaikan dengan nama field di model
+                  phonenumber: phoneNumber,  // Menyesuaikan dengan nama field di model
+                  email: email,
+                  status: status
+              };
 
-            // Buat ID baru untuk siswa
-            const idBaru = siswaData.length > 0 ? siswaData[siswaData.length - 1].id + 1 : 1;
+              try {
+                  // Kirim data ke server menggunakan fetch
+                  const response = await fetch('http://localhost:8080/siswa', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(siswaData)
+                  });
 
-            // Tambahkan data siswa baru ke array
-            siswaData.push({
-                id: idBaru,
-                nama,
-                alamat,
-                telepon,
-                email,
-                status
-            });
+                  if (response.ok) {
+                      // Tampilkan notifikasi sukses dengan SweetAlert2
+                      Swal.fire({
+                          title: 'Berhasil!',
+                          text: 'Data siswa berhasil ditambahkan.',
+                          icon: 'success',
+                          confirmButtonText: 'OK'
+                      }).then(() => {
+                          // Arahkan kembali ke halaman utama setelah notifikasi
+                          window.location.href = 'index.html';  // Sesuaikan URL jika diperlukan
+                      });
+                  } else {
+                      // Tampilkan pesan error jika request gagal
+                      Swal.fire({
+                          title: 'Error!',
+                          text: 'Gagal menambahkan data siswa.',
+                          icon: 'error',
+                          confirmButtonText: 'Coba Lagi'
+                      });
+                  }
+              } catch (error) {
+                  // Tampilkan pesan error jika terjadi masalah pada fetch
+                  Swal.fire({
+                      title: 'Error!',
+                      text: 'Terjadi kesalahan saat mengirim data.',
+                      icon: 'error',
+                      confirmButtonText: 'Coba Lagi'
+                  });
+              }
+          }
 
-            // Simpan kembali data siswa ke localStorage
-            localStorage.setItem('siswaData', JSON.stringify(siswaData));
-
-            // Tampilkan notifikasi sukses dengan SweetAlert2
-            Swal.fire({
-                title: 'Berhasil!',
-                text: 'Data siswa berhasil ditambahkan.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                // Arahkan kembali ke halaman utama setelah notifikasi
-                window.location.href = 'index.html';
-            });
-        }
-
-        // Tambahkan event listener ke form
-        document.getElementById('formEditSiswa').addEventListener('submit', tambahSiswa);
+          // Pastikan form ID benar sesuai dengan ID form di HTML
+          document.getElementById('formEditSiswa').addEventListener('submit', tambahSiswa);
+      });
     </script>
 </body>
 </html>

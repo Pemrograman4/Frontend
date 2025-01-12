@@ -151,12 +151,27 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                alert('Data siswa berhasil diperbarui!');
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Error updating siswa:', error);
-                alert('Gagal memperbarui data siswa!');
-            }
+                 // Tampilkan notifikasi sukses dengan SweetAlert2
+                 Swal.fire({
+                      title: 'Berhasil!',
+                      text: 'Data siswa berhasil di edit.',
+                      icon: 'success',
+                      confirmButtonText: 'OK'
+                  }).then(() => {
+                      // Arahkan kembali ke halaman utama setelah notifikasi
+                      window.location.href = 'index.html';  // Sesuaikan URL jika diperlukan
+                  });
+              } catch (error) {
+                  // Tampilkan pesan error jika terjadi masalah pada fetch
+                  Swal.fire({
+                      title: 'Error!',
+                      text: 'Gagal mengedit data siswa.',
+                      icon: 'error',
+                      confirmButtonText: 'Coba Lagi'
+                  });
+              }
+              // Pastikan form ID benar sesuai dengan ID form di HTML
+          document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
         });
     </script>
 </body>
