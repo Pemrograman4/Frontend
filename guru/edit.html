@@ -26,39 +26,56 @@
   </head>
   <body>
     <header class="header">
-      <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+      <a href="javascript:history.back()"
+        ><i class="fa-solid fa-arrow-left"></i
+      ></a>
       <div class="right-section">
         <h1 class="title">FASFADE Institute</h1>
         <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
       </div>
     </header>
     <div class="container">
-        <h1>Edit Data Guru</h1>
-        <form id="formEditGuru">
-            <span>
-                <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
-                <input type="text" id="nama" name="nama" required>
-            </span>
-            <span>
-                <label for="alamat"><i class="fas fa-map-marker-alt"></i> Alamat:</label>
-                <input type="text" id="alamat" name="alamat" required>
-            </span>
-
-            <span>
-                <label for="telepon"><i class="fas fa-phone-alt"></i> Nomor Telepon:</label>
-                <input type="text" id="telepon" name="telepon" required>
-            </span>
-
-            <span>
-                <label for="email"><i class="fas fa-envelope"></i> Email:</label>
-                <input type="email" id="email" name="email" required>
-            </span>
-
-            <div class="form-buttons">
-                <button type="submit">Simpan</button>
-            </div>
-            <!-- Bottom Navigation -->
-    <nav class="nav-bottom">
+      <h1>Edit Data Guru</h1>
+      <form id="formEditGuru">
+        <span>
+          <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
+          <input type="text" id="nama" name="nama" required />
+        </span>
+        <span>
+          <label for="alamat"
+            ><i class="fas fa-map-marker-alt"></i> Alamat:</label
+          >
+          <input type="text" id="alamat" name="alamat" required />
+        </span>
+        <span>
+          <label for="telepon"
+            ><i class="fas fa-phone-alt"></i> Nomor Telepon:</label
+          >
+          <input type="text" id="telepon" name="telepon" required />
+        </span>
+        <span>
+          <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+          <input type="email" id="email" name="email" required />
+        </span>
+        <span>
+          <label for="mataPelajaran"
+            ><i class="fas fa-book"></i> Mata Pelajaran:</label
+          >
+          <input type="text" id="mataPelajaran" name="mataPelajaran" required />
+        </span>
+        <span>
+          <label for="status"><i class="fas fa-info-circle"></i> Status:</label>
+          <select id="status" name="status" required>
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+        </span>
+        <div class="form-buttons">
+          <button type="submit">Simpan</button>
+        </div>
+      </form>
+      <!-- Bottom Navigation -->
+      <nav class="nav-bottom">
         <i
           class="fa-solid fa-house"
           onclick="window.location.href='/index.html'"
@@ -69,86 +86,75 @@
         ></i>
         <i class="fa-solid fa-user active"></i>
       </nav>
-        </form>
     </div>
-    <script>
-        // Fungsi untuk memuat data guru dari localStorage
-        function loadGuruData() {
-            const id = getUrlParameter('id'); // Mendapatkan ID guru dari URL
-            let guruData = JSON.parse(localStorage.getItem('guruData')) || [];
-            
-            // Cari data guru berdasarkan ID
-            const guru = guruData.find(s => s.id == id);
+    <script type="module" src="script.js"></script>
+    <!-- <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const formEditGuru = document.getElementById("formEditGuru");
+        const id = new URLSearchParams(window.location.search).get("id");
 
-            if (guru) {
-                // Isi form dengan data guru
-                document.getElementById('nama').value = guru.nama;
-                document.getElementById('alamat').value = guru.alamat;
-                document.getElementById('telepon').value = guru.telepon;
-                document.getElementById('email').value = guru.email;
-            } else {
-                // Tampilkan pesan jika data guru tidak ditemukan
-                Swal.fire('Error', 'Data guru tidak ditemukan!', 'error').then(() => {
-                    window.location.href = 'index.html';
-                });
+        // Fungsi untuk mengambil data Guru berdasarkan ID
+        async function fetchGuruData() {
+          try {
+            const response = await fetch(`http://localhost:8080/gurus/${id}`);
+            if (!response.ok) {
+              throw new Error("Gagal mengambil data Guru.");
             }
+            const guru = await response.json();
+
+            // Isi form dengan data yang diambil
+            document.getElementById("nama").value = guru.fullname || "";
+            document.getElementById("alamat").value = guru.address || "";
+            document.getElementById("telepon").value = guru.phonenumber || "";
+            document.getElementById("email").value = guru.email || "";
+            document.getElementById("mataPelajaran").value =
+              guru.school_subject || "";
+            document.getElementById("status").value = guru.status || "aktif";
+          } catch (error) {
+            alert("Terjadi kesalahan saat memuat data: " + error.message);
+          }
         }
 
-        // Fungsi untuk memperbarui data guru di localStorage
-        function editGuru(event) {
-            event.preventDefault();
+        // Fungsi untuk mengupdate data Guru
+        async function updateGuru(event) {
+          event.preventDefault();
 
-            const id = getUrlParameter('id'); 
-            const nama = document.getElementById('nama').value;
-            const alamat = document.getElementById('alamat').value;
-            const telepon = document.getElementById('telepon').value;
-            const email = document.getElementById('email').value;
+          const updatedData = {
+            fullname: document.getElementById("nama").value,
+            address: document.getElementById("alamat").value,
+            phonenumber: document.getElementById("telepon").value,
+            email: document.getElementById("email").value,
+            school_subject: document.getElementById("mataPelajaran").value,
+            status: document.getElementById("status").value,
+          };
 
-            // Ambil data guru dari localStorage
-            let guruData = JSON.parse(localStorage.getItem('guruData')) || [];
+          try {
+            console.log("Payload yang dikirim:", updatedData); // Debugging
+            const response = await fetch(`http://localhost:8080/gurus/${id}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedData),
+            });
 
-            // Temukan indeks guru dengan ID tertentu
-            const guruIndex = guruData.findIndex(guru => guru.id == id);
-
-            if (guruIndex !== -1) {
-                // Perbarui data guru
-                guruData[guruIndex] = {
-                    id: parseInt(id),
-                    nama,
-                    alamat,
-                    telepon,
-                    email
-                };
-
-                // Simpan kembali data guru ke localStorage
-                localStorage.setItem('guruData', JSON.stringify(guruData));
-
-                // Tampilkan notifikasi sukses
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Data guru berhasil diperbarui.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    // Arahkan kembali ke halaman utama
-                    window.location.href = 'index.html';
-                });
-            } else {
-                Swal.fire('Error', 'Gagal memperbarui data guru!', 'error');
+            if (!response.ok) {
+              throw new Error("Gagal memperbarui data Guru.");
             }
+
+            alert("Data Guru berhasil diperbarui!");
+            window.location.href = "guru/index.html";
+          } catch (error) {
+            alert("Terjadi kesalahan saat menyimpan data: " + error.message);
+          }
         }
 
-        // Fungsi untuk mendapatkan parameter ID dari URL
-        function getUrlParameter(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
+        // Panggil fetchGuruData saat halaman dimuat
+        fetchGuruData();
 
-        // Tambahkan event listener untuk memuat data guru saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', loadGuruData);
-
-        // Tambahkan event listener untuk menyimpan perubahan
-        document.getElementById('formEditGuru').addEventListener('submit', editGuru);
-    </script>
-</body>
+        // Tambahkan event listener pada form
+        formEditGuru.addEventListener("submit", updateGuru);
+      });
+    </script> -->
+  </body>
 </html>
