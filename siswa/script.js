@@ -1,25 +1,55 @@
-// Fungsi untuk mendapatkan data siswa dari localStorage
-function getSiswaData() {
-    return JSON.parse(localStorage.getItem('siswaData')) || [];
+const apiUrl = "http://localhost:8080/siswa";
+
+// Fungsi untuk mengambil data siswa dari API
+async function getSiswaData() {
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Pastikan respons berbentuk array
+        if (!Array.isArray(data)) {
+            throw new Error("Data tidak berbentuk array.");
+        }
+
+        return data;
+    } catch (error) {
+        console.error("Error fetching siswa data:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops!",
+            text: "Gagal mengambil data siswa. Silakan coba lagi nanti.",
+        });
+        return [];
+    }
 }
 
-// Fungsi untuk menyimpan data siswa ke localStorage
-function saveSiswaData(data) {
-    localStorage.setItem('siswaData', JSON.stringify(data));
-}
+// Fungsi untuk menampilkan daftar siswa di halaman
+async function tampilkanDataSiswa() {
+    const siswaList = document.getElementById("siswaList");
+    siswaList.innerHTML = ""; // Hapus konten sebelumnya
 
-// Fungsi untuk menampilkan data siswa dalam format card
-function tampilkanDataSiswa() {
-    const siswaData = getSiswaData();
-    const siswaList = document.getElementById('siswaList');
-    siswaList.innerHTML = '';
-    siswaData.forEach(siswa => {
-        const card = document.createElement('div');
-        card.classList.add('card');
+    const data = await getSiswaData();
+
+    // Tangani kondisi jika data tidak ada atau kosong
+    if (!data || data.length === 0) {
+        siswaList.innerHTML = `
+            <p class="empty-message">Tidak ada data siswa yang tersedia.</p>
+        `;
+        return;
+    }
+
+    // Loop melalui data siswa untuk membuat kartu
+    data.forEach((siswa) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
         card.innerHTML = `
-            <h3>${siswa.nama}</h3>
-            <p><strong>Alamat:</strong> ${siswa.alamat}</p>
-            <p><strong>Telepon:</strong> ${siswa.telepon}</p>
+            <h3>${siswa.fullname}</h3>
+            <p><strong>Alamat:</strong> ${siswa.address}</p>
+            <p><strong>No. HP:</strong> ${siswa.phonenumber}</p>
             <p><strong>Email:</strong> ${siswa.email}</p>
             <p><strong>Status:</strong> ${siswa.status}</p>
         `;
@@ -57,50 +87,67 @@ function editSiswa(id) {
 }
 
 // Fungsi untuk menghapus data siswa
-function hapusSiswa(id) {
-    Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data siswa akan dihapus secara permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, hapus!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let siswaData = getSiswaData();
-            siswaData = siswaData.filter(siswa => siswa.id !== id);
-            saveSiswaData(siswaData);
-            Swal.fire('Terhapus!', 'Data siswa telah dihapus.', 'success')
-                .then(() => {
-                    tampilkanDataSiswa();
-                });
+async function hapusSiswa(id) {
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    });
+
+        Swal.fire({
+            title: "Terhapus!",
+            text: "Data siswa telah dihapus.",
+            icon: "success",
+        }).then(() => {
+            tampilkanDataSiswa();
+        });
+    } catch (error) {
+        console.error("Error deleting siswa:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops!",
+            text: "Gagal menghapus data siswa. Silakan coba lagi nanti.",
+        });
+    }
 }
 
 // Fungsi untuk mencari siswa berdasarkan nama
-function searchSiswa() {
-    const query = document.getElementById('search').value.toLowerCase();
-    const siswaData = getSiswaData();
-    const filteredData = siswaData.filter(siswa =>
-        siswa.nama.toLowerCase().includes(query)
+async function searchSiswa() {
+    const query = document.getElementById("search").value.toLowerCase();
+    const siswaList = document.getElementById("siswaList");
+    siswaList.innerHTML = ""; // Hapus konten sebelumnya
+
+    const data = await getSiswaData();
+    const filteredData = data.filter((siswa) =>
+        siswa.fullname.toLowerCase().includes(query)
     );
-    const siswaList = document.getElementById('siswaList');
-    siswaList.innerHTML = '';
-    filteredData.forEach(siswa => {
-        const card = document.createElement('div');
-        card.classList.add('card');
+
+    // Tampilkan hasil pencarian
+    if (!filteredData.length) {
+        siswaList.innerHTML = `
+            <p class="empty-message">Tidak ada siswa yang sesuai dengan pencarian.</p>
+        `;
+        return;
+    }
+
+    filteredData.forEach((siswa) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
         card.innerHTML = `
-            <h3>${siswa.nama}</h3>
-            <p><strong>Alamat:</strong> ${siswa.alamat}</p>
-            <p><strong>Telepon:</strong> ${siswa.telepon}</p>
+            <h3>${siswa.fullname}</h3>
+            <p><strong>Alamat:</strong> ${siswa.address}</p>
+            <p><strong>No. HP:</strong> ${siswa.phonenumber}</p>
             <p><strong>Email:</strong> ${siswa.email}</p>
             <p><strong>Status:</strong> ${siswa.status}</p>
         `;
+
         siswaList.appendChild(card);
     });
 }
 
-// Tampilkan data siswa saat halaman dimuat
-tampilkanDataSiswa();
+// Panggil fungsi untuk menampilkan data siswa saat halaman dimuat
+document.addEventListener("DOMContentLoaded", tampilkanDataSiswa);
