@@ -88,36 +88,50 @@ function editSiswa(id) {
 
 // Fungsi untuk menghapus data siswa
 async function hapusSiswa(id) {
-    console.log(`Menghapus siswa dengan ID: ${id}`); // Log ID untuk debugging
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Anda tidak dapat mengembalikan data siswa yang sudah dihapus!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            console.log(`Menghapus siswa dengan ID: ${id}`); // Log ID untuk debugging
 
-    try {
-        const response = await fetch(`${apiUrl}/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
+            try {
+                const response = await fetch(`${apiUrl}/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                Swal.fire({
+                    title: "Terhapus!",
+                    text: "Data siswa telah dihapus.",
+                    icon: "success",
+                }).then(() => {
+                    tampilkanDataSiswa(); // Menampilkan kembali data siswa setelah penghapusan
+                });
+            } catch (error) {
+                console.error("Error deleting siswa:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!",
+                    text: "Gagal menghapus data siswa. Silakan coba lagi nanti.",
+                });
             }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        Swal.fire({
-            title: "Terhapus!",
-            text: "Data siswa telah dihapus.",
-            icon: "success",
-        }).then(() => {
-            tampilkanDataSiswa(); // Menampilkan kembali data siswa setelah penghapusan
-        });
-    } catch (error) {
-        console.error("Error deleting siswa:", error);
-        Swal.fire({
-            icon: "error",
-            title: "Oops!",
-            text: "Gagal menghapus data siswa. Silakan coba lagi nanti.",
-        });
-    }
+    });
 }
+
 
 
 // Fungsi untuk mencari siswa berdasarkan nama
