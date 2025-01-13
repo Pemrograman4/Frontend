@@ -36,7 +36,7 @@
       </header>
     <div class="container">
         <h1>Tambah Program Kursus</h1>
-        
+        <div id="courseList"></div>
         <!-- Form input data program kursus -->
         <form id="courseForm">
             <span><label for="programId">ID Program:</label>
@@ -45,7 +45,7 @@
             <span><label for="programName">Nama Program:</label>
                 <input type="text" id="programName" required><br><br></span>
             
-            <span><label for="duration">Durasi Program (bulan):</label>
+            <span><label for="duration">Durasi Program:</label>
                 <input type="number" id="duration" required><br><br></span>
             
             <span><label for="programCost">Biaya Kursus:</label>
@@ -73,43 +73,82 @@
 
     <script src="script.js"></script>
     <script>
-        // Fungsi untuk menambahkan program kursus
-        document.getElementById("courseForm").addEventListener("submit", function (e) {
-          e.preventDefault(); // Mencegah submit default form
-  
-          // Ambil data dari form
-          const programId = document.getElementById("programId").value;
-          const programName = document.getElementById("programName").value;
-          const duration = parseInt(document.getElementById("duration").value);
-          const description = document.getElementById("description").value;
-          const programCost = parseInt(document.getElementById("programCost").value);
-  
-          // Validasi form
-          if (!programId || !programName || !duration || !description || !programCost) {
-            alert("Semua field harus diisi dengan benar!");
-            return;
-          }
-  
-          // Ambil data kursus dari localStorage dan tambahkan data baru
-          let courses = JSON.parse(localStorage.getItem("courses")) || [];
-          courses.push({
-            programId,
-            programName,
-            duration,
-            description,
-            cost: programCost * duration
-          });
-  
-          // Simpan kembali ke localStorage
-          localStorage.setItem("courses", JSON.stringify(courses));
-  
-          // Setelah menambahkan data kursus ke localStorage
-localStorage.setItem("courses", JSON.stringify(courses));
+      document.addEventListener('DOMContentLoaded', async function () {
+        try {
+            // Ambil ID program terbaru dari server
+            const response = await fetch('http://localhost:8080/courses/latest-id');
+            
+            if (!response.ok) {
+                throw new Error('Gagal mendapatkan ID program terbaru');
+            }
+            
+            const result = await response.json();
+            const latestId = result.latestId; // ID terbaru yang dikirim oleh server
+            
+            // Perbarui input programId dengan ID terbaru
+            document.getElementById('programId').value = latestId;        // ID berikutnya
+            
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Terjadi kesalahan saat mengambil ID program!',
+            });
+        }
+    });
+    
+    document.getElementById('courseForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Mencegah refresh halaman
+    
+        // Ambil nilai dari form
+        const courseData = {
+          id: document.getElementById('programId').value,
+          name: document.getElementById('programName').value,
+          duration: parseInt(document.getElementById('duration').value),
+          cost: parseFloat(document.getElementById('programCost').value),
+          description: document.getElementById('description').value
+      };
+      
+        try {
+            // Kirim data ke backend
+            const response = await fetch('http://localhost:8080/courses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(courseData)
+            });
+    
+            if (!response.ok) {
+                throw new Error('Gagal menambahkan data kursus');
+            }
+    
+            const result = await response.json();
+    
+            // Tampilkan pesan sukses
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Program kursus berhasil ditambahkan!',
+            }).then(() => {
+                localStorage.setItem('newCourse', JSON.stringify(courseData));
+console.log('Data baru disimpan ke localStorage:', courseData);
+window.location.href = '/program_kursus/list_courses.html';
 
-// Redirect ke halaman daftar kursus
-window.location.href = "list_courses.html"; // Ganti dengan halaman daftar kursus yang benar
-
-        });
-      </script>
+              });
+    
+            // Reset form setelah berhasil menambahkan data
+            document.getElementById('courseForm').reset();
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Terjadi kesalahan saat menambahkan data kursus!',
+            });
+        }
+    });
+    </script>    
 </body>
 </html>

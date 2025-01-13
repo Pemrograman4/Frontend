@@ -61,54 +61,111 @@
     </nav>
 
     <script>
-
-      // Fungsi untuk menghitung biaya berdasarkan ID program dan durasi
-      function calculateCost(programId, duration) {
-        const costPerProgram = courseCosts[programId];
-        return costPerProgram * duration;
-      }
-
-      // Memuat data kursus dan menampilkannya dalam bentuk kartu
-      function loadCourses() {
-        const courses = JSON.parse(localStorage.getItem("courses")) || [];
+      // Fungsi utama untuk memuat data kursus
+      async function loadCourses() {
+        console.log("Memuat data kursus...");
+    
         const courseCards = document.getElementById("courseCards");
-
-        // Kosongkan kartu sebelum menambahkan data baru
+    
+        // Periksa apakah elemen `courseCards` ada
+        if (!courseCards) {
+          console.error("Elemen dengan ID 'courseCards' tidak ditemukan!");
+          return;
+        }
+    
+        // Kosongkan kontainer sebelum menambahkan data
         courseCards.innerHTML = "";
-
-        courses.forEach((course, index) => {
+    
+        try {
+          // Coba fetch data dari API
+          const response = await fetch("http://localhost:8080/courses"); // Ganti dengan URL API Anda
+          if (!response.ok) {
+            throw new Error("Gagal mengambil data dari server.");
+          }
+    
+          const courses = await response.json();
+          console.log("Data dari server:", courses);
+    
+          // Jika data dari server kosong, tampilkan pesan
+          if (courses.length === 0) {
+            courseCards.innerHTML = '<p>Tidak ada program kursus yang tersedia.</p>';
+            return;
+          }
+    
+          // Tampilkan data kursus dari server
+          renderCourses(courses);
+    
+          // Simpan data ke localStorage sebagai cadangan
+          localStorage.setItem("courses", JSON.stringify(courses));
+        } catch (error) {
+          console.error("Gagal memuat data dari server. Menggunakan data dari localStorage...", error);
+    
+          // Jika fetch gagal, gunakan data dari localStorage
+          const courses = JSON.parse(localStorage.getItem("courses")) || [];
+          if (courses.length === 0) {
+            courseCards.innerHTML = '<p>Tidak ada program kursus yang tersedia.</p>';
+            return;
+          }
+    
+          // Tampilkan data kursus dari localStorage
+          renderCourses(courses);
+        }
+      }
+    
+      // Fungsi untuk menampilkan data kursus dalam bentuk kartu
+      function renderCourses(courses) {
+        const courseCards = document.getElementById("courseCards");
+    
+        courses.forEach((course) => {
           const card = document.createElement("div");
           card.classList.add("course-card");
-
+        
           card.innerHTML = `
-            <h3 class="course-name">${course.programName}</h3>
-            <p><strong>Durasi:</strong> ${course.duration} bulan</p>
+            <h3 class="course-name">${course.name}</h3>
+            <p><strong>Durasi:</strong> ${course.duration}</p>
             <p><strong>Biaya:</strong> Rp ${course.cost.toLocaleString()}</p>
             <p><strong>Deskripsi:</strong> ${course.description}</p>
             <div class="card-actions">
-                <button class="edit-btn" onclick="editCourse(${index})">Edit</button>
-                <button class="delete-btn" onclick="deleteCourse(${index})">Hapus</button>
+              <button class="edit-btn" onclick="editCourse('${course.id}')">Edit</button>
+              <button class="delete-btn" onclick="deleteCourse('${course._id}')">Hapus</button>
             </div>
           `;
           courseCards.appendChild(card);
-        });
+        });        
+    
+        console.log("Data berhasil dirender ke halaman.");
       }
-
-      // Memuat kursus saat halaman dimuat
-      document.addEventListener("DOMContentLoaded", loadCourses);
-
+    
       // Fungsi untuk mengedit kursus
-      function editCourse(index) {
-        window.location.href = `edit_course.html?edit=${index}`;
-      }
-
+      function editCourse(id) {
+        console.log(`Edit kursus dengan ID ${id}`);
+        window.location.href = `edit_course.html?id=${id}`;
+      }      
+    
       // Fungsi untuk menghapus kursus
-      function deleteCourse(index) {
-        let courses = JSON.parse(localStorage.getItem("courses")) || [];
-        courses.splice(index, 1);
-        localStorage.setItem("courses", JSON.stringify(courses));
-        loadCourses();
-      }
-    </script>
+      async function deleteCourse(id) {
+        try {
+          console.log(`Menghapus kursus dengan ID: ${id}`);
+      
+          const response = await fetch(`http://localhost:8080/courses/${id}`, {
+            method: 'DELETE',
+          });
+      
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Gagal menghapus kursus: ${response.status} - ${errorText}`);
+          }
+      
+          console.log(`Kursus dengan ID ${id} berhasil dihapus.`);
+          loadCourses(); // Muat ulang daftar kursus
+        } catch (error) {
+          console.error("Terjadi kesalahan saat menghapus kursus:", error);
+          alert(`Gagal menghapus kursus. Error: ${error.message}`);
+        }
+      }       
+    
+      // Panggil fungsi loadCourses saat halaman selesai dimuat
+      document.addEventListener("DOMContentLoaded", loadCourses);
+    </script>    
   </body>
 </html>
