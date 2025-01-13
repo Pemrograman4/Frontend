@@ -80,86 +80,99 @@
         </form>
     </div>
     <script>
-        // Fungsi untuk memuat data siswa dari localStorage
-        function loadSiswaData() {
-            const id = getUrlParameter('id'); // Mendapatkan ID siswa dari URL
-            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
-            
-            // Cari data siswa berdasarkan ID
-            const siswa = siswaData.find(s => s.id == id);
+        const apiUrl = "http://localhost:8080/siswa";
 
-            if (siswa) {
-                // Isi form dengan data siswa
-                document.getElementById('nama').value = siswa.nama;
-                document.getElementById('alamat').value = siswa.alamat;
-                document.getElementById('telepon').value = siswa.telepon;
-                document.getElementById('email').value = siswa.email;
-                document.getElementById('status').value = siswa.status;
-            } else {
-                // Tampilkan pesan jika data siswa tidak ditemukan
-                Swal.fire('Error', 'Data siswa tidak ditemukan!', 'error').then(() => {
-                    window.location.href = 'index.html';
-                });
+        function getUrlParameter(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        async function getSiswaById(id) {
+            try {
+                const response = await fetch(`${apiUrl}/${id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error("Error fetching siswa data by ID:", error);
             }
         }
 
-        // Fungsi untuk memperbarui data siswa di localStorage
-        function editSiswa(event) {
+        async function loadSiswaData() {
+            const id = getUrlParameter('id'); // Ambil ID dari URL
+            if (!id) {
+                alert('ID siswa tidak ditemukan!');
+                return;
+            }
+
+            const siswa = await getSiswaById(id);
+
+            if (siswa) {
+                // Isi form dengan data siswa
+                document.getElementById('nama').value = siswa.fullname;
+                document.getElementById('alamat').value = siswa.address;
+                document.getElementById('telepon').value = siswa.phonenumber;
+                document.getElementById('email').value = siswa.email;
+                document.getElementById('status').value = siswa.status;
+            } else {
+                alert('Data siswa tidak ditemukan!');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadSiswaData);
+
+        document.getElementById('formEditSiswa').addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const id = getUrlParameter('id'); // Mendapatkan ID siswa dari URL
+            const id = getUrlParameter('id');
             const nama = document.getElementById('nama').value;
             const alamat = document.getElementById('alamat').value;
             const telepon = document.getElementById('telepon').value;
             const email = document.getElementById('email').value;
             const status = document.getElementById('status').value;
 
-            // Ambil data siswa dari localStorage
-            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
-
-            // Temukan indeks siswa dengan ID tertentu
-            const siswaIndex = siswaData.findIndex(siswa => siswa.id == id);
-
-            if (siswaIndex !== -1) {
-                // Perbarui data siswa
-                siswaData[siswaIndex] = {
-                    id: parseInt(id),
-                    nama,
-                    alamat,
-                    telepon,
-                    email,
-                    status
-                };
-
-                // Simpan kembali data siswa ke localStorage
-                localStorage.setItem('siswaData', JSON.stringify(siswaData));
-
-                // Tampilkan notifikasi sukses
-                Swal.fire({
-                    title: 'Berhasil!',
-                    text: 'Data siswa berhasil diperbarui.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    // Arahkan kembali ke halaman utama
-                    window.location.href = 'index.html';
+            try {
+                const response = await fetch(`${apiUrl}/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        fullname: nama,
+                        address: alamat,
+                        phonenumber: telepon,
+                        email: email,
+                        status: status,
+                    }),
                 });
-            } else {
-                Swal.fire('Error', 'Gagal memperbarui data siswa!', 'error');
-            }
-        }
 
-        // Fungsi untuk mendapatkan parameter ID dari URL
-        function getUrlParameter(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
-        // Tambahkan event listener untuk memuat data siswa saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', loadSiswaData);
-
-        // Tambahkan event listener untuk menyimpan perubahan
-        document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
+                 // Tampilkan notifikasi sukses dengan SweetAlert2
+                 Swal.fire({
+                      title: 'Berhasil!',
+                      text: 'Data siswa berhasil di edit.',
+                      icon: 'success',
+                      confirmButtonText: 'OK'
+                  }).then(() => {
+                      // Arahkan kembali ke halaman utama setelah notifikasi
+                      window.location.href = 'index.html';  // Sesuaikan URL jika diperlukan
+                  });
+              } catch (error) {
+                  // Tampilkan pesan error jika terjadi masalah pada fetch
+                  Swal.fire({
+                      title: 'Error!',
+                      text: 'Gagal mengedit data siswa.',
+                      icon: 'error',
+                      confirmButtonText: 'Coba Lagi'
+                  });
+              }
+              // Pastikan form ID benar sesuai dengan ID form di HTML
+          document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
+        });
     </script>
 </body>
 </html>

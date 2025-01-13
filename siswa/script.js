@@ -1,170 +1,153 @@
- // Fungsi untuk menambahkan data siswa ke localStorage
- function tambahSiswa(event) {
-    event.preventDefault();
+const apiUrl = "http://localhost:8080/siswa";
 
-    // Ambil data dari form
-    const nama = document.getElementById('nama').value;
-    const alamat = document.getElementById('alamat').value;
-    const telepon = document.getElementById('telepon').value;
-    const email = document.getElementById('email').value;
-    const status = document.getElementById('status').value;
+// Fungsi untuk mengambil data siswa dari API
+async function getSiswaData() {
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
 
-    // Ambil data siswa dari localStorage (atau buat array baru jika belum ada)
-    let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+        // Pastikan respons berbentuk array
+        if (!Array.isArray(data)) {
+            throw new Error("Data tidak berbentuk array.");
+        }
 
-    // Buat ID baru untuk siswa
-    const idBaru = siswaData.length > 0 ? siswaData[siswaData.length - 1].id + 1 : 1;
-
-    // Tambahkan data siswa baru ke array
-    siswaData.push({
-        id: idBaru,
-        nama,
-        alamat,
-        telepon,
-        email,
-        status
-    });
-
-    // Simpan kembali data siswa ke localStorage
-    localStorage.setItem('siswaData', JSON.stringify(siswaData));
-
-    // Tampilkan notifikasi sukses dengan SweetAlert2
-    Swal.fire({
-        title: 'Berhasil!',
-        text: 'Data siswa berhasil ditambahkan.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    }).then(() => {
-        // Arahkan kembali ke halaman utama setelah notifikasi
-        window.location.href = 'index.html';
-    });
+        return data;
+    } catch (error) {
+        console.error("Error fetching siswa data:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops!",
+            text: "Gagal mengambil data siswa. Silakan coba lagi nanti.",
+        });
+        return [];
+    }
 }
 
-// Tambahkan event listener ke form
-document.getElementById('formTambahSiswa').addEventListener('submit', tambahSiswa);
+// Fungsi untuk menampilkan daftar siswa di halaman
+async function tampilkanDataSiswa() {
+    const siswaList = document.getElementById("siswaList");
+    siswaList.innerHTML = ""; // Hapus konten sebelumnya
 
+    const data = await getSiswaData();
+
+    // Tangani kondisi jika data tidak ada atau kosong
+    if (!data || data.length === 0) {
+        siswaList.innerHTML = `
+            <p class="empty-message">Tidak ada data siswa yang tersedia.</p>
+        `;
+        return;
+    }
+
+    // Loop melalui data siswa untuk membuat kartu
+    data.forEach((siswa) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <h3>${siswa.fullname}</h3>
+            <p><strong>Alamat:</strong> ${siswa.address}</p>
+            <p><strong>No. HP:</strong> ${siswa.phonenumber}</p>
+            <p><strong>Email:</strong> ${siswa.email}</p>
+            <p><strong>Status:</strong> ${siswa.status}</p>
+        `;
+
+        // Bagian aksi (tombol edit & hapus)
+        const cardActions = document.createElement("div");
+        cardActions.className = "card-actions";
+
+        // Tombol Edit
+        const editButton = document.createElement("button");
+        editButton.className = "edit-btn";
+        editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+        editButton.onclick = () => editSiswa(siswa.id);
+
+        // Tombol Delete
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-btn";
+        deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+        deleteButton.onclick = () => hapusSiswa(siswa.id);
+
+        // Tambahkan tombol ke bagian aksi
+        cardActions.appendChild(editButton);
+        cardActions.appendChild(deleteButton);
+
+        // Tambahkan cardActions ke card
+        card.appendChild(cardActions);
+
+        siswaList.appendChild(card);
+    });
+}
 
 // Fungsi untuk mengedit data siswa
 function editSiswa(id) {
-    window.location.href = `edit_siswa.html?id=${id}`; // Mengarahkan ke halaman edit dengan ID siswa sebagai parameter
+    window.location.href = `edit_siswa.html?id=${id}`;
 }
 
 // Fungsi untuk menghapus data siswa
-function hapusSiswa(id) {
-    Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data siswa akan dihapus secara permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, hapus!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Ambil data siswa dari localStorage
-            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+async function hapusSiswa(id) {
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: "DELETE",
+        });
 
-            // Temukan indeks siswa yang akan dihapus
-            const siswaIndex = siswaData.findIndex(siswa => siswa.id == id);
-
-            if (siswaIndex > -1) {
-                // Hapus siswa dari array
-                siswaData.splice(siswaIndex, 1);
-
-                // Simpan kembali data siswa ke localStorage
-                localStorage.setItem('siswaData', JSON.stringify(siswaData));
-
-                // Tampilkan notifikasi sukses dengan SweetAlert2
-                Swal.fire(
-                    'Terhapus!',
-                    'Data siswa telah dihapus.',
-                    'success'
-                ).then(() => {
-                    // Memuat kembali data siswa
-                    tampilkanDataSiswa();
-                });
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    });
+
+        Swal.fire({
+            title: "Terhapus!",
+            text: "Data siswa telah dihapus.",
+            icon: "success",
+        }).then(() => {
+            tampilkanDataSiswa();
+        });
+    } catch (error) {
+        console.error("Error deleting siswa:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Oops!",
+            text: "Gagal menghapus data siswa. Silakan coba lagi nanti.",
+        });
+    }
 }
 
-// Fungsi untuk menampilkan data siswa
-function tampilkanDataSiswa() {
-    // Ambil data siswa dari localStorage
-    const siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+// Fungsi untuk mencari siswa berdasarkan nama
+async function searchSiswa() {
+    const query = document.getElementById("search").value.toLowerCase();
+    const siswaList = document.getElementById("siswaList");
+    siswaList.innerHTML = ""; // Hapus konten sebelumnya
 
-    // Kosongkan tabel sebelum menampilkan data baru
-    const tbody = document.getElementById('siswaTable').getElementsByTagName('tbody')[0];
-    tbody.innerHTML = '';
+    const data = await getSiswaData();
+    const filteredData = data.filter((siswa) =>
+        siswa.fullname.toLowerCase().includes(query)
+    );
 
-    // Tampilkan setiap siswa dalam tabel
-    siswaData.forEach(siswa => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${siswa.id}</td>
-            <td>${siswa.nama}</td>
-            <td>${siswa.alamat}</td>
-            <td>${siswa.telepon}</td>
-            <td>${siswa.email}</td>
-            <td>${siswa.status}</td>
-            <td>
-                <button onclick="editSiswa(${siswa.id})">Edit</button>
-                <button onclick="hapusSiswa(${siswa.id})">Hapus</button>
-            </td>
+    // Tampilkan hasil pencarian
+    if (!filteredData.length) {
+        siswaList.innerHTML = `
+            <p class="empty-message">Tidak ada siswa yang sesuai dengan pencarian.</p>
         `;
+        return;
+    }
+
+    filteredData.forEach((siswa) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <h3>${siswa.fullname}</h3>
+            <p><strong>Alamat:</strong> ${siswa.address}</p>
+            <p><strong>No. HP:</strong> ${siswa.phonenumber}</p>
+            <p><strong>Email:</strong> ${siswa.email}</p>
+            <p><strong>Status:</strong> ${siswa.status}</p>
+        `;
+
+        siswaList.appendChild(card);
     });
 }
 
-// Panggil fungsi untuk menampilkan data siswa
-tampilkanDataSiswa();
- // Fungsi untuk memperbarui data siswa di localStorage
- function editSiswa(event) {
-    event.preventDefault();
-
-    // Ambil data dari form
-    const id = getUrlParameter('id'); // Mendapatkan ID siswa dari URL
-    const nama = document.getElementById('nama').value;
-    const alamat = document.getElementById('alamat').value;
-    const telepon = document.getElementById('telepon').value;
-    const email = document.getElementById('email').value;
-    const status = document.getElementById('status').value;
-
-    // Ambil data siswa dari localStorage
-    let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
-
-    // Temukan siswa dengan ID tertentu
-    const siswaIndex = siswaData.findIndex(siswa => siswa.id == id);
-
-    // Perbarui data siswa
-    siswaData[siswaIndex] = {
-        id: parseInt(id),
-        nama,
-        alamat,
-        telepon,
-        email,
-        status
-    };
-
-    // Simpan kembali data siswa ke localStorage
-    localStorage.setItem('siswaData', JSON.stringify(siswaData));
-
-    // Tampilkan notifikasi sukses dengan SweetAlert2
-    Swal.fire({
-        title: 'Berhasil!',
-        text: 'Data siswa berhasil diperbarui.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-    }).then(() => {
-        // Arahkan kembali ke halaman utama setelah notifikasi
-        window.location.href = 'index.html';
-    });
-}
-
-// Ambil parameter 'id' dari URL
-function getUrlParameter(name) {
-    var url = new URL(window.location.href);
-    return url.searchParams.get(name);
-}
-
-// Tambahkan event listener ke form
-document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
+// Panggil fungsi untuk menampilkan data siswa saat halaman dimuat
+document.addEventListener("DOMContentLoaded", tampilkanDataSiswa);

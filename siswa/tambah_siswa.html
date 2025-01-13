@@ -81,50 +81,71 @@
     </div>
 
     <script>
-        // Fungsi untuk menambahkan data siswa ke localStorage
-        function tambahSiswa(event) {
-            event.preventDefault();
+      // Menunggu hingga DOM selesai dimuat
+      document.addEventListener('DOMContentLoaded', function() {
+          // Fungsi untuk menambahkan data siswa ke server menggunakan fetch
+          async function tambahSiswa(event) {
+              event.preventDefault();
 
-            // Ambil data dari form
-            const nama = document.getElementById('nama').value;
-            const alamat = document.getElementById('alamat').value;
-            const telepon = document.getElementById('telepon').value;
-            const email = document.getElementById('email').value;
-            const status = document.getElementById('status').value;
+              // Ambil data dari form
+              const fullName = document.getElementById('nama').value;  // Menggunakan fullname sesuai model
+              const address = document.getElementById('alamat').value;  // Menggunakan address sesuai model
+              const phoneNumber = document.getElementById('telepon').value;  // Menggunakan phonenumber sesuai model
+              const email = document.getElementById('email').value;
+              const status = document.getElementById('status').value;
 
-            // Ambil data siswa dari localStorage (atau buat array baru jika belum ada)
-            let siswaData = JSON.parse(localStorage.getItem('siswaData')) || [];
+              const siswaData = {
+                  fullname: fullName,  // Menyesuaikan dengan nama field di model
+                  address: address,  // Menyesuaikan dengan nama field di model
+                  phonenumber: phoneNumber,  // Menyesuaikan dengan nama field di model
+                  email: email,
+                  status: status
+              };
 
-            // Buat ID baru untuk siswa
-            const idBaru = siswaData.length > 0 ? siswaData[siswaData.length - 1].id + 1 : 1;
+              try {
+                  // Kirim data ke server menggunakan fetch
+                  const response = await fetch('http://localhost:8080/siswa', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(siswaData)
+                  });
 
-            // Tambahkan data siswa baru ke array
-            siswaData.push({
-                id: idBaru,
-                nama,
-                alamat,
-                telepon,
-                email,
-                status
-            });
+                  if (response.ok) {
+                      // Tampilkan notifikasi sukses dengan SweetAlert2
+                      Swal.fire({
+                          title: 'Berhasil!',
+                          text: 'Data siswa berhasil ditambahkan.',
+                          icon: 'success',
+                          confirmButtonText: 'OK'
+                      }).then(() => {
+                          // Arahkan kembali ke halaman utama setelah notifikasi
+                          window.location.href = 'index.html';  // Sesuaikan URL jika diperlukan
+                      });
+                  } else {
+                      // Tampilkan pesan error jika request gagal
+                      Swal.fire({
+                          title: 'Error!',
+                          text: 'Gagal menambahkan data siswa.',
+                          icon: 'error',
+                          confirmButtonText: 'Coba Lagi'
+                      });
+                  }
+              } catch (error) {
+                  // Tampilkan pesan error jika terjadi masalah pada fetch
+                  Swal.fire({
+                      title: 'Error!',
+                      text: 'Terjadi kesalahan saat mengirim data.',
+                      icon: 'error',
+                      confirmButtonText: 'Coba Lagi'
+                  });
+              }
+          }
 
-            // Simpan kembali data siswa ke localStorage
-            localStorage.setItem('siswaData', JSON.stringify(siswaData));
-
-            // Tampilkan notifikasi sukses dengan SweetAlert2
-            Swal.fire({
-                title: 'Berhasil!',
-                text: 'Data siswa berhasil ditambahkan.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                // Arahkan kembali ke halaman utama setelah notifikasi
-                window.location.href = 'index.html';
-            });
-        }
-
-        // Tambahkan event listener ke form
-        document.getElementById('formEditSiswa').addEventListener('submit', tambahSiswa);
+          // Pastikan form ID benar sesuai dengan ID form di HTML
+          document.getElementById('formEditSiswa').addEventListener('submit', tambahSiswa);
+      });
     </script>
 </body>
 </html>
