@@ -88,9 +88,14 @@ function editSiswa(id) {
 
 // Fungsi untuk menghapus data siswa
 async function hapusSiswa(id) {
+    console.log(`Menghapus siswa dengan ID: ${id}`); // Log ID untuk debugging
+
     try {
         const response = await fetch(`${apiUrl}/${id}`, {
             method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            }
         });
 
         if (!response.ok) {
@@ -102,7 +107,7 @@ async function hapusSiswa(id) {
             text: "Data siswa telah dihapus.",
             icon: "success",
         }).then(() => {
-            tampilkanDataSiswa();
+            tampilkanDataSiswa(); // Menampilkan kembali data siswa setelah penghapusan
         });
     } catch (error) {
         console.error("Error deleting siswa:", error);
@@ -113,6 +118,7 @@ async function hapusSiswa(id) {
         });
     }
 }
+
 
 // Fungsi untuk mencari siswa berdasarkan nama
 async function searchSiswa() {
