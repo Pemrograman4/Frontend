@@ -72,82 +72,77 @@
 
     <script src="script.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', async function () {
-        try {
-            // Ambil ID program terbaru dari server
-            const response = await fetch('http://localhost:8080/courses/latest-id');
-            
-            if (!response.ok) {
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+              // Ambil ID program terbaru dari server
+              const response = await fetch('http://localhost:8080/courses/next-id');
+              if (!response.ok) {
                 throw new Error('Gagal mendapatkan ID program terbaru');
-            }
-            
-            const result = await response.json();
-            const latestId = result.latestId; // ID terbaru yang dikirim oleh server
-            
-            // Perbarui input programId dengan ID terbaru
-            document.getElementById('programId').value = latestId;        // ID berikutnya
-            
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
+              }
+          
+              const result = await response.json();
+              const nextId = result.nextId; // ID kursus berikutnya dari server
+          
+              // Perbarui input programId dengan ID baru
+              document.getElementById('programId').value = nextId;
+            } catch (error) {
+              console.error('Error:', error);
+              Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Terjadi kesalahan saat mengambil ID program!',
-            });
-        }
-    });
-    
-    document.getElementById('courseForm').addEventListener('submit', async function (event) {
-        event.preventDefault(); // Mencegah refresh halaman
-    
-        // Ambil nilai dari form
-        const courseData = {
-          id: document.getElementById('programId').value,
-          name: document.getElementById('programName').value,
-          duration: parseInt(document.getElementById('duration').value),
-          cost: parseFloat(document.getElementById('programCost').value),
-          description: document.getElementById('description').value
-      };
-      
-        try {
-            // Kirim data ke backend
-            const response = await fetch('http://localhost:8080/courses', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(courseData)
-            });
-    
-            if (!response.ok) {
-                throw new Error('Gagal menambahkan data kursus');
-            }
-    
-            const result = await response.json();
-    
-            // Tampilkan pesan sukses
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil',
-                text: 'Program kursus berhasil ditambahkan!',
-            }).then(() => {
-                localStorage.setItem('newCourse', JSON.stringify(courseData));
-console.log('Data baru disimpan ke localStorage:', courseData);
-window.location.href = '/program_kursus/list_courses.html';
-
               });
-    
-            // Reset form setelah berhasil menambahkan data
-            document.getElementById('courseForm').reset();
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan saat menambahkan data kursus!',
-            });
-        }
-    });
+            }
+          });          
+          
+          document.getElementById("courseForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Mencegah refresh halaman
+          
+            // Ambil nilai dari form
+            const courseData = {
+              id: document.getElementById("programId").value,
+              name: document.getElementById("programName").value,
+              duration: parseInt(document.getElementById("duration").value, 10),
+              cost: parseFloat(document.getElementById("programCost").value),
+              description: document.getElementById("description").value,
+            };
+          
+            try {
+              // Kirim data ke backend
+              const response = await fetch("http://localhost:8080/courses", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(courseData),
+              });
+          
+              if (!response.ok) {
+                throw new Error("Gagal menambahkan data kursus");
+              }
+          
+              // Tampilkan pesan sukses
+              Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "Program kursus berhasil ditambahkan!",
+              }).then(() => {
+                localStorage.setItem("newCourse", JSON.stringify(courseData));
+                console.log("Data baru disimpan ke localStorage:", courseData);
+                window.location.href = "/program_kursus/list_courses.html";
+              });
+          
+              // Reset form setelah berhasil menambahkan data
+              document.getElementById("courseForm").reset();
+            } catch (error) {
+              console.error("Error:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Terjadi kesalahan saat menambahkan data kursus!",
+              });
+            }
+          });          
     </script>    
 </body>
 </html>
