@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
+
 <body>
     <header class="header">
         <i class="fa-solid fa-arrow-left" onclick="window.location.href='index.html'"></i>
@@ -31,7 +33,7 @@
                 <option value="Paket B">Paket B</option>
                 <option value="Paket C">Paket C</option>
                 <option value="Paket UTBK">Paket UTBK</option>
-                
+
             </select>
             <label for="tanggalTagihan">Tanggal Tagihan:</label>
             <input type="date" id="tanggalTagihan" required />
@@ -44,7 +46,7 @@
             </select>
             <button type="submit" id="submitBtn">Tambah</button>
             <button type="button" id="saveBtn" style="display: none;">Simpan</button>
-           
+
         </form>
     </div>
 
@@ -68,7 +70,7 @@
 
         function generateIdTagihan() {
             const tagihanData = JSON.parse(localStorage.getItem("tagihanData")) || [];
-            const newIdNumber = tagihanData.length ? 
+            const newIdNumber = tagihanData.length ?
                 Math.max(...tagihanData.map(tagihan => parseInt(tagihan.idTagihan.replace('TGH', '')))) + 1 : 1;
             return `TGH${String(newIdNumber).padStart(2, '0')}`;
         }
@@ -98,21 +100,22 @@
             }
         }
 
-        window.onload = function() {
+        window.onload = function () {
             populateSelects();
             loadDataForEdit();
         };
 
-        document.getElementById("formTambahTagihan").addEventListener("submit", function (event) {
+        document.getElementById("formTambahTagihan").addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const idTagihan = document.getElementById("idTagihan").value;
+            // Ambil nilai input form
             const idSiswa = document.getElementById("idSiswa").value;
             const program = document.getElementById("program").value;
             const tanggalTagihan = document.getElementById("tanggalTagihan").value;
             const totalTagihan = parseInt(document.getElementById("totalTagihan").value);
             const statusTagihan = document.getElementById("statusTagihan").value;
 
+            // Validasi input
             if (!idSiswa || !program || !tanggalTagihan || totalTagihan <= 0) {
                 Swal.fire({
                     title: "Error!",
@@ -122,33 +125,49 @@
                 return;
             }
 
-            let tagihanData = JSON.parse(localStorage.getItem("tagihanData")) || [];
+            // Data yang akan dikirim ke server
+            const tagihanData = {
+                siswa_id: idSiswa,
+                course_id: program,
+                amount: totalTagihan,
+                due_date: new Date(tanggalTagihan).toISOString(),
+                status: statusTagihan,
+            };
 
-            const existingIndex = tagihanData.findIndex(tagihan => tagihan.idTagihan === idTagihan);
-            if (existingIndex !== -1) {
-                tagihanData[existingIndex] = { idTagihan, idSiswa, program, tanggalTagihan, totalTagihan, statusTagihan };
-            } else {
-                tagihanData.push({ idTagihan, idSiswa, program, tanggalTagihan, totalTagihan, statusTagihan });
+            try {
+                // Kirim request POST ke API
+                const response = await fetch('http://localhost:8080/tagihan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(tagihanData),
+                });
+
+                // Cek apakah request berhasil
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Tampilkan pesan sukses
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "Data tagihan berhasil ditambahkan.",
+                    icon: "success",
+                }).then(() => {
+                    window.location.href = "index.html"; // Redirect ke halaman utama
+                });
+            } catch (error) {
+                // Tangani error
+                console.error("Error:", error);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Gagal menambahkan data tagihan.",
+                    icon: "error",
+                });
             }
-
-            localStorage.setItem("tagihanData", JSON.stringify(tagihanData));
-
-            Swal.fire({
-                title: "Berhasil!",
-                text: "Data tagihan berhasil disimpan.",
-                icon: "success",
-            }).then(() => {
-                window.location.href = "index.html";
-            });
-        });
-
-        document.getElementById("saveBtn").addEventListener("click", function() {
-            document.getElementById("formTambahTagihan").dispatchEvent(new Event('submit'));
-        });
-
-        document.getElementById("cancelBtn").addEventListener("click", function() {
-            window.location.href = "index.html";
         });
     </script>
 </body>
+
 </html>
