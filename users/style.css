@@ -1,6 +1,7 @@
 /* General Reset */
 body,
 h1,
+h2,
 h3,
 h4,
 p {
@@ -8,12 +9,7 @@ p {
   padding: 0;
   font-family: Arial, sans-serif;
   color: #060606;
-}
 
-h2 {
-  font-size: 18px;
-  color: #000;
-  font-weight: bold;
 }
 
 p {
@@ -214,30 +210,3 @@ body {
 .nav-bottom .active-plus{
   color: #ffc00a;
 }
-
-/* Styles for the card container */
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 20px;
-  }
-  
-  /* Styles for individual cards */
-  .card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  /* Styles for the card content */
-  .card-content {
-    margin-bottom: 20px;
-  }
-  
-  /* Styles for the card actions */
-  .card-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }  
