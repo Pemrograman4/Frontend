@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat Transaksi</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <header class="header">
+        <i class="fa-solid fa-bars"></i>
+        <div class="right-section">
+            <h1 class="title">FASFADE Institute</h1>
+            <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+    </header>
+    <div class="container">
+        <nav class="nav-bar">
+            <h1>Riwayat Transaksi Siswa</h1>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Cari Transaksi..." />
+            <button class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+
+        <div id="cardContainer" class="card-container">
+            <!-- Data transaksi akan ditampilkan di sini dalam bentuk card -->
+        </div>
+    </div>
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+        <i class="fa-solid fa-user active"></i>
+    </nav>
+
+    <script>
+        function displayTransaksi() {
+            const transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
+            const cardContainer = document.getElementById("cardContainer");
+
+            cardContainer.innerHTML = ''; // Clear existing cards
+            transaksiData.forEach((transaksi, index) => {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                // Format angka menjadi Rupiah
+                const formattedTotalBayar = parseInt(transaksi.totalBayar).toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                });
+
+                card.innerHTML = `
+                    <div class="card-content">
+                        <p><strong>ID Transaksi:</strong> ${transaksi.idTransaksi}</p>
+                        <p><strong>ID Siswa:</strong> ${transaksi.idSiswa}</p>
+                        <p><strong>Nama Siswa:</strong> ${transaksi.namaSiswa}</p>
+                        <p><strong>Tanggal Transaksi:</strong> ${transaksi.tanggalTransaksi}</p>
+                        <p><strong>Metode Pembayaran:</strong> ${transaksi.metodePembayaran}</p>
+                        <p><strong>Total Bayar:</strong> ${formattedTotalBayar}</p>
+                        <p><strong>Status:</strong> ${transaksi.status}</p>
+                    </div>
+                    <div class="card-actions">
+                        <button class="edit-btn" onclick="editTransaksi('${transaksi.idTransaksi}')">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="delete-btn" onclick="hapusTransaksi(${index})">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+
+                cardContainer.appendChild(card);
+            });
+        }
+
+        function editTransaksi(id) {
+            const transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
+            const transaksiToEdit = transaksiData.find(transaksi => transaksi.idTransaksi === id);
+            if (transaksiToEdit) {
+                const queryString = new URLSearchParams(transaksiToEdit).toString();
+                window.location.href = `add.html?${queryString}`;
+            }
+        }
+
+        function hapusTransaksi(index) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus transaksi ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
+                    // Hapus data berdasarkan index
+                    transaksiData.splice(index, 1);
+                    // Simpan kembali ke localStorage
+                    localStorage.setItem("transaksiData", JSON.stringify(transaksiData));
+                    // Tampilkan kembali data setelah penghapusan
+                    displayTransaksi();
+                    Swal.fire('Terhapus!', 'Transaksi telah dihapus.', 'success');
+                }
+            });
+        }
+
+        // Panggil fungsi displayTransaksi saat halaman dimuat
+        window.onload = displayTransaksi;
+    </script>
+</body>
+</html>

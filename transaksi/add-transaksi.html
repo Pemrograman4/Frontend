@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Data Transaksi</title>
+    <link rel="stylesheet" href="add-edit.css" /> <!-- Menghubungkan CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <header class="header">
+        <i class="fa-solid fa-arrow-left" onclick="window.location.href='index.html'"></i>
+        <div class="right-section">
+            <h1 class="title">FASFADE Institute</h1>
+            <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+        </div>
+    </header>
+    <div class="container">
+        <h1>Tambah Data Transaksi</h1>
+        <form id="formTambahTransaksi">
+            <label for="idTransaksi">ID Transaksi:</label>
+            <input type="text" id="idTransaksi" readonly required />
+            
+            <label for="idSiswa">ID Siswa:</label>
+            <select id="idSiswa" required>
+                <option value="">Pilih Siswa</option>
+            </select>
+            
+            <label for="tanggalTransaksi">Tanggal Transaksi:</label>
+            <input type="date" id="tanggalTransaksi" required />
+            
+            <label for="jumlahBayar">Jumlah Bayar:</label>
+            <input type="number" id="jumlahBayar" min="0" required />
+            
+            <label for="metodeBayar">Metode Pembayaran:</label>
+            <select id="metodeBayar" required>
+                <option value="Transfer Bank">Transfer Bank</option>
+                <option value="Tunai">Tunai</option>
+                <option value="E-Wallet">E-Wallet</option>
+            </select>
+            
+            <label for="statusBayar">Status Pembayaran:</label>
+            <select id="statusBayar" required>
+                <option value="Belum Lunas" selected>Belum Lunas</option>
+                <option value="Lunas">Lunas</option>
+            </select>
+            
+            <button type="submit" id="submitBtn">Tambah</button>
+        </form>
+    </div>
+
+    <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+        <i class="fa-solid fa-user active"></i>
+    </nav>
+
+    <script>
+        function generateIdTransaksi() {
+            const transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
+            const newIdNumber = transaksiData.length ? 
+                Math.max(...transaksiData.map(transaksi => parseInt(transaksi.idTransaksi.replace('TRX', '')))) + 1 : 1;
+            return `TRX${String(newIdNumber).padStart(2, '0')}`;
+        }
+
+        function populateSiswa() {
+            const siswaData = JSON.parse(localStorage.getItem("siswaData")) || [];
+            const idSiswaSelect = document.getElementById("idSiswa");
+            siswaData.forEach((siswa) => {
+                const option = document.createElement("option");
+                option.value = siswa.id;
+                option.textContent = siswa.nama;
+                idSiswaSelect.appendChild(option);
+            });
+        }
+
+        window.onload = function() {
+            document.getElementById("idTransaksi").value = generateIdTransaksi();
+            populateSiswa();
+        };
+
+        document.getElementById("formTambahTransaksi").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            const idTransaksi = document.getElementById("idTransaksi").value;
+            const idSiswa = document.getElementById("idSiswa").value;
+            const tanggalTransaksi = document.getElementById("tanggalTransaksi").value;
+            const jumlahBayar = parseInt(document.getElementById("jumlahBayar").value);
+            const metodeBayar = document.getElementById("metodeBayar").value;
+            const statusBayar = document.getElementById("statusBayar").value;
+            
+            if (!idSiswa || !tanggalTransaksi || jumlahBayar <= 0) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Mohon lengkapi semua data dengan benar.",
+                    icon: "error",
+                });
+                return;
+            }
+            
+            let transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
+            transaksiData.push({ idTransaksi, idSiswa, tanggalTransaksi, jumlahBayar, metodeBayar, statusBayar });
+            localStorage.setItem("transaksiData", JSON.stringify(transaksiData));
+            
+            Swal.fire({
+                title: "Berhasil!",
+                text: "Data transaksi berhasil disimpan.",
+                icon: "success",
+            }).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+</html>
