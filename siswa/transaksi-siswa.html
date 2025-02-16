@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Siswa</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+    integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+</head>
+<style>
+  .nav-bottom .active-plus {
+    color: #ffc00a;
+  }
+
+  .container {
+    max-width: 400px;
+    /* Membatasi lebar form agar lebih kompak */
+    margin: 50px auto;
+    /* Tengah secara horizontal dan memberikan jarak vertikal */
+    padding: 20px;
+    background-color: #ffffff;
+    /* Warna latar belakang putih */
+    border-radius: 15px;
+    /* Membuat sudut membulat */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Menambahkan efek bayangan */
+    font-family: "Arial", sans-serif;
+    /* Font default */
+  }
+
+  h1 {
+    text-align: center;
+    /* Memusatkan judul */
+    font-size: 1.5rem;
+    color: #0097b2;
+    /* Warna teks abu-abu gelap */
+    margin-bottom: 20px;
+    font-family: "Poppins", sans-serif;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Jarak antar elemen form */
+  }
+
+  label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+    /* Warna teks label */
+    margin-bottom: 5px;
+    /* Jarak antara label dan field input */
+    font-family: "Poppins", sans-serif;
+  }
+
+  /* Sembunyikan ikon default */
+  select {
+    appearance: none;
+    /* Hapus gaya default */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    cursor: pointer;
+  }
+
+  option {
+    appearance: none;
+    /* Hapus gaya default */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  /* Tambahkan gaya ke opsi */
+  .option-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><circle cx="12" cy="12" r="9"></circle></svg>');
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+    padding-left: 30px;
+    /* Spasi untuk ikon */
+    width: 100px;
+  }
+
+  select:focus option {
+    background-color: #f1f1f1;
+    /* Warna saat dipilih */
+  }
+
+  input {
+    width: 94%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    /* Warna border */
+    border-radius: 8px;
+    /* Membuat sudut input membulat */
+    background-color: #f9f9f9;
+    /* Latar belakang input */
+    font-size: 0.9rem;
+    color: #333;
+    font-family: "Ubuntu", sans-serif;
+    margin-bottom: 20px;
+  }
+
+  select:focus,
+  input:focus {
+    border-color: #0097b2;
+    outline: none;
+    /* Menghilangkan garis biru default */
+    box-shadow: 0 0 5px rgb(0, 151, 178);
+  }
+
+  /* Styling untuk textarea */
+  textarea {
+    width: 94%;
+    /* Sama seperti input */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 0.9rem;
+    color: #333;
+    font-family: "Ubuntu", sans-serif;
+    height: 80px;
+    /* Sesuaikan tinggi agar 2-3x tinggi input biasa */
+    resize: none;
+    /* Mencegah resize manual */
+  }
+
+  /* Fokus pada textarea */
+  textarea:focus {
+    border-color: #0097b2;
+    outline: none;
+    box-shadow: 0 0 5px rgb(0, 151, 178);
+  }
+
+  /* Supaya label tetap di atas */
+  .longtext {
+    display: block;
+    margin-bottom: 5px;
+    /* Jarak antara label dan textarea */
+  }
+
+  button {
+    background-color: #0097b2;
+    /* Warna utama */
+    color: #fff;
+    /* Warna teks */
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+  }
+
+  button:hover {
+    background-color: #ffc00a;
+    /* Warna lebih gelap saat hover */
+  }
+
+  button+button {
+    margin-top: 10px;
+    /* Jarak antar tombol jika ada tombol tambahan */
+    background-color: transparent;
+    color: #0097b2;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  button+button:hover {
+    color: #ffc00a;
+  }
+
+  /* Bottom Navigation */
+  .nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    color: #0097b2;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-bottom i {
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .nav-bottom .fa-house.active {
+    color: #ffc00a;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: scroll;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    /* Tambahkan scroll horizontal */
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    white-space: nowrap;
+    /* Mencegah teks memanjang ke bawah */
+  }
+
+  th {
+    background-color: #0097b2;
+    color: white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tr:hover {
+    background-color: #ddd;
+  }
+</style>
+
+<body>
+  <header class="header">
+    <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="right-section">
+      <h1 class="title">FASFADE Institute</h1>
+      <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Laporan Transaksi Siswa</h1>
+    <label for="start-date">Tanggal Mulai:</label>
+    <input type="date" id="start-date" />
+    <label for="end-date">Tanggal Akhir:</label>
+    <input type="date" id="end-date" />
+    <button onclick="generateLaporan()">Generate Laporan</button>
+
+    <div class="table-wrapper"> <!-- Tambahkan wrapper untuk scroll -->
+      <table>
+        <thead>
+          <tr>
+            <th>Siswa ID</th>
+            <th>Biaya</th>
+            <th>Tanggal</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="laporan-body">
+          <tr>
+            <td colspan="4" id="status-message">
+              Silakan pilih rentang tanggal dan klik "Generate Laporan"
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="nav-bottom">
+    <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+    <i class="fa-solid fa-user active"></i>
+  </nav>
+
+  <script>
+    function getAuthToken() {
+      return localStorage.getItem("auth_token") || "";
+    }
+
+    async function generateLaporan() {
+      const startDate = document.getElementById("start-date").value;
+      const endDate = document.getElementById("end-date").value;
+
+      if (!startDate || !endDate) {
+        alert("Pilih tanggal mulai dan akhir");
+        return;
+      }
+
+      const url = `http://localhost:8080/siswa/all/transaksi?start_date=${startDate}&end_date=${endDate}`;
+
+      try {
+        const response = await fetch(url, {
+          headers: { Authorization: `Bearer ${getAuthToken()}` },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const tbody = document.getElementById("laporan-body");
+        tbody.innerHTML = "";
+
+        if (!data || !Array.isArray(data) || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4">Tidak ada data pada rentang tanggal ini</td></tr>';
+          return;
+        }
+
+        data.forEach((item) => {
+          const formattedDate = new Date(item.tanggal).toLocaleDateString("id-ID", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          const row = `<tr>
+                <td>${item.siswa_id}</td>
+                <td>Rp ${item.harga.toLocaleString()}</td>
+                <td>${formattedDate}</td>
+                <td>${item.status || "-"}</td>
+            </tr>`;
+
+          tbody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Gagal mengambil data laporan");
+      }
+    }
+
+  </script>
+</body>
+
+</html>
