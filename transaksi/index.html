@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,8 +8,10 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
     <header class="header">
         <i class="fa-solid fa-bars"></i>
@@ -43,36 +46,93 @@
     </nav>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
-            let cardContainer = document.getElementById("cardContainer");
+        async function fetchTransaksi() {
+            try {
+                const token = localStorage.getItem("auth_token");
+                if (!token) {
+                    console.error("Token tidak ditemukan. Silakan login ulang.");
+                    return;
+                }
 
-            if (riwayat.length === 0) {
-                cardContainer.innerHTML = "<p class='no-transaksi'>Belum ada transaksi</p>";
-            } else {
-                riwayat.forEach((transaksi, index) => {
-                    let card = document.createElement("div");
-                    card.className = "card";
-                    
-                    card.innerHTML = `
-                        <button class="delete-btn" onclick="hapusTransaksi(${index})">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                        <div class="card-content">
-                            <p><strong>No:</strong> ${index + 1}</p>
-                            <p><strong>Item:</strong> ${transaksi.item}</p>
-                            <p><strong>Harga:</strong> Rp ${parseInt(transaksi.harga).toLocaleString("id-ID")}</p>
-                            <p><strong>Tanggal:</strong> ${transaksi.tanggal}</p>
-                        </div>
-                    `;
+                // Decode token untuk mendapatkan user_id
+                const userId = getUserIdFromToken(token);
+                if (!userId) {
+                    console.error("User ID tidak ditemukan dalam token.");
+                    return;
+                }
 
-                    cardContainer.appendChild(card);
+                const response = await fetch("http://localhost:8080/siswa/all/transaksi", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
-            }
-        });
 
-        // Fungsi untuk menghapus transaksi dengan konfirmasi SweetAlert2
-        function hapusTransaksi(index) {
+                const data = await response.json();
+                console.log("Data transaksi:", data); // Debugging
+
+                let cardContainer = document.getElementById("cardContainer");
+                cardContainer.innerHTML = ""; // Bersihkan container sebelum menampilkan data
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Gagal mengambil data transaksi");
+                }
+
+                // Filter transaksi berdasarkan user_id
+                let riwayat = Array.isArray(data) ? data.filter(transaksi => transaksi.user_id === userId) : [];
+
+                if (riwayat.length === 0) {
+                    cardContainer.innerHTML = "<p class='no-transaksi'>Belum ada transaksi</p>";
+                } else {
+                    riwayat.forEach((transaksi, index) => {
+                        let card = document.createElement("div");
+                        card.className = "card";
+
+                        card.innerHTML = `
+                            <button class="delete-btn" onclick="hapusTransaksi('${transaksi.id}')">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <div class="card-content">
+                                <p><strong>No:</strong> ${index + 1}</p>
+                                <p><strong>Item:</strong> ${transaksi.item}</p>
+                                <p><strong>Harga:</strong> Rp ${parseInt(transaksi.harga).toLocaleString("id-ID")}</p>
+                                <p><strong>Tanggal:</strong> ${new Date(transaksi.tanggal).toLocaleDateString("id-ID")}</p>
+                                <p><strong>Status:</strong> ${transaksi.status}</p>
+                            </div>
+                        `;
+
+                        cardContainer.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("cardContainer").innerHTML = "<p class='error'>Terjadi kesalahan saat mengambil data transaksi</p>";
+            }
+        }
+
+        // Fungsi untuk decode token dan mendapatkan user_id
+        function getUserIdFromToken(token) {
+            try {
+                const base64Url = token.split(".")[1];
+                const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+                const jsonPayload = decodeURIComponent(
+                    atob(base64)
+                        .split("")
+                        .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+                        .join("")
+                );
+
+                const decoded = JSON.parse(jsonPayload);
+                return decoded.user_id; // Ambil user_id dari token
+            } catch (error) {
+                console.error("Token tidak valid:", error);
+                return null;
+            }
+        }
+
+        // Panggil fungsi fetch setelah halaman dimuat
+        document.addEventListener("DOMContentLoaded", fetchTransaksi);
+
+        async function hapusTransaksi(transaksiId) {
             Swal.fire({
                 title: "Apakah Anda yakin?",
                 text: "Data transaksi ini akan dihapus dan tidak bisa dikembalikan!",
@@ -82,15 +142,23 @@
                 cancelButtonColor: "#3085d6",
                 confirmButtonText: "Ya, hapus!",
                 cancelButtonText: "Batal"
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
+                    try {
+                        const response = await fetch(`http://localhost:8080/siswa/delete/transaksi/${transaksiId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${localStorage.getItem("auth_token")}`
+                            }
+                        });
 
-                    if (index >= 0 && index < riwayat.length) {
-                        riwayat.splice(index, 1); // Hapus transaksi dari array
-                        localStorage.setItem("riwayatTransaksi", JSON.stringify(riwayat)); // Simpan perubahan ke localStorage
+                        const data = await response.json();
 
-                        // Menampilkan pesan sukses
+                        if (!response.ok) {
+                            throw new Error(data.error || "Gagal menghapus transaksi");
+                        }
+
                         Swal.fire({
                             title: "Terhapus!",
                             text: "Transaksi telah dihapus.",
@@ -100,12 +168,18 @@
                         });
 
                         setTimeout(() => {
-                            location.reload(); // Refresh halaman setelah SweetAlert selesai
+                            fetchTransaksi(); // Refresh data transaksi setelah penghapusan
                         }, 1600);
+
+                    } catch (error) {
+                        console.error("Error:", error);
+                        Swal.fire("Error", "Terjadi kesalahan saat menghapus transaksi", "error");
                     }
                 }
             });
         }
     </script>
+
 </body>
+
 </html>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,14 +12,12 @@
     integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
     rel="stylesheet" />
 </head>
-
 
 <body>
   <header class="header">
@@ -42,18 +39,15 @@
         <input type="text" id="alamat" name="alamat" required>
       </span>
 
-
       <span>
         <label for="telepon"><i class="fas fa-phone-alt"></i> Nomor Telepon:</label>
         <input type="text" id="telepon" name="telepon" required>
       </span>
 
-
       <span>
         <label for="email"><i class="fas fa-envelope"></i> Email:</label>
         <input type="email" id="email" name="email" required>
       </span>
-
 
       <div class="form-buttons">
         <button type="submit">Submit</button>
@@ -66,16 +60,34 @@
     </form>
   </div>
 
-
   <script>
+    function getUserIdFromToken(token) {
+      try {
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join("")
+        );
+
+        const decoded = JSON.parse(jsonPayload);
+        return decoded.user_id; // Ambil user_id
+      } catch (error) {
+        console.error("Token tidak valid:", error);
+        return null;
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       async function tambahSiswa(event) {
         event.preventDefault();
 
-
         // Fungsi untuk mendapatkan token dari localStorage
         const token = localStorage.getItem('auth_token');
-
+        const userId = getUserIdFromToken(token);
+        console.log("User ID:", userId);
 
         // Ambil data dari form
         const fullName = document.getElementById('nama').value.trim();
@@ -83,7 +95,6 @@
         const phoneNumber = document.getElementById('telepon').value.trim();
         const email = document.getElementById('email').value.trim();
         const status = "nonaktif";  // Status default untuk siswa
-
 
         // Validasi data tidak boleh kosong
         if (!fullName || !address || !phoneNumber || !email) {
@@ -96,16 +107,14 @@
           return;
         }
 
-
         // Objek data siswa
         const siswaData = {
           fullname: fullName,
           address: address,
           phonenumber: phoneNumber,
           email: email,
-          status: status
+          status: status,
         };
-
 
         try {
           // Kirim data siswa ke server
@@ -118,17 +127,13 @@
             body: JSON.stringify(siswaData)
           });
 
-
           const responseData = await response.json(); // Ambil respon dari server
-
 
           if (response.ok) {
             const siswaID = responseData.id; // ID siswa yang dikembalikan server
 
-
             // Simpan ID siswa di localStorage
             localStorage.setItem('siswa_id', siswaID);
-
 
             // Buat transaksi baru dengan status unpaid
             const transaksiData = {
@@ -136,9 +141,9 @@
               item: "Pendaftaran FASFADE",
               harga: 500000,
               tanggal: new Date().toISOString(),
-              status: "unpaid"
+              status: "unpaid",
+              user_id: userId
             };
-
 
             // Kirim transaksi ke server
             const transaksiResponse = await fetch('http://localhost:8080/siswa/create/transaksi', {
@@ -150,13 +155,10 @@
               body: JSON.stringify(transaksiData)
             });
 
-
             const responseDataTransaksi = await transaksiResponse.json(); // Ambil respon dari server
             console.log(responseDataTransaksi);
 
-
             if (transaksiResponse.ok) {
-
 
               // Tampilkan notifikasi sukses dengan SweetAlert2
               Swal.fire({
@@ -190,7 +192,6 @@
         }
       }
 
-
       // Tambahkan event listener ke form
       const form = document.getElementById('formEditSiswa');
       if (form) {
@@ -199,6 +200,9 @@
         console.error("Form dengan ID 'formEditSiswa' tidak ditemukan!");
       }
     });
+
   </script>
+
 </body>
+
 </html>
