@@ -41,78 +41,30 @@
     </nav>
 
     <script>
-        function displayTransaksi() {
-            const transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
-            const cardContainer = document.getElementById("cardContainer");
+        document.addEventListener("DOMContentLoaded", function () {
+            let riwayat = JSON.parse(localStorage.getItem("riwayatTransaksi")) || [];
+            let cardContainer = document.getElementById("cardContainer");
 
-            cardContainer.innerHTML = ''; // Clear existing cards
-            transaksiData.forEach((transaksi, index) => {
-                const card = document.createElement("div");
-                card.className = "card";
-
-                // Format angka menjadi Rupiah
-                const formattedTotalBayar = parseInt(transaksi.totalBayar).toLocaleString('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR'
+            if (riwayat.length === 0) {
+                cardContainer.innerHTML = "<p class='no-transaksi'>Belum ada transaksi</p>";
+            } else {
+                riwayat.forEach((transaksi, index) => {
+                    let card = document.createElement("div");
+                    card.className = "card";
+                    
+                    card.innerHTML = `
+                        <div class="card-content">
+                            <p><strong>No:</strong> ${index + 1}</p>
+                            <p><strong>Item:</strong> ${transaksi.item}</p>
+                            <p><strong>Harga:</strong> Rp ${parseInt(transaksi.harga).toLocaleString("id-ID")}</p>
+                            <p><strong>Tanggal:</strong> ${transaksi.tanggal}</p>
+                        </div>
+                    `;
+                    
+                    cardContainer.appendChild(card);
                 });
-
-                card.innerHTML = `
-                    <div class="card-content">
-                        <p><strong>ID Transaksi:</strong> ${transaksi.idTransaksi}</p>
-                        <p><strong>ID Siswa:</strong> ${transaksi.idSiswa}</p>
-                        <p><strong>Nama Siswa:</strong> ${transaksi.namaSiswa}</p>
-                        <p><strong>Tanggal Transaksi:</strong> ${transaksi.tanggalTransaksi}</p>
-                        <p><strong>Metode Pembayaran:</strong> ${transaksi.metodePembayaran}</p>
-                        <p><strong>Total Bayar:</strong> ${formattedTotalBayar}</p>
-                        <p><strong>Status:</strong> ${transaksi.status}</p>
-                    </div>
-                    <div class="card-actions">
-                        <button class="edit-btn" onclick="editTransaksi('${transaksi.idTransaksi}')">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button class="delete-btn" onclick="hapusTransaksi(${index})">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                `;
-
-                cardContainer.appendChild(card);
-            });
-        }
-
-        function editTransaksi(id) {
-            const transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
-            const transaksiToEdit = transaksiData.find(transaksi => transaksi.idTransaksi === id);
-            if (transaksiToEdit) {
-                const queryString = new URLSearchParams(transaksiToEdit).toString();
-                window.location.href = `add.html?${queryString}`;
             }
-        }
-
-        function hapusTransaksi(index) {
-            Swal.fire({
-                title: 'Konfirmasi Hapus',
-                text: "Apakah Anda yakin ingin menghapus transaksi ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let transaksiData = JSON.parse(localStorage.getItem("transaksiData")) || [];
-                    // Hapus data berdasarkan index
-                    transaksiData.splice(index, 1);
-                    // Simpan kembali ke localStorage
-                    localStorage.setItem("transaksiData", JSON.stringify(transaksiData));
-                    // Tampilkan kembali data setelah penghapusan
-                    displayTransaksi();
-                    Swal.fire('Terhapus!', 'Transaksi telah dihapus.', 'success');
-                }
-            });
-        }
-
-        // Panggil fungsi displayTransaksi saat halaman dimuat
-        window.onload = displayTransaksi;
+        });
     </script>
 </body>
 </html>
