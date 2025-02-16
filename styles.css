@@ -115,11 +115,16 @@ body, h1, h2, h3, h4, p {
   }
   
   .card p {
-    font-size: 1rem; /* Ukuran font teks */
+    font-size: 20px; /* Ukuran font teks */
     font-weight: bold; /* Teks tebal */
     color: #ffc00a;
   }  
   
+  .card i {
+    margin-top: 15px;
+    font-size: 40px; /* Ukuran font teks */
+    color: #ffc00a;
+  }
   /* Bottom Navigation */
   .nav-bottom {
     position: fixed;

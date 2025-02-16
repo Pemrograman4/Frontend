@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laporan Gaji Guru</title>
+    <link rel="shortcut icon" href="logo_only.png" type="image/x-icon" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <a href="javascript:history.back()"
+        ><i class="fa-solid fa-arrow-left"></i
+      ></a>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
+    <div class="container">
+      <h1>Laporan Gaji Guru</h1>
+      <label for="start-date">Tanggal Mulai:</label>
+      <input type="date" id="start-date" />
+      <label for="end-date">Tanggal Akhir:</label>
+      <input type="date" id="end-date" />
+      <button onclick="generateLaporan()">Generate Laporan</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Guru</th>
+            <th>Jumlah Gaji</th>
+            <th>Tanggal</th>
+            <th>Catatan</th>
+          </tr>
+        </thead>
+        <tbody id="laporan-body">
+          <tr>
+            <td colspan="4">
+              Silakan pilih rentang tanggal dan klik "Generate Laporan"
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i
+        class="fa-solid fa-house"
+        onclick="window.location.href='/index.html'"
+      ></i>
+      <i class="fa-solid fa-plus-circle active"></i>
+      <i class="fa-solid fa-user"></i>
+    </nav>
+    <script>
+      function getAuthToken() {
+        return localStorage.getItem("auth_token") || "";
+      }
+      async function generateLaporan() {
+        const startDate = document.getElementById("start-date").value;
+        const endDate = document.getElementById("end-date").value;
+        if (!startDate || !endDate) {
+          alert("Pilih tanggal mulai dan akhir");
+          return;
+        }
+
+        const formattedStartDate = startDate.split("-").reverse().join("-");
+        const formattedEndDate = endDate.split("-").reverse().join("-");
+        const url = `http://localhost:8080/laporan-guru/?start_date=${formattedStartDate}&end_date=${formattedEndDate}`;
+
+        try {
+          const response = await fetch(url, {
+            headers: { Authorization: `Bearer ${getAuthToken()}` },
+          });
+          const data = await response.json();
+          const tbody = document.getElementById("laporan-body");
+          tbody.innerHTML = "";
+
+          if (!data || !Array.isArray(data) || data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="4">Tidak ada data pada rentang tanggal ini</td></tr>';
+            return;
+          }
+
+          data.forEach((item) => {
+            const row = `<tr>
+                        <td>${item.guru_name}</td>
+                        <td>Rp ${item.amount.toLocaleString()}</td>
+                        <td>${item.created_at}</td>
+                        <td>${item.notes || "-"}</td>
+                    </tr>`;
+            tbody.innerHTML += row;
+          });
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Gagal mengambil data laporan");
+        }
+      }
+    </script>
+  </body>
+</html>
