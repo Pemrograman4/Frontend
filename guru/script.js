@@ -1,6 +1,12 @@
 const API_URL = "http://localhost:8080/gurus"; // Ganti sesuai konfigurasi backend Anda
 let allGuruData = []; // Menyimpan semua data guru yang di-fetch dari backend
 
+// Fungsi untuk mendapatkan token dari localStorage
+function getAuthToken() {
+    return localStorage.getItem("auth_token") || "";
+}
+
+
 // Fungsi untuk menampilkan data guru dalam format card
 function tampilkanDataGuru(data) {
     const guruList = document.getElementById("guruList");
@@ -45,7 +51,9 @@ function tampilkanDataGuru(data) {
 // Fungsi untuk mendapatkan data guru dari backend
 async function fetchGuruData() {
     try {
-        const response = await fetch(API_URL);
+          const response = await fetch(API_URL, {
+            headers: { Authorization: `Bearer ${getAuthToken()}` },
+          });
         if (response.ok) {
             allGuruData = await response.json();
             tampilkanDataGuru(allGuruData);
@@ -76,7 +84,10 @@ async function hapusGuru(id) {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+                const response = await fetch(`${API_URL}/${id}`, {
+                  method: "DELETE",
+                  headers: { Authorization: `Bearer ${getAuthToken()}` },
+                });
                 if (response.ok) {
                     Swal.fire("Terhapus!", "Data guru telah dihapus.", "success");
                     fetchGuruData(); // Refresh data setelah penghapusan
@@ -109,12 +120,14 @@ async function handleAddGuruForm() {
         };
 
         try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(guruData),
-            });
-
+           const response = await fetch(API_URL, {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${getAuthToken()}`,
+             },
+             body: JSON.stringify(guruData),
+           });
             if (response.ok) {
                 Swal.fire("Berhasil", "Guru berhasil ditambahkan!", "success").then(() => {
                     window.location.href = "index.html";
@@ -140,7 +153,9 @@ async function handleEditGuruForm() {
 
     // Ambil data guru untuk diisi ke form
     try {
-        const response = await fetch(`${API_URL}/${id}`);
+          const response = await fetch(`${API_URL}/${id}`, {
+            headers: { Authorization: `Bearer ${getAuthToken()}` },
+          });
         if (response.ok) {
             const guru = await response.json();
             document.getElementById("nama").value = guru.fullname || "";
@@ -171,11 +186,14 @@ async function handleEditGuruForm() {
         };
 
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedData),
-            });
+             const response = await fetch(`${API_URL}/${id}`, {
+               method: "PUT",
+               headers: {
+                 "Content-Type": "application/json",
+                 Authorization: `Bearer ${getAuthToken()}`,
+               },
+               body: JSON.stringify(updatedData),
+             });
 
             if (response.ok) {
                 alert("Data Guru berhasil diperbarui!");
