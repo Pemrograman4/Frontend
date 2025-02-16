@@ -55,14 +55,6 @@
       </span>
 
 
-      <span>
-        <label><i class="fas fa-toggle-off"></i> Status:</label>
-        <span>Nonaktif</span>
-      </span>
-
-
-
-
       <div class="form-buttons">
         <button type="submit">Submit</button>
       </div>
@@ -153,6 +145,7 @@
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
               },
               body: JSON.stringify(transaksiData)
             });
@@ -206,12 +199,6 @@
         console.error("Form dengan ID 'formEditSiswa' tidak ditemukan!");
       }
     });
-
-
   </script>
-
-
 </body>
-
-
 </html>
