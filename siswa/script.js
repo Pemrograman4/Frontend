@@ -1,9 +1,15 @@
 const apiUrl = "http://localhost:8080/siswa";
+// fungsi untuk mendapatkan token dari setiap localstorage
+function getAuthToken() {
+    return localStorage.getItem("auth_token") || "";
+}
 
 // Fungsi untuk mengambil data siswa dari API
 async function getSiswaData() {
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+            headers: { Authorization: `Bearer ${getAuthToken()}` },
+          });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

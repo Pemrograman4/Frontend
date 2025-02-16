@@ -163,6 +163,7 @@ body {
 .delete-btn {
   margin-right: 10px;
   color: #dc3545;
+  position: absolute; right: 10px; top: 10px;
 }
 
 .edit-btn {

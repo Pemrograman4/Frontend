@@ -80,99 +80,94 @@
         </form>
     </div>
     <script>
-        const apiUrl = "http://localhost:8080/siswa";
+const API_URL = "http://localhost:8080/siswa";
 
-        function getUrlParameter(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
+function getAuthToken() {
+    return localStorage.getItem("authToken"); // Sesuaikan dengan cara penyimpanan token di aplikasi Anda
+}
 
-        async function getSiswaById(id) {
-            try {
-                const response = await fetch(`${apiUrl}/${id}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error("Error fetching siswa data by ID:", error);
-            }
-        }
+async function handleEditSiswaForm() {
+    const formEditSiswa = document.getElementById("formEditSiswa");
+    const id = new URLSearchParams(window.location.search).get("id");
 
-        async function loadSiswaData() {
-            const id = getUrlParameter('id'); // Ambil ID dari URL
-            if (!id) {
-                alert('ID siswa tidak ditemukan!');
-                return;
-            }
+    if (!formEditSiswa || !id) {
+        alert("ID siswa tidak ditemukan!");
+        return;
+    }
 
-            const siswa = await getSiswaById(id);
-
-            if (siswa) {
-                // Isi form dengan data siswa
-                document.getElementById('nama').value = siswa.fullname;
-                document.getElementById('alamat').value = siswa.address;
-                document.getElementById('telepon').value = siswa.phonenumber;
-                document.getElementById('email').value = siswa.email;
-                document.getElementById('status').value = siswa.status;
-            } else {
-                alert('Data siswa tidak ditemukan!');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadSiswaData);
-
-        document.getElementById('formEditSiswa').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const id = getUrlParameter('id');
-            const nama = document.getElementById('nama').value;
-            const alamat = document.getElementById('alamat').value;
-            const telepon = document.getElementById('telepon').value;
-            const email = document.getElementById('email').value;
-            const status = document.getElementById('status').value;
-
-            try {
-                const response = await fetch(`${apiUrl}/${id}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        fullname: nama,
-                        address: alamat,
-                        phonenumber: telepon,
-                        email: email,
-                        status: status,
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                 // Tampilkan notifikasi sukses dengan SweetAlert2
-                 Swal.fire({
-                      title: 'Berhasil!',
-                      text: 'Data siswa berhasil di edit.',
-                      icon: 'success',
-                      confirmButtonText: 'OK'
-                  }).then(() => {
-                      // Arahkan kembali ke halaman utama setelah notifikasi
-                      window.location.href = 'index.html';  // Sesuaikan URL jika diperlukan
-                  });
-              } catch (error) {
-                  // Tampilkan pesan error jika terjadi masalah pada fetch
-                  Swal.fire({
-                      title: 'Error!',
-                      text: 'Gagal mengedit data siswa.',
-                      icon: 'error',
-                      confirmButtonText: 'Coba Lagi'
-                  });
-              }
-              // Pastikan form ID benar sesuai dengan ID form di HTML
-          document.getElementById('formEditSiswa').addEventListener('submit', editSiswa);
+    // Ambil data siswa untuk diisi ke form
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${getAuthToken()}`,
+                "Content-Type": "application/json",
+            },
         });
+
+        if (response.ok) {
+            const siswa = await response.json();
+            document.getElementById("nama").value = siswa.fullname || "";
+            document.getElementById("alamat").value = siswa.address || "";
+            document.getElementById("telepon").value = siswa.phonenumber || "";
+            document.getElementById("email").value = siswa.email || "";
+            document.getElementById("status").value = siswa.status || "aktif";
+        } else {
+            throw new Error("Gagal mengambil data siswa.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Terjadi kesalahan saat memuat data: " + error.message);
+    }
+
+    // Event untuk submit data yang diubah
+    formEditSiswa.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const updatedData = {
+            fullname: document.getElementById("nama").value,
+            address: document.getElementById("alamat").value,
+            phonenumber: document.getElementById("telepon").value,
+            email: document.getElementById("email").value,
+            status: document.getElementById("status").value,
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${getAuthToken()}`,
+                },
+                body: JSON.stringify(updatedData),
+            });
+
+            if (response.ok) {
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "Data siswa berhasil diperbarui.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    window.location.href = "index.html";
+                });
+            } else {
+                throw new Error("Gagal memperbarui data siswa.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: "Terjadi kesalahan saat menyimpan data: " + error.message,
+                icon: "error",
+                confirmButtonText: "Coba Lagi"
+            });
+        }
+    });
+}
+
+// Inisialisasi saat halaman dimuat
+document.addEventListener("DOMContentLoaded", handleEditSiswaForm);
+
     </script>
 </body>
 </html>
