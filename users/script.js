@@ -34,22 +34,22 @@ function fetchUsers() {
         userCard.classList.add("card");
 
         const buttonText =
-          user.status === "active" ? "Nonaktifkan" : "Aktifkan";
+          user.Status === "active" ? "Nonaktifkan" : "Aktifkan";
         const buttonClass =
-          user.status === "active" ? "btn-inactive" : "btn-active";
+          user.Status === "active" ? "btn-inactive" : "btn-active";
 
         userCard.innerHTML = `
                 <h3><strong>${
-                  user.username || "Nama tidak tersedia"
+                  user.Username || "Nama tidak tersedia"
                 }</strong></h3>
-                <p>Email: ${user.email || "Tidak ada email"}</p>
-                <p>Role: ${user.role || "Tidak ada role"}</p>
-                <p>Status: <span class="status-${user.status}">${
-          user.status
+                <p>Email: ${user.Email || "Tidak ada email"}</p>
+                <p>Role: ${user.Role || "Tidak ada role"}</p>
+                <p>Status: <span class="status-${user.Status}">${
+          user.Status
         }</span></p>
                 <button class="${buttonClass}" onclick="toggleUserStatus('${
-          user.id
-        }', '${user.status}')">${buttonText}</button> `;
+          user.ID
+        }', '${user.Status}')">${buttonText}</button> `;
 
         userList.appendChild(userCard);
       });
