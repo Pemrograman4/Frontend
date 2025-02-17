@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen Jadwal Kursus</title>
+   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Global styling */
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+         /* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .right-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header .fa-bars {
+    justify-content: start;
+    margin-left: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  
+  .header .logo {
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 5px;
+  }
+  
+  .header .title {
+    color: #ffc00a;
+    font-size: 20px;
+    font-weight: medium;
+    font-family: "Poppins", sans-serif;
+  }
+
+      .title {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .logo {
+        height: 40px;
+      }
+
+      .nav-bar {
+        background-color: #ffffff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .filter-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .filter-container label {
+        font-weight: 600;
+      }
+
+      .filter-container select {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .filter-button {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .filter-button:hover {
+        background-color: #007bff;
+      }
+
+      .table-container {
+        margin-top: 30px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #007bff;
+        color: white;
+      }
+
+      td ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+      }
+
+      td ul li {
+        margin-bottom: 5px;
+      }
+
+      .nav-bottom {
+        background-color: #007bff;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+      }
+
+      .nav-bottom i {
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .active-plus {
+        color: #ffdf00;
+      }
+
+      /* Media query for responsive design */
+      @media (max-width: 768px) {
+        .filter-container {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .filter-container label {
+          margin-bottom: 10px;
+        }
+
+        .filter-container select, .filter-button {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+
+        .nav-bottom {
+          flex-direction: row;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+        <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"  onclick="window.location.href='/index.html'"></i></a>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
+
+    <div class="container">
+      <nav class="nav-bar">
+        <h1>Management Jadwal Kursus</h1>
+        
+        <div class="filter-container">
+            <select id="monthFilter">
+              <option value="">Semua Bulan</option>
+              <option value="01">Januari</option>
+              <option value="02">Februari</option>
+              <option value="03">Maret</option>
+              <option value="04">April</option>
+              <option value="05">Mei</option>
+              <option value="06">Juni</option>
+              <option value="07">Juli</option>
+              <option value="08">Agustus</option>
+              <option value="09">September</option>
+              <option value="10">Oktober</option>
+              <option value="11">November</option>
+              <option value="12">Desember</option>
+            </select>
+            <button id="filterButton" class="filter-button">Filter</button>
+          </div>          
+
+      <!-- Tabel Daftar Jadwal -->
+      <div class="table-container">
+        <table id="schedulesTable">
+          <thead>
+            <tr>
+              <th>Nama Kursus</th>
+              <th>Waktu</th>
+              <th>Tanggal</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleTableBody">
+            <!-- Data akan diisi melalui JavaScript -->
+          </tbody>
+        </table>
+        <div id="totalSchedules" style="margin-top: 10px; font-weight: bold;"></div> <!-- Tempat untuk menampilkan total jadwal -->
+    </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+    </nav>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        const authToken = localStorage.getItem('auth_token');
+
+        if (!authToken) {
+            throw new Error('Token tidak ditemukan. Silakan login ulang.');
+        }
+
+        console.log("Token yang dikirim:", authToken);  // Debugging token
+
+        await loadSchedules(authToken);  // Menambahkan token ke dalam fungsi loadSchedules jika diperlukan
+    } catch (error) {
+        console.error(error.message);
+        Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+        });
+    }
+
+    // Menambahkan event listener untuk tombol filter
+    const filterButton = document.getElementById('filterButton');
+    filterButton.addEventListener('click', async function () {
+        const selectedMonth = document.getElementById('monthFilter').value;
+        const authToken = localStorage.getItem('auth_token');
+
+        if (selectedMonth) {
+            await loadSchedules(authToken, selectedMonth);  // Filter berdasarkan bulan
+        } else {
+            await loadSchedules(authToken);  // Jika tidak ada filter, tampilkan semua
+        }
+    });
+});
+
+// Fungsi untuk memuat jadwal dengan token dan filter bulan
+async function loadSchedules(authToken, monthFilter = '') {
+    console.log("Memuat data jadwal...");
+
+    const scheduleTableBody = document.getElementById("scheduleTableBody");
+
+    if (!scheduleTableBody) {
+        console.error("Elemen dengan ID 'scheduleTableBody' tidak ditemukan!");
+        return;
+    }
+
+    scheduleTableBody.innerHTML = ""; // Bersihkan tabel sebelum memuat data baru
+
+    try {
+        const response = await fetch("http://localhost:8080/schedules", {
+            headers: {
+                'Authorization': `Bearer ${authToken}` // Menyertakan token dalam header
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data dari server.");
+        }
+
+        const schedules = await response.json();
+        console.log("Data dari server:", schedules);
+
+        if (schedules.length === 0) {
+            scheduleTableBody.innerHTML = `<tr><td colspan="4">Tidak ada jadwal yang tersedia.</td></tr>`;
+            return;
+        }
+
+        // Jika ada filter bulan, lakukan pemfilteran
+        if (monthFilter) {
+            const filteredSchedules = schedules.filter(schedule => {
+                return schedule.dates.some(date => {
+                    const month = new Date(date).getMonth() + 1; // Mendapatkan bulan dari tanggal
+                    return month === parseInt(monthFilter);
+                });
+            });
+            renderSchedules(filteredSchedules); // Tampilkan jadwal yang sudah difilter
+        } else {
+            renderSchedules(schedules); // Tampilkan semua jadwal jika tidak ada filter
+        }
+    } catch (error) {
+        console.error("Gagal memuat data jadwal:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: "Terjadi kesalahan dalam memuat jadwal.",
+        });
+    }
+}
+
+// Fungsi untuk menampilkan data jadwal dalam tabel
+function renderSchedules(schedules) {
+    const scheduleTableBody = document.getElementById("scheduleTableBody");
+
+    schedules.forEach((schedule) => {
+        console.log("Rendering schedule:", schedule);
+
+        // Menampilkan waktu dalam format list (vertikal)
+        const time = schedule.time.map(t => `<li>${t}</li>`).join(''); // Membuat list item untuk setiap waktu
+        
+        // Menampilkan tanggal dalam format list (vertikal)
+        const dates = schedule.dates.map(date => `<li>${date}</li>`).join(''); // Membuat list item untuk setiap tanggal
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${schedule.name}</td>
+            <td><ul>${time}</ul></td> <!-- Menampilkan waktu dalam list vertikal -->
+            <td><ul>${dates}</ul></td> <!-- Menampilkan tanggal dalam list vertikal -->
+        `;
+
+        scheduleTableBody.appendChild(row);
+    });
+}
+
+// Fungsi untuk memuat jadwal dengan token dan filter bulan
+async function loadSchedules(authToken, monthFilter = '') {
+    console.log("Memuat data jadwal...");
+
+    const scheduleTableBody = document.getElementById("scheduleTableBody");
+    const totalSchedulesElement = document.getElementById("totalSchedules");
+
+    if (!scheduleTableBody) {
+        console.error("Elemen dengan ID 'scheduleTableBody' tidak ditemukan!");
+        return;
+    }
+
+    scheduleTableBody.innerHTML = ""; // Bersihkan tabel sebelum memuat data baru
+    totalSchedulesElement.innerHTML = ""; // Bersihkan total jadwal sebelumnya
+
+    try {
+        const response = await fetch("http://localhost:8080/schedules", {
+            headers: {
+                'Authorization': `Bearer ${authToken}` // Menyertakan token dalam header
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Gagal mengambil data dari server.");
+        }
+
+        const schedules = await response.json();
+        console.log("Data dari server:", schedules);
+
+        if (schedules.length === 0) {
+            scheduleTableBody.innerHTML = `<tr><td colspan="4">Tidak ada jadwal yang tersedia.</td></tr>`;
+            totalSchedulesElement.innerHTML = "Total Jadwal: 0"; // Menampilkan total jadwal 0 jika tidak ada jadwal
+            return;
+        }
+
+        // Jika ada filter bulan, lakukan pemfilteran
+        let filteredSchedules = schedules;
+        if (monthFilter) {
+            filteredSchedules = schedules.filter(schedule => {
+                return schedule.dates.some(date => {
+                    const month = new Date(date).getMonth() + 1; // Mendapatkan bulan dari tanggal
+                    return month === parseInt(monthFilter);
+                });
+            });
+        }
+
+        renderSchedules(filteredSchedules); // Tampilkan jadwal yang sudah difilter
+
+        // Menampilkan total jadwal
+        totalSchedulesElement.innerHTML = `Total Jadwal: ${filteredSchedules.length}`;
+
+    } catch (error) {
+        console.error("Gagal memuat data jadwal:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: "Terjadi kesalahan dalam memuat jadwal.",
+        });
+    }
+}
+
+// Fungsi untuk menampilkan data jadwal dalam tabel
+function renderSchedules(schedules) {
+    const scheduleTableBody = document.getElementById("scheduleTableBody");
+
+    schedules.forEach((schedule) => {
+        console.log("Rendering schedule:", schedule);
+
+        // Menampilkan waktu dalam format list (vertikal)
+        const time = schedule.time.map(t => `<li>${t}</li>`).join(''); // Membuat list item untuk setiap waktu
+        
+        // Menampilkan tanggal dalam format list (vertikal)
+        const dates = schedule.dates.map(date => `<li>${date}</li>`).join(''); // Membuat list item untuk setiap tanggal
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${schedule.name}</td>
+            <td><ul>${time}</ul></td> <!-- Menampilkan waktu dalam list vertikal -->
+            <td><ul>${dates}</ul></td> <!-- Menampilkan tanggal dalam list vertikal -->
+        `;
+
+        scheduleTableBody.appendChild(row);
+    });
+}
+    </script>      
+  </body>
+</html>

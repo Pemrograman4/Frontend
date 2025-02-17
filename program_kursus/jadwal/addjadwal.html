@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Jadwal Kursus</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Tambah Jadwal Kursus</h1>
+      <div id="scheduleList"></div>
+
+      <!-- Form input data jadwal kursus -->
+      <form id="scheduleForm">
+        <span>
+          <label for="courseName">Nama Kursus:</label>
+          <input type="text" id="courseName" required /><br /><br />
+        </span>
+
+        <span>
+          <label for="courseTime">Waktu Kursus:</label>
+          <input type="time" id="courseTime" required /><br /><br />
+        </span>
+
+        <span>
+          <label for="courseDate">Tanggal Kursus:</label>
+          <input type="date" id="courseDate" required /><br /><br />
+        </span>
+
+        <button type="submit" id="submitButton">Simpan Jadwal</button>
+      </form>
+
+      <!-- Bottom Navigation -->
+      <nav class="nav-bottom">
+        <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+      </nav>
+    </div>
+
+    <script>
+      document.getElementById("scheduleForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const authToken = localStorage.getItem('auth_token');
+        if (!authToken) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Token tidak ditemukan! Silakan login ulang.",
+          });
+          return;
+        }
+
+        const scheduleData = {
+          courseName: document.getElementById("courseName").value,
+          courseTime: document.getElementById("courseTime").value,
+          courseDate: document.getElementById("courseDate").value,
+        };
+
+        try {
+          const response = await fetch("http://localhost:8080/schedules", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${authToken}`,
+            },
+            body: JSON.stringify(scheduleData),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Gagal menambahkan jadwal. Status: ${response.status}`);
+          }
+
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Jadwal kursus berhasil ditambahkan!",
+          }).then(() => {
+            localStorage.setItem("newSchedule", JSON.stringify(scheduleData));
+            console.log("Data baru disimpan ke localStorage:", scheduleData);
+            window.location.href = "/schedule_list.html";  // Redirect ke halaman jadwal
+          });
+
+          document.getElementById("scheduleForm").reset();
+        } catch (error) {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Terjadi kesalahan saat menambahkan jadwal kursus!",
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
