@@ -25,7 +25,7 @@
 </head>
 <body>
     <header class="header">
-        <i class="fa-solid fa-bars"></i>
+        <i class="fa-solid fa-file-lines" onclick="redirectToLaporan()" style="cursor: pointer;"></i>
         <div class="right-section">
           <h1 class="title">FASFADE Institute</h1>
           <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
@@ -57,5 +57,11 @@
     </nav>
 
     <script src="script.js"></script>
+    <script>
+        function redirectToLaporan() {
+       window.location.href =
+         "http://127.0.0.1:5504/siswa/transaksi-siswa.html";
+     }
+   </script>
 </body>
 </html>

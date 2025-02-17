@@ -210,3 +210,18 @@ body {
 .nav-bottom .active-plus{
   color: #ffc00a;
 }
+
+.header .fa-file-lines {
+  margin-top: 15px;
+  font-size: 30px;
+  /* Ukuran font teks */
+  color: #0097b2;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.header .logo {
+  height: 40px;
+  margin-right: 10px;
+  margin-left: 5px;
+}
