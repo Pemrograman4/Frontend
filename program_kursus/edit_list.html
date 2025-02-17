@@ -72,96 +72,116 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-          const courseId = new URLSearchParams(window.location.search).get('id');
-          const baseUrl = 'http://localhost:8080'; // Ganti dengan URL backend Anda
-          const authToken = localStorage.getItem('auth_token'); 
-      
-          if (!authToken) {
-            alert('Token tidak ditemukan! Silakan login ulang.');
-            window.location.href = 'login.html'; 
-            return;
-          }
-      
-          console.log("Auth Token:", authToken);
-      
-          if (!courseId) {
-            alert('No Course ID provided in the URL.');
-            return;
-          }
-      
-          try {
-            console.log(`Fetching course data from: ${baseUrl}/courses/${courseId}`);
-      
-            const response = await fetch(`${baseUrl}/courses/${courseId}`, {
-              method: "GET",
-              headers: {
-                "Authorization": `Bearer ${authToken}`,
-                "Content-Type": "application/json"
-              }
-            });
-      
-            console.log("Response Status: ", response.status);
-      
-            if (!response.ok) {
-              throw new Error(`Failed to fetch course data: ${response.status} ${response.statusText}`);
+            const courseId = new URLSearchParams(window.location.search).get('id');
+            const baseUrl = 'http://localhost:8080'; // Sesuaikan dengan backend Anda
+            const authToken = localStorage.getItem('auth_token'); 
+        
+            if (!authToken) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Token tidak ditemukan! Silakan login ulang.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                }).then(() => {
+                    window.location.href = 'login.html'; 
+                });
+                return;
             }
-      
-            const course = await response.json();
-      
-            if (!course) {
-              throw new Error('Course data is empty or not found.');
+        
+            if (!courseId) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Course ID tidak tersedia.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+                return;
             }
-      
-            document.getElementById('id').value = course.id || course._id;
-            document.getElementById('name').value = course.name || '';
-            document.getElementById('duration').value = course.duration || '';
-            document.getElementById('cost').value = course.cost || '';
-            document.getElementById('description').value = course.description || '';
-            document.getElementById('schedule').value = course.schedule || ''; // New field for schedule
-      
-          } catch (error) {
-            console.error(error.message);
-            alert('Error loading course data. Please check your connection or try again.');
-          }
-      
-          document.getElementById('edit-course-form').addEventListener('submit', async (event) => {
-            event.preventDefault();
-      
-            const updatedCourse = {
-              name: document.getElementById('name').value.trim(),
-              duration: parseInt(document.getElementById('duration').value.trim(), 10),
-              cost: parseFloat(document.getElementById('cost').value.trim()),
-              description: document.getElementById('description').value.trim(),
-              schedule: document.getElementById('schedule').value.trim(), // New schedule value
-            };
-      
-            if (!updatedCourse.name || isNaN(updatedCourse.duration) || isNaN(updatedCourse.cost) || !updatedCourse.description || !updatedCourse.schedule) {
-              alert('Please fill out all fields correctly.');
-              return;
-            }
-      
+        
             try {
-              const response = await fetch(`http://localhost:8080/courses/${courseId}`, {
-                method: 'PUT',
-                headers: { 
-                  'Authorization': `Bearer ${authToken}`,
-                  'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify(updatedCourse),
-              });
-      
-              if (!response.ok) {
-                throw new Error(`Failed to update course: ${response.status} ${response.statusText}`);
-              }
-      
-              alert('Course updated successfully!');
-              window.location.href = './list_users.html';  // Redirect to list_user.html after successful update
+                const response = await fetch(`${baseUrl}/courses/${courseId}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${authToken}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`Gagal mengambil data course: ${response.status} ${response.statusText}`);
+                }
+        
+                const course = await response.json();
+        
+                document.getElementById('id').value = course.id || course._id;
+                document.getElementById('name').value = course.name || '';
+                document.getElementById('duration').value = course.duration || '';
+                document.getElementById('cost').value = course.cost || '';
+                document.getElementById('description').value = course.description || '';
+                document.getElementById('schedule').value = course.schedule || '';
+        
             } catch (error) {
-              console.error(error.message);
-              alert('Error updating course. Please check your connection or try again.');
+                Swal.fire({
+                    title: "Error!",
+                    text: "Terjadi kesalahan saat mengambil data: " + error.message,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
             }
-          });
+        
+            document.getElementById('edit-course-form').addEventListener('submit', async (event) => {
+                event.preventDefault();
+        
+                const updatedCourse = {
+                    name: document.getElementById('name').value.trim(),
+                    duration: parseInt(document.getElementById('duration').value.trim(), 10),
+                    cost: parseFloat(document.getElementById('cost').value.trim()),
+                    description: document.getElementById('description').value.trim(),
+                    schedule: document.getElementById('schedule').value.trim(),
+                };
+        
+                if (!updatedCourse.name || isNaN(updatedCourse.duration) || isNaN(updatedCourse.cost) || !updatedCourse.description || !updatedCourse.schedule) {
+                    Swal.fire({
+                        title: "Peringatan!",
+                        text: "Mohon isi semua data dengan benar.",
+                        icon: "warning",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+        
+                try {
+                    const response = await fetch(`${baseUrl}/courses/${courseId}`, {
+                        method: 'PUT',
+                        headers: { 
+                            'Authorization': `Bearer ${authToken}`,
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify(updatedCourse),
+                    });
+        
+                    if (response.ok) {
+                        Swal.fire({
+                            title: "Berhasil!",
+                            text: "Data course berhasil diperbarui.",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            window.location.href = "list_users.html"; // Redirect setelah update sukses
+                        });
+                    } else {
+                        throw new Error("Gagal memperbarui data course.");
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Terjadi kesalahan saat menyimpan data: " + error.message,
+                        icon: "error",
+                        confirmButtonText: "Coba Lagi"
+                    });
+                }
+            });
         });
-      </script>      
+        </script>            
   </body>
 </html>
