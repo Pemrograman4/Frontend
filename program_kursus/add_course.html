@@ -53,6 +53,10 @@
             
             <span><label for="description">Deskripsi Program:</label>
                 <textarea id="description" required></textarea><br><br></span>
+
+            <span><label for="schedule">Jadwal Program:</label>
+                <input type="text" id="schedule" required><br><br></span>
+                
             
             <button type="submit" id="submitButton">Simpan Program</button>
         </form>        
@@ -123,6 +127,7 @@
     duration: parseInt(document.getElementById("duration").value, 10),
     cost: parseFloat(document.getElementById("programCost").value),
     description: document.getElementById("description").value,
+    schedule: document.getElementById("schedule").value // Menambahkan jadwal program
 };
 
 
