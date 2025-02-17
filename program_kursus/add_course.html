@@ -70,7 +70,6 @@
       </nav>
     </div>
 
-    <script src="script.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', async function () {
           try {
@@ -119,12 +118,13 @@
           }
 
           const courseData = {
-              id: document.getElementById("programId").value,
-              name: document.getElementById("programName").value,
-              duration: parseInt(document.getElementById("duration").value, 10),
-              cost: parseFloat(document.getElementById("programCost").value),
-              description: document.getElementById("description").value,
-          };
+    id: document.getElementById("programId").value,
+    name: document.getElementById("programName").value,
+    duration: parseInt(document.getElementById("duration").value, 10),
+    cost: parseFloat(document.getElementById("programCost").value),
+    description: document.getElementById("description").value,
+};
+
 
           try {
               const response = await fetch("http://localhost:8080/courses", {

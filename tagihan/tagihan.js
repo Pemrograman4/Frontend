@@ -253,8 +253,17 @@ async function handleEditTagihanForm() {
     });
     if (response.ok) {
       const tagihan = await response.json();
-      document.getElementById("siswa_id").value = tagihan.siswa_id || "";
-      document.getElementById("program").value = tagihan.course_id || "";
+
+      // Memanggil fetchSiswaList untuk mengambil daftar siswa dan menyesuaikan dropdown
+      await fetchSelectedSiswa(tagihan.siswa_id); // Menyesuaikan siswa yang terpilih berdasarkan siswa_id dari tagihan
+
+      // Pre-select course_id dari data tagihan yang di-fetch
+      const selectCourse = document.getElementById("program");
+      if (selectCourse) {
+        selectCourse.value = tagihan.course_id || ""; // Pre-select course_id
+      }
+
+      // Set tanggalTagihan
       document.getElementById("tanggalTagihan").value = formatDateToInput(
         tagihan.due_date
       );
@@ -301,6 +310,33 @@ async function handleEditTagihanForm() {
   });
 }
 
+async function fetchSelectedSiswa(selectedSiswaId) {
+  const selectSiswa = document.getElementById("siswa_id");
+  if (!selectSiswa) return;
+
+  try {
+    const response = await fetch("http://localhost:8080/siswa", {
+      headers: { Authorization: `Bearer ${getAuthToken()}` },
+    });
+    if (!response.ok) throw new Error("Gagal mengambil data siswa");
+
+    const siswas = await response.json();
+    selectSiswa.innerHTML = siswas
+      .map(
+        (siswa) =>
+          `<option value="${siswa.id}" ${
+            siswa.id === selectedSiswaId ? "selected" : ""
+          }>${siswa.fullname}</option>`
+      )
+      .join("");
+  } catch (error) {
+    console.error("Error:", error);
+    Swal.fire("Kesalahan", "Gagal mengambil daftar siswa.", "error");
+  }
+}
+
+
+
 // Inisialisasi berdasarkan halaman
 document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
@@ -313,3 +349,5 @@ document.addEventListener("DOMContentLoaded", () => {
     handleEditTagihanForm();
   }
 });
+      // Memanggil fetchSiswaList untuk mengambil daftar siswa dan menyesuaikan dropdown
+      // await fetchSiswaList(tagihan.siswa_id);
