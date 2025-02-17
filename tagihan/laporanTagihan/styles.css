@@ -1,0 +1,295 @@
+/* General Reset */
+body,
+h1,
+h2,
+h3,
+h4,
+p {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #060606;
+
+}
+
+p {
+    margin-top: 10px;
+}
+
+body {
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    height: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.header .fa-arrow-left {
+    justify-content: start;
+    margin-left: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.header svg {
+    color: #333;
+}
+
+.header .logo {
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.header .title {
+    color: #ffc00a;
+    font-size: 20px;
+    font-weight: medium;
+    font-family: "Poppins", sans-serif;
+    margin-top: 20px;
+}
+
+.container {
+    max-width: 400px;
+    /* Membatasi lebar form agar lebih kompak */
+    margin: 50px auto;
+    /* Tengah secara horizontal dan memberikan jarak vertikal */
+    padding: 20px;
+    background-color: #ffffff;
+    /* Warna latar belakang putih */
+    border-radius: 15px;
+    /* Membuat sudut membulat */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Menambahkan efek bayangan */
+    font-family: 'Arial', sans-serif;
+    /* Font default */
+}
+
+h1 {
+    text-align: center;
+    /* Memusatkan judul */
+    font-size: 1.5rem;
+    color: #0097b2;
+    /* Warna teks abu-abu gelap */
+    margin-bottom: 20px;
+    font-family: "Poppins", sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Jarak antar elemen form */
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+    /* Warna teks label */
+    margin-bottom: 5px;
+    /* Jarak antara label dan field input */
+    font-family: "Poppins", sans-serif;
+}
+
+/* Sembunyikan ikon default */
+select {
+    appearance: none;
+    /* Hapus gaya default */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+option {
+    appearance: none;
+    /* Hapus gaya default */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Tambahkan gaya ke opsi */
+.option-icon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><circle cx="12" cy="12" r="9"></circle></svg>');
+    background-repeat: no-repeat;
+    background-position: left 10px center;
+    padding-left: 30px;
+    /* Spasi untuk ikon */
+    width: 100px;
+}
+
+
+select:focus option {
+    background-color: #f1f1f1;
+    /* Warna saat dipilih */
+}
+
+
+input {
+    width: 94%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    /* Warna border */
+    border-radius: 8px;
+    /* Membuat sudut input membulat */
+    background-color: #f9f9f9;
+    /* Latar belakang input */
+    font-size: 0.9rem;
+    color: #333;
+    font-family: "Ubuntu", sans-serif;
+    margin-bottom: 20px;
+}
+
+select:focus,
+input:focus {
+    border-color: #0097b2;
+    outline: none;
+    /* Menghilangkan garis biru default */
+    box-shadow: 0 0 5px rgb(0, 151, 178);
+}
+
+/* Styling untuk textarea */
+textarea {
+    width: 94%;
+    /* Sama seperti input */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 0.9rem;
+    color: #333;
+    font-family: "Ubuntu", sans-serif;
+    height: 80px;
+    /* Sesuaikan tinggi agar 2-3x tinggi input biasa */
+    resize: none;
+    /* Mencegah resize manual */
+}
+
+/* Fokus pada textarea */
+textarea:focus {
+    border-color: #0097b2;
+    outline: none;
+    box-shadow: 0 0 5px rgb(0, 151, 178);
+}
+
+/* Supaya label tetap di atas */
+.longtext {
+    display: block;
+    margin-bottom: 5px;
+    /* Jarak antara label dan textarea */
+}
+
+button {
+    background-color: #0097b2;
+    /* Warna utama */
+    color: #fff;
+    /* Warna teks */
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #ffc00a;
+    /* Warna lebih gelap saat hover */
+}
+
+button+button {
+    margin-top: 10px;
+    /* Jarak antar tombol jika ada tombol tambahan */
+    background-color: transparent;
+    color: #0097b2;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+button+button:hover {
+    color: #ffc00a;
+}
+
+/* Bottom Navigation */
+.nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    color: #0097b2;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-bottom i {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.nav-bottom .fa-house.active {
+    color: #ffc00a;
+}
+
+ table {
+     width: 100%;
+     border-collapse: collapse;
+     margin-top: 20px;
+     background: #fff;
+     border-radius: 8px;
+     overflow: hidden;
+ }
+
+ th,
+ td {
+     border: 1px solid #ddd;
+     padding: 12px;
+     text-align: left;
+ }
+
+ th {
+     background-color: #0097b2;
+     color: white;
+ }
+
+ tr:nth-child(even) {
+     background-color: #f2f2f2;
+ }
+
+ tr:hover {
+     background-color: #ddd;
+ }

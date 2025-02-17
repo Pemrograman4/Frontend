@@ -1,7 +1,6 @@
 /* General Reset */
 body,
 h1,
-h2,
 h3,
 h4,
 p {
@@ -9,7 +8,12 @@ p {
   padding: 0;
   font-family: Arial, sans-serif;
   color: #060606;
+}
 
+h2 {
+  font-size: 18px;
+  color: #000;
+  font-weight: bold;
 }
 
 p {
@@ -19,7 +23,6 @@ p {
 body {
   background-color: #f4f4f4;
   overflow-x: hidden;
-  padding-bottom: 80px;
 }
 
 /* Header */
@@ -37,14 +40,13 @@ body {
   align-items: center;
 }
 
-.header .fa-file-lines {
-  margin-top: 15px;
-  font-size: 30px;
-  /* Ukuran font teks */
-  color: #0097b2;
-  margin-bottom: 10px;
+.header .fa-bars {
+  justify-content: start;
   margin-left: 20px;
+  width: 20px;
+  height: 20px;
 }
+
 
 .header .logo {
   height: 40px;
@@ -93,7 +95,6 @@ body {
   padding: 10px;
   outline: none;
 }
-
 
 .search-bar button {
   background-color: #ffc00a;
@@ -153,17 +154,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* Untuk Tombol Edit dan Delete */
-.card-actions {
-  position: absolute;
-  top: 10px;
-  /* Posisi di atas */
-  right: 10px;
-  /* Posisi di kanan */
-  display: flex;
-  gap: 10px;
-  /* Jarak antar tombol */
-}
 
 .edit-btn,
 .delete-btn {
@@ -228,4 +218,44 @@ body {
 
 .nav-bottom .active-plus {
   color: #ffc00a;
+}
+
+/* Styles for the card container */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 20px;
+}
+
+/* Styles for individual cards */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Styles for the card content */
+.card-content {
+  margin-bottom: 20px;
+}
+
+/* Styles for the card actions */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card-actions button {
+  background-color: #ffc00a;
+    /* Warna utama */
+    color: #fff;
+    /* Warna teks */
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
