@@ -168,3 +168,27 @@
         font-size: 24px;
         cursor: pointer;
       }
+
+      .plus-icon {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .tooltip {
+        visibility: hidden;
+        position: absolute;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgb(0, 0, 0);
+        color: white;
+        padding: 5px;
+        border-radius: 3px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      
+      .plus-icon:hover .tooltip {
+        visibility: visible;
+      }    
+      

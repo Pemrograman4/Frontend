@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Data Pembayaran</title>
+    <link rel="stylesheet" href="add-edit.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"
+      integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left" onclick="window.location.href='list_courses.html'"></i></a>
+      <div class="right-section">
+        <h1 class="title">FASFADE Institute</h1>
+        <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
+      </div>
+    </header>
+    <div class="container mt-5">
+      <h1 class="mb-4">Edit Course</h1>
+      <form id="edit-course-form">
+        <div class="mb-3">
+          <label for="id" class="form-label">Course ID</label>
+          <input type="text" class="form-control" id="id" name="id" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="name" class="form-label">Course Name</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+          <label for="duration" class="form-label">Duration (in hours)</label>
+          <input type="number" class="form-control" id="duration" name="duration" required>
+        </div>
+        <div class="mb-3">
+          <label for="cost" class="form-label">Cost</label>
+          <input type="number" step="0.01" class="form-control" id="cost" name="cost" required>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+        <!-- New Jadwal Field -->
+        <div class="mb-3">
+          <label for="schedule" class="form-label">Jadwal</label>
+          <input type="text" class="form-control" id="schedule" name="schedule" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom">
+      <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
+      <i class="fa-solid fa-plus-circle active-plus" onclick="window.location.href='#'"></i>
+      <i class="fa-solid fa-user active"></i>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+          const courseId = new URLSearchParams(window.location.search).get('id');
+          const baseUrl = 'http://localhost:8080'; // Ganti dengan URL backend Anda
+          const authToken = localStorage.getItem('auth_token'); 
+      
+          if (!authToken) {
+            alert('Token tidak ditemukan! Silakan login ulang.');
+            window.location.href = 'login.html'; 
+            return;
+          }
+      
+          console.log("Auth Token:", authToken);
+      
+          if (!courseId) {
+            alert('No Course ID provided in the URL.');
+            return;
+          }
+      
+          try {
+            console.log(`Fetching course data from: ${baseUrl}/courses/${courseId}`);
+      
+            const response = await fetch(`${baseUrl}/courses/${courseId}`, {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${authToken}`,
+                "Content-Type": "application/json"
+              }
+            });
+      
+            console.log("Response Status: ", response.status);
+      
+            if (!response.ok) {
+              throw new Error(`Failed to fetch course data: ${response.status} ${response.statusText}`);
+            }
+      
+            const course = await response.json();
+      
+            if (!course) {
+              throw new Error('Course data is empty or not found.');
+            }
+      
+            document.getElementById('id').value = course.id || course._id;
+            document.getElementById('name').value = course.name || '';
+            document.getElementById('duration').value = course.duration || '';
+            document.getElementById('cost').value = course.cost || '';
+            document.getElementById('description').value = course.description || '';
+            document.getElementById('schedule').value = course.schedule || ''; // New field for schedule
+      
+          } catch (error) {
+            console.error(error.message);
+            alert('Error loading course data. Please check your connection or try again.');
+          }
+      
+          document.getElementById('edit-course-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+      
+            const updatedCourse = {
+              name: document.getElementById('name').value.trim(),
+              duration: parseInt(document.getElementById('duration').value.trim(), 10),
+              cost: parseFloat(document.getElementById('cost').value.trim()),
+              description: document.getElementById('description').value.trim(),
+              schedule: document.getElementById('schedule').value.trim(), // New schedule value
+            };
+      
+            if (!updatedCourse.name || isNaN(updatedCourse.duration) || isNaN(updatedCourse.cost) || !updatedCourse.description || !updatedCourse.schedule) {
+              alert('Please fill out all fields correctly.');
+              return;
+            }
+      
+            try {
+              const response = await fetch(`http://localhost:8080/courses/${courseId}`, {
+                method: 'PUT',
+                headers: { 
+                  'Authorization': `Bearer ${authToken}`,
+                  'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(updatedCourse),
+              });
+      
+              if (!response.ok) {
+                throw new Error(`Failed to update course: ${response.status} ${response.statusText}`);
+              }
+      
+              alert('Course updated successfully!');
+              window.location.href = './list_users.html';  // Redirect to list_user.html after successful update
+            } catch (error) {
+              console.error(error.message);
+              alert('Error updating course. Please check your connection or try again.');
+            }
+          });
+        });
+      </script>      
+  </body>
+</html>

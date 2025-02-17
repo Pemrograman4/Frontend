@@ -26,7 +26,7 @@
   </head>
 <body>
   <header class="header">
-    <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i></a>
+    <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"  onclick="window.location.href='list_courses.html'"></i></a>
     <div class="right-section">
       <h1 class="title">FASFADE Institute</h1>
       <img src="/logo_only.png" alt="FASFADE Logo" class="logo" />
@@ -73,75 +73,103 @@
       </form>
   </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const courseId = new URLSearchParams(window.location.search).get('id');
-            const baseUrl = 'http://localhost:8080'; // Ganti dengan URL backend Anda
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const courseId = new URLSearchParams(window.location.search).get('id');
+        const baseUrl = 'http://localhost:8080'; // Ganti dengan URL backend Anda
+        const authToken = localStorage.getItem('auth_token'); 
 
-            if (!courseId) {
-                alert('No Course ID provided in the URL.');
+        // Periksa apakah token tersedia
+        if (!authToken) {
+            alert('Token tidak ditemukan! Silakan login ulang.');
+            window.location.href = 'login.html'; // Alihkan ke halaman login
+            return;
+        }
+
+        console.log("Auth Token:", authToken); // Debugging token
+
+        // Periksa apakah ID kursus ada di URL
+        if (!courseId) {
+            alert('No Course ID provided in the URL.');
+            return;
+        }
+
+        try {
+            // Debugging: URL dan header
+            console.log(`Fetching course data from: ${baseUrl}/courses/${courseId}`);
+
+            const response = await fetch(`${baseUrl}/courses/${courseId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${authToken}`, // Gunakan authToken yang benar
+                    "Content-Type": "application/json"
+                }
+            });
+
+            // Debugging response
+            console.log("Response Status: ", response.status);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch course data: ${response.status} ${response.statusText}`);
+            }
+
+            const course = await response.json();
+
+            if (!course) {
+                throw new Error('Course data is empty or not found.');
+            }
+
+            // Menampilkan data kursus di form
+            document.getElementById('id').value = course.id || course._id;
+            document.getElementById('name').value = course.name || '';
+            document.getElementById('duration').value = course.duration || '';
+            document.getElementById('cost').value = course.cost || '';
+            document.getElementById('description').value = course.description || '';
+
+        } catch (error) {
+            console.error(error.message);
+            alert('Error loading course data. Please check your connection or try again.');
+        }
+
+        // Menangani form submit untuk memperbarui kursus
+        document.getElementById('edit-course-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const updatedCourse = {
+                name: document.getElementById('name').value.trim(),
+                duration: parseInt(document.getElementById('duration').value.trim(), 10),
+                cost: parseFloat(document.getElementById('cost').value.trim()),
+                description: document.getElementById('description').value.trim(),
+            };
+
+            // Validasi input
+            if (!updatedCourse.name || isNaN(updatedCourse.duration) || isNaN(updatedCourse.cost) || !updatedCourse.description) {
+                alert('Please fill out all fields correctly.');
                 return;
             }
 
-            // Fetch course details
-            fetch(`${baseUrl}/courses/${courseId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch course data: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(course => {
-                    if (!course) {
-                        throw new Error('Course data is empty or not found.');
-                    }
-                    // Populate the form fields with course data
-                    document.getElementById('id').value = course.id || course._id; // Handle MongoDB _id if applicable
-                    document.getElementById('name').value = course.name || '';
-                    document.getElementById('duration').value = course.duration || '';
-                    document.getElementById('cost').value = course.cost || '';
-                    document.getElementById('description').value = course.description || '';
-                })
-                .catch(error => {
-                    console.error(error.message);
-                    alert('Error loading course data. Please check your connection or try again.');
+            try {
+                const response = await fetch(`${baseUrl}/courses/${courseId}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `Bearer ${authToken}`, // Gunakan authToken yang benar
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(updatedCourse),
                 });
 
-            // Handle form submission
-            document.getElementById('edit-course-form').addEventListener('submit', (event) => {
-                event.preventDefault();
-
-                const updatedCourse = {
-                    name: document.getElementById('name').value.trim(),
-                    duration: parseInt(document.getElementById('duration').value.trim(), 10),
-                    cost: parseFloat(document.getElementById('cost').value.trim()),
-                    description: document.getElementById('description').value.trim(),
-                };
-
-                // Validate form fields
-                if (!updatedCourse.name || isNaN(updatedCourse.duration) || isNaN(updatedCourse.cost) || !updatedCourse.description) {
-                    alert('Please fill out all fields correctly.');
-                    return;
+                if (!response.ok) {
+                    throw new Error(`Failed to update course: ${response.status} ${response.statusText}`);
                 }
 
-                fetch(`${baseUrl}/courses/${courseId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedCourse),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to update course: ${response.status} ${response.statusText}`);
-                    }
-                    alert('Course updated successfully!');
-                    window.location.href = './list_courses.html';
-                })
-                .catch(error => {
-                    console.error(error.message);
-                    alert('Error updating course. Please check your connection or try again.');
-                });
-            });
+                alert('Course updated successfully!');
+                window.location.href = './list_courses.html'; // Alihkan ke daftar kursus setelah berhasil
+            } catch (error) {
+                console.error(error.message);
+                alert('Error updating course. Please check your connection or try again.');
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>

@@ -56,21 +56,60 @@ function renderCourses(courses) {
       currency: "IDR",
     });
 
-    // Cek apakah schedule adalah string, jika iya tampilkan langsung
-    const schedule =
-      typeof course.schedule === "string" && course.schedule.length > 0
-        ? course.schedule
-        : "Jadwal belum tersedia"; // Menambahkan jadwal kursus
+    const schedule = course.schedule
+      ? course.schedule.join(", ")
+      : "Belum tersedia"; // Menambahkan jadwal kursus
 
     card.innerHTML = `
-            <h3 class="course-name">${course.name}</h3>
-            <p><strong>Durasi:</strong> ${course.duration}</p>
-            <p><strong>Biaya:</strong> ${formattedCost}</p>
-            <p><strong>Deskripsi:</strong> ${course.description}</p>
-            <p><strong>Jadwal:</strong> ${schedule}</p>
-        `;
+        <h3 class="course-name">${course.name}</h3>
+        <p><strong>Durasi:</strong> ${course.duration}</p>
+        <p><strong>Biaya:</strong> ${formattedCost}</p>
+        <p><strong>Deskripsi:</strong> ${course.description}</p>
+        <p><strong>Jadwal:</strong> ${schedule}</p>
+        <div class="card-actions">
+          <button class="edit-btn" onclick="editCourse('${course._id}')">Edit</button>
+          <button class="delete-btn" onclick="deleteCourse('${course._id}')">Hapus</button>
+        </div>
+      `;
     courseCards.appendChild(card);
   });
+}
+
+// Fungsi untuk mengedit kursus
+function editCourse(courseId) {
+  console.log(`Edit kursus dengan ID ${courseId}`);
+  window.location.href = `edit_course.html?id=${courseId}`; // Arahkan ke halaman edit
+}
+
+// Fungsi untuk menghapus kursus
+async function deleteCourse(courseId) {
+  try {
+    console.log(`Menghapus kursus dengan ID: ${courseId}`);
+
+    const response = await fetch(`http://localhost:8080/courses/${courseId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error("Gagal menghapus kursus.");
+    }
+
+    console.log(`Kursus dengan ID ${courseId} berhasil dihapus.`);
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil",
+      text: "Kursus berhasil dihapus!",
+    }).then(() => {
+      loadCourses(); // Memuat ulang data kursus setelah penghapusan
+    });
+  } catch (error) {
+    console.error("Terjadi kesalahan saat menghapus kursus:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Gagal",
+      text: `Gagal menghapus kursus. Error: ${error.message}`,
+    });
+  }
 }
 
 // Panggil fungsi loadCourses saat halaman selesai dimuat
