@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tambah Data Tagihan</title>
+    <title>Edit Data Tagihan</title>
     <link rel="stylesheet" href="add-edit.css" /> <!-- Menghubungkan CSS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -19,28 +19,25 @@
         </div>
     </header>
     <div class="container">
-        <h1>Tambah Data Tagihan</h1>
-        <form id="formTambahTagihan">
+        <h1>Edit Data Tagihan</h1>
+        <form id="formEditTagihan">
             <input type="hidden" id="idTagihan" required />
             <span>
-          <label for="siswa_id"><i class="fas fa-user"></i> Nama Siswa:</label>
-          <select id="siswa_id" name="siswa_id" required></select>
-        </span>
+                <label for="siswa_id"><i class="fas fa-user"></i> Nama Siswa:</label>
+                <select id="siswa_id" name="siswa_id" required></select>
+            </span>
             <label for="program">Program Kursus:</label>
             <select id="program" required>
                 <option value="">Pilih Program</option>
             </select>
             <label for="tanggalTagihan">Tanggal Tagihan:</label>
             <input type="date" id="tanggalTagihan" required />
-            <button type="submit" id="submitBtn">Tambah</button>
-            <button type="button" id="saveBtn" style="display: none;">Simpan</button>
-
+            <button type="submit" id="saveBtn">Simpan</button>
         </form>
     </div>
 
     <nav class="nav-bottom">
         <i class="fa-solid fa-house" onclick="window.location.href='/index.html'"></i>
-        <i class="fa-solid fa-plus-circle active-plus" onclick="window.location.href='#'" style="color: #ffc00a;"></i>
         <i class="fa-solid fa-user active"></i>
     </nav>
 
