@@ -112,6 +112,7 @@ async function hapusSiswa(id) {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${getAuthToken()}`,
                     }
                 });
 
