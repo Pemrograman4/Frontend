@@ -240,7 +240,7 @@
   td {
     border: 1px solid #ddd;
     padding: 12px;
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
     /* Mencegah teks memanjang ke bawah */
   }
@@ -280,6 +280,7 @@
       <table>
         <thead>
           <tr>
+            <th>No</th>  
             <th>Siswa ID</th>
             <th>Biaya</th>
             <th>Tanggal</th>
@@ -295,6 +296,8 @@
         </tbody>
       </table>
     </div>
+    <!-- Tambahkan elemen untuk menampilkan total pemasukan -->
+    <h3 id="total-pemasukan" style="margin-top: 15px;"></h3>
   </div>
 
   <!-- Bottom Navigation -->
@@ -333,11 +336,14 @@
         tbody.innerHTML = "";
 
         if (!data || !Array.isArray(data) || data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4">Tidak ada data pada rentang tanggal ini</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5">Tidak ada data pada rentang tanggal ini</td></tr>';
+          document.getElementById("total-pemasukan").innerText = "";
           return;
         }
 
-        data.forEach((item) => {
+        let totalPemasukan = 0;
+
+        data.forEach((item, index) => {
           const formattedDate = new Date(item.tanggal).toLocaleDateString("id-ID", {
             year: "numeric",
             month: "long",
@@ -345,6 +351,7 @@
           });
 
           const row = `<tr>
+                <td>${index + 1}</td>
                 <td>${item.siswa_id}</td>
                 <td>Rp ${item.harga.toLocaleString()}</td>
                 <td>${formattedDate}</td>
@@ -352,13 +359,18 @@
             </tr>`;
 
           tbody.innerHTML += row;
+
+          totalPemasukan += item.harga;
         });
+
+        // Menampilkan total pemasukan
+        document.getElementById("total-pemasukan").innerText = `Total Pemasukan: Rp ${totalPemasukan.toLocaleString()}`;
+
       } catch (error) {
         console.error("Error:", error);
         alert("Gagal mengambil data laporan");
       }
     }
-
-  </script>
+</script>
 </body>
 </html>
