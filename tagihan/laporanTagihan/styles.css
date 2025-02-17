@@ -1,7 +1,6 @@
 /* General Reset */
 body,
 h1,
-h2,
 h3,
 h4,
 p {
@@ -64,8 +63,6 @@ body {
 .container {
     max-width: 400px;
     /* Membatasi lebar form agar lebih kompak */
-    margin: 50px auto;
-    /* Tengah secara horizontal dan memberikan jarak vertikal */
     padding: 20px;
     background-color: #ffffff;
     /* Warna latar belakang putih */

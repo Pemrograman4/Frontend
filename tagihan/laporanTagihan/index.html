@@ -44,7 +44,7 @@
       <select id="status">
         <option value="">Pilih Status</option>
         <option value="Lunas">Lunas</option>
-        <option value="Belum Lunas">Belum Lunas</option>
+        <option value="Belum Bayar">Belum Lunas</option>
       </select>
       <button onclick="generateLaporan()">Generate Laporan</button>
 
@@ -67,12 +67,9 @@
     </div>
     <!-- Bottom Navigation -->
     <nav class="nav-bottom">
-      <i
-        class="fa-solid fa-house"
-        onclick="window.location.href='/index.html'"
-      ></i>
-      <i class="fa-solid fa-user"></i>
+      <h2>Total Pembayaran: <span id="total-tagihan">Rp 0</span></h2>
     </nav>
+
     <script>
       function getAuthToken() {
         return localStorage.getItem("auth_token") || "";
@@ -112,9 +109,12 @@
           const tbody = document.getElementById("laporan-body");
           tbody.innerHTML = "";
 
+          let totalTagihan = 0;
+
           if (!data || !Array.isArray(data) || data.length === 0) {
             tbody.innerHTML =
               '<tr><td colspan="3">Tidak ada data pada rentang tanggal ini</td></tr>';
+            document.getElementById("total-tagihan").innerText = "Rp 0";
             return;
           }
 
@@ -131,7 +131,11 @@
                         <td>${keterangan}</td>
                     </tr>`;
             tbody.innerHTML += row;
+
+            totalTagihan += item.amount;
           });
+
+          document.getElementById("total-tagihan").innerText = `Rp ${totalTagihan.toLocaleString()}`;
         } catch (error) {
           console.error("Error:", error);
           alert("Gagal mengambil data laporan");

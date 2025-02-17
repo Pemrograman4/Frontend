@@ -1,7 +1,6 @@
 /* General Reset */
 body,
 h1,
-h2,
 h3,
 h4,
 p {
@@ -63,8 +62,6 @@ body {
 
 .container {
     max-width: 400px;
-    /* Membatasi lebar form agar lebih kompak */
-    margin: 50px auto;
     /* Tengah secara horizontal dan memberikan jarak vertikal */
     padding: 20px;
     background-color: #ffffff;
@@ -276,7 +273,7 @@ button+button:hover {
  th,
  td {
      border: 1px solid #ddd;
-     padding: 12px;
+     padding: 9px;
      text-align: left;
  }
 

@@ -36,10 +36,8 @@
     </header>
     <div class="container">
       <h1>Laporan Transaksi Gaji Guru</h1>
-      <label for="start-date">Tanggal Mulai:</label>
-      <input type="date" id="start-date" />
-      <label for="end-date">Tanggal Akhir:</label>
-      <input type="date" id="end-date" />
+      <label for="month">Pilih Bulan:</label>
+      <input type="month" id="month" />
       <button onclick="generateLaporan()">Generate Laporan</button>
 
       <table>
@@ -54,7 +52,7 @@
         <tbody id="laporan-body">
           <tr>
             <td colspan="4">
-              Silakan pilih rentang tanggal dan klik "Generate Laporan"
+              Silakan pilih bulan dan klik "Generate Laporan"
             </td>
           </tr>
         </tbody>
@@ -62,28 +60,22 @@
     </div>
     <!-- Bottom Navigation -->
     <nav class="nav-bottom">
-      <i
-        class="fa-solid fa-house"
-        onclick="window.location.href='/index.html'"
-      ></i>
-      <i class="fa-solid fa-plus-circle active"></i>
-      <i class="fa-solid fa-user"></i>
+      <h2>Total Pengeluaran: <span id="total-pengeluaran">Rp 0</span></h2>
     </nav>
+
     <script>
       function getAuthToken() {
         return localStorage.getItem("auth_token") || "";
       }
+
       async function generateLaporan() {
-        const startDate = document.getElementById("start-date").value;
-        const endDate = document.getElementById("end-date").value;
-        if (!startDate || !endDate) {
-          alert("Pilih tanggal mulai dan akhir");
+        const month = document.getElementById("month").value;
+        if (!month) {
+          alert("Pilih bulan terlebih dahulu");
           return;
         }
 
-        const formattedStartDate = startDate.split("-").reverse().join("-");
-        const formattedEndDate = endDate.split("-").reverse().join("-");
-        const url = `http://localhost:8080/laporan-guru/?start_date=${formattedStartDate}&end_date=${formattedEndDate}`;
+        const url = `http://localhost:8080/transaksi-guru/laporan?month=${month}`;
 
         try {
           const response = await fetch(url, {
@@ -93,21 +85,27 @@
           const tbody = document.getElementById("laporan-body");
           tbody.innerHTML = "";
 
+          let totalPengeluaran = 0;
+
           if (!data || !Array.isArray(data) || data.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="4">Tidak ada data pada rentang tanggal ini</td></tr>';
+              '<tr><td colspan="4">Tidak ada data pada bulan ini</td></tr>';
+            document.getElementById("total-pengeluaran").innerText = "Rp 0";
             return;
           }
 
           data.forEach((item) => {
+            totalPengeluaran += item.amount;
             const row = `<tr>
-                        <td>${item.guru_name}</td>
-                        <td>Rp ${item.amount.toLocaleString()}</td>
-                        <td>${item.created_at}</td>
-                        <td>${item.notes || "-"}</td>
-                    </tr>`;
+                          <td>${item.guru_name}</td>
+                          <td>Rp ${item.amount.toLocaleString()}</td>
+                          <td>${item.created_at}</td>
+                          <td>${item.notes || "-"}</td>
+                        </tr>`;
             tbody.innerHTML += row;
           });
+
+          document.getElementById("total-pengeluaran").innerText = `Rp ${totalPengeluaran.toLocaleString()}`;
         } catch (error) {
           console.error("Error:", error);
           alert("Gagal mengambil data laporan");
