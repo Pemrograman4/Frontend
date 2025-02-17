@@ -85,9 +85,12 @@ async function fetchGuruList() {
   if (!selectGuru) return;
 
   try {
-    const response = await fetch("http://localhost:8080/gurus", {
-      headers: { Authorization: `Bearer ${getAuthToken()}` },
-    });
+    const response = await fetch(
+      "http://localhost:8080/gurus/status?status=aktif",
+      {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      }
+    );
     if (!response.ok) throw new Error("Gagal mengambil data guru");
 
     const gurus = await response.json();
