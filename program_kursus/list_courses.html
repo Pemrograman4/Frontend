@@ -62,91 +62,85 @@
     </nav>
 
     <script>
-      async function loadCourses() {
-        console.log("Memuat data kursus...");
-        const courseCards = document.getElementById("courseCards");
-        if (!courseCards) {
-          console.error("Elemen dengan ID 'courseCards' tidak ditemukan!");
-          return;
-        }
-    
-        courseCards.innerHTML = ""; // Bersihkan kontainer sebelum memuat data baru
-    
-        try {
-          const token = localStorage.getItem("auth_token"); // Ambil token dari localStorage
-          if (!token) {
-            throw new Error("Token tidak ditemukan. Harap login terlebih dahulu.");
-          }
-    
-          const response = await fetch("http://localhost:8080/courses", {
-            headers: {
-              "Authorization": `Bearer ${token}`, // Tambahkan header Authorization
-              "Content-Type": "application/json"
-            }
-          });
-    
-          if (response.status === 401) {
-            console.warn("User tidak terautentikasi. Redirect ke halaman login...");
-            window.location.href = "login.html"; // Redirect ke login
-            return;
-          }
-    
-          if (!response.ok) {
-            throw new Error(`Gagal mengambil data dari server: ${response.status}`);
-          }
-    
-          const courses = await response.json();
-          console.log("Data dari server:", courses);
-    
-          if (courses.length === 0) {
-            courseCards.innerHTML = '<p>Tidak ada program kursus yang tersedia.</p>';
-            return;
-          }
-    
-          renderCourses(courses);
-          localStorage.setItem("courses", JSON.stringify(courses));
-        } catch (error) {
-          console.error("Gagal memuat data dari server. Menggunakan data dari localStorage...", error);
-    
-          const courses = JSON.parse(localStorage.getItem("courses")) || [];
-          if (courses.length === 0) {
-            courseCards.innerHTML = '<p>Tidak ada program kursus yang tersedia.</p>';
-            return;
-          }
-    
-          renderCourses(courses);
-        }
-      }
-    
-      function renderCourses(courses) {
-        const courseCards = document.getElementById("courseCards");
-    
-        courses.forEach((course) => {
-          console.log("Rendering course:", course);
-    
-          const card = document.createElement("div");
-          card.classList.add("course-card");
-    
-          const formattedCost = Number(course.cost).toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          });
-    
-          card.innerHTML = `
+      // Fungsi utama untuk memuat data kursus
+async function loadCourses() {
+  console.log("Memuat data kursus...");
+  const courseCards = document.getElementById("courseCards");
+  if (!courseCards) {
+    console.error("Elemen dengan ID 'courseCards' tidak ditemukan!");
+    return;
+  }
+
+  courseCards.innerHTML = ""; // Bersihkan kontainer sebelum memuat data baru
+
+  try {
+    const response = await fetch("http://localhost:8080/courses");
+    if (!response.ok) {
+      throw new Error("Gagal mengambil data dari server.");
+    }
+
+    const courses = await response.json();
+    console.log("Data dari server:", courses); // Log data dari server
+
+    if (courses.length === 0) {
+      courseCards.innerHTML = "<p>Tidak ada program kursus yang tersedia.</p>";
+      return;
+    }
+
+    renderCourses(courses); // Tampilkan data kursus di halaman
+    localStorage.setItem("courses", JSON.stringify(courses)); // Simpan ke localStorage
+  } catch (error) {
+    console.error(
+      "Gagal memuat data dari server. Menggunakan data dari localStorage...",
+      error
+    );
+
+    const courses = JSON.parse(localStorage.getItem("courses")) || [];
+    if (courses.length === 0) {
+      courseCards.innerHTML = "<p>Tidak ada program kursus yang tersedia.</p>";
+      return;
+    }
+
+    renderCourses(courses); // Render data dari localStorage jika fetch gagal
+  }
+}
+
+// Fungsi untuk menampilkan data kursus dalam bentuk kartu
+function renderCourses(courses) {
+  const courseCards = document.getElementById("courseCards");
+
+  courses.forEach((course) => {
+    console.log("Rendering course:", course); // Log data kursus yang dirender
+
+    const card = document.createElement("div");
+    card.classList.add("course-card");
+
+    const formattedCost = Number(course.cost).toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    });
+
+    // Cek apakah schedule adalah string, jika iya tampilkan langsung
+    const schedule =
+      typeof course.schedule === "string" && course.schedule.length > 0
+        ? course.schedule
+        : "Jadwal belum tersedia"; // Menambahkan jadwal kursus
+
+    card.innerHTML = `
             <h3 class="course-name">${course.name}</h3>
             <p><strong>Durasi:</strong> ${course.duration}</p>
             <p><strong>Biaya:</strong> ${formattedCost}</p>
             <p><strong>Deskripsi:</strong> ${course.description}</p>
+            <p><strong>Jadwal:</strong> ${schedule}</p>
             <div class="card-actions">
               <button class="edit-btn" onclick="editCourse('${course._id}')">Edit</button>
               <button class="delete-btn" onclick="deleteCourse('${course._id}')">Hapus</button>
             </div>
-          `;
-          courseCards.appendChild(card);
-        });
-      }
-    
-      function editCourse(id) {
+        `;
+    courseCards.appendChild(card);
+  });
+}
+function editCourse(id) {
         console.log(`Edit kursus dengan ID ${id}`);
         window.location.href = `edit_course.html?id=${id}`;
       }
@@ -198,6 +192,7 @@
       }
     
       document.addEventListener("DOMContentLoaded", loadCourses);
+
     </script>
        
   </body>
