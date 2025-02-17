@@ -102,6 +102,7 @@ async function fetchGuruList() {
 
 // Panggil saat halaman dimuat
 document.addEventListener("DOMContentLoaded", fetchGuruList);
+
 async function handleAddTransaksiForm() {
   const formTambahTransaksi = document.getElementById("formTambahTransaksi");
   if (!formTambahTransaksi) return;
